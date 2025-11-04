@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import '../../../styles/AuthForm.css';
+import { Link } from "react-router-dom";
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -61,9 +61,7 @@ function LoginForm() {
               />
               <span className="checkbox-text">Remember me</span>
             </label>
-            <a href="#" className="forgot-link">
-              Forgot password?
-            </a>
+            <Link to="/resetpassword" className="forgot-link">Forgot password?</Link>
           </div>
 
           <button type="submit" className="auth-button">
@@ -71,7 +69,7 @@ function LoginForm() {
           </button>
 
           <div className="auth-link">
-            Don't have an account? <a href="/register">Sign up</a>
+            Don't have an account? <Link to="/register">Create one</Link>
           </div>
         </form>
       </div>

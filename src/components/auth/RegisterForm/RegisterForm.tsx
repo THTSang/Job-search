@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-// import '../../../styles/AuthForm.css';
-
+import { Link } from 'react-router-dom';
 function RegisterForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -76,7 +75,7 @@ function RegisterForm() {
           </button>
 
           <div className="auth-link">
-            Already have an account? <a href="/login">Sign in</a>
+            Already have an account? <Link to="/login">Sign In</Link>
           </div>
         </form>
       </div>
