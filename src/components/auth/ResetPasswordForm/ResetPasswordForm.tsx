@@ -8,6 +8,7 @@ function ResetPasswordForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // reset password validation methods
+    // send password reset to user's emai
     console.log('Reset password submitted:', { email });
     setIsSubmitted(true);
   };
