@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { registerUser } from './RegisterFormMethod';
 
 function RegisterForm() {
   const [email, setEmail] = useState('');
@@ -8,6 +9,8 @@ function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [roles, setRoles] = useState<string[]>([]);
   const [roleInput, setRoleInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const availableRoles = ['Job Seeker', 'Employer', 'Recruiter', 'HR Manager', 'Career Advisor'];
 
@@ -30,20 +33,45 @@ function RegisterForm() {
         handleAddRole(trimmedInput);
       }
     } else if (e.key === 'Backspace' && !roleInput && roles.length > 0) {
-      // Remove last role if backspace is pressed on empty input
       setRoles(roles.slice(0, -1));
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null);
 
     if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+      setError('Passwords do not match!');
       return;
     }
-    // registration validation methods
-    console.log('Registered:', { email, name, roles, password });
+
+    if (roles.length === 0) {
+      setError('Please select at least one role');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const userData = await registerUser({
+        email,
+        name,
+        password,
+        roles,
+      });
+
+      console.log('Registration successful:', userData);
+      alert('Registration successful! Please login.');
+      // Optional: Reset form or redirect
+      // navigate('/login'); // If using useNavigate from react-router-dom
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Registration failed';
+      setError(errorMessage);
+      console.error('Registration error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -55,6 +83,21 @@ function RegisterForm() {
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
+          {error && (
+            <div style={{
+              padding: '0.75rem 1rem',
+              marginBottom: '1rem',
+              backgroundColor: '#fee2e2',
+              border: '1px solid #fecaca',
+              borderRadius: '10px',
+              color: '#dc2626',
+              fontSize: '0.875rem',
+              fontWeight: '500'
+            }}>
+              {error}
+            </div>
+          )}
+
           <div className="form-group">
             <label htmlFor="email" className="form-label">
               Email Address
@@ -67,6 +110,7 @@ function RegisterForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -82,6 +126,7 @@ function RegisterForm() {
               onChange={(e) => setName(e.target.value)}
               placeholder="John Doe"
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -100,6 +145,7 @@ function RegisterForm() {
                         className="role-remove"
                         onClick={() => handleRemoveRole(role)}
                         aria-label={`Remove ${role}`}
+                        disabled={isLoading}
                       >
                         ×
                       </button>
@@ -116,6 +162,7 @@ function RegisterForm() {
                 onKeyDown={handleRoleInputKeyDown}
                 placeholder={roles.length === 0 ? "Type a role and press Enter" : "Add another role..."}
                 list="role-suggestions"
+                disabled={isLoading}
               />
               <datalist id="role-suggestions">
                 {availableRoles.map((role) => (
@@ -134,6 +181,7 @@ function RegisterForm() {
                       type="button"
                       className="role-suggestion-btn"
                       onClick={() => handleAddRole(role)}
+                      disabled={isLoading}
                     >
                       {role}
                     </button>
@@ -154,6 +202,7 @@ function RegisterForm() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Create a password"
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -169,11 +218,12 @@ function RegisterForm() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm your password"
               required
+              disabled={isLoading}
             />
           </div>
 
-          <button type="submit" className="auth-button">
-            Create Account
+          <button type="submit" className="auth-button" disabled={isLoading}>
+            {isLoading ? 'Creating Account...' : 'Create Account'}
           </button>
 
           <div className="auth-link">
