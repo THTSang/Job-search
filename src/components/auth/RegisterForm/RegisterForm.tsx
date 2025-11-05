@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from './RegisterFormMethod';
 
 function RegisterForm() {
@@ -11,7 +11,7 @@ function RegisterForm() {
   const [roleInput, setRoleInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const navigate = useNavigate();
   const availableRoles = ['Job Seeker', 'Employer', 'Recruiter', 'HR Manager', 'Career Advisor'];
 
   const handleAddRole = (role: string) => {
@@ -63,8 +63,7 @@ function RegisterForm() {
 
       console.log('Registration successful:', userData);
       alert('Registration successful! Please login.');
-      // Optional: Reset form or redirect
-      // navigate('/login'); // If using useNavigate from react-router-dom
+      navigate('/login');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Registration failed';
       setError(errorMessage);
