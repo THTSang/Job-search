@@ -21,7 +21,7 @@ export interface ErrorResponse {
 }
 export async function registerUser(formData: RegisterFormData): Promise<RegisterResponse> {
   try {
-    const response = await axios.post<RegisterResponse>('/api/users', {
+    const response = await axios.post<RegisterResponse>('http://localhost:8080/api/users', {
       ...formData,
     });
     return response.data;
