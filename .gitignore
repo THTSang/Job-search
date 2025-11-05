@@ -64,3 +64,4 @@ replay_pid*
 # Frontend modules 
 node_modules/
 AGENTS.md
+.vite
