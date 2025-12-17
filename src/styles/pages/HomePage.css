@@ -1,0 +1,157 @@
+/* Global page styling */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f9fafb;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+/* Hero/Slogan Section */
+.slogan-section {
+  padding: 80px 24px 40px;
+  text-align: center;
+  background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+}
+.title-big {
+  font-size: 48px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+.title-small {
+  font-size: 18px;
+  font-weight: 400;
+  color: #6b7280;
+  margin-bottom: 0;
+}
+/* Statistics Section */
+.status-section {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 24px;
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.current-job-counting,
+.current-company-counting,
+.current-user-counting {
+  flex: 1;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-width: 200px;
+}
+.current-job-counting:hover,
+.current-company-counting:hover,
+.current-user-counting:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+/* Icon containers for statistics */
+.current-job-counting::before,
+.current-company-counting::before,
+.current-user-counting::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  border-radius: 12px;
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.current-job-counting::before {
+  background-color: #dbeafe;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%233b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>');
+}
+.current-company-counting::before {
+  background-color: #d1fae5;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%2310b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>');
+}
+.current-user-counting::before {
+  background-color: #e9d5ff;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>');
+}
+.job-counting-title-section::before,
+.company-counting-title-section::before,
+.user-counting-title-section::before {
+  content: attr(data-count);
+  display: block;
+  font-size: 36px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+.job-counting-title-section,
+.company-counting-title-section,
+.user-counting-title-section {
+  font-size: 16px;
+  font-weight: 500;
+  color: #6b7280;
+}
+/* Featured Jobs Section */
+.flavor-job-section {
+  padding: 60px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.favor-job-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 32px;
+}
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .title-big {
+    font-size: 40px;
+  }
+  .status-section {
+    gap: 16px;
+  }
+  .favor-job-title {
+    font-size: 28px;
+  }
+}
+@media (max-width: 768px) {
+  .slogan-section {
+    padding: 60px 16px 32px;
+  }
+  .title-big {
+    font-size: 32px;
+  }
+  .title-small {
+    font-size: 16px;
+  }
+  .status-section {
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px 16px;
+  }
+  .current-job-counting,
+  .current-company-counting,
+  .current-user-counting {
+    min-width: auto;
+  }
+  .flavor-job-section {
+    padding: 40px 16px;
+  }
+  .favor-job-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+}
+@media (max-width: 480px) {
+  .title-big {
+    font-size: 28px;
+  }
+  .title-small  
+    font-size: 14px;
+  }
+}

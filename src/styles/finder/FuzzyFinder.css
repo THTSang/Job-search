@@ -1,0 +1,92 @@
+/* Main container */
+.fuzzy-finder-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+/* Job search input */
+.fuzzy-finder-search-job {
+  flex: 1;
+  padding: 14px 16px 14px 44px;
+  background-color: #f3f4f6;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>');
+  background-repeat: no-repeat;
+  background-position: 14px center;
+  background-size: 20px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #333333;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+.fuzzy-finder-search-job::placeholder {
+  color: #9ca3af;
+}
+.fuzzy-finder-search-job:focus {
+  background-color: #e5e7eb;
+}
+/* Location input */
+.fuzzy-finder-search-place {
+  flex: 0.7;
+  padding: 14px 16px 14px 44px;
+  background-color: #f3f4f6;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>');
+  background-repeat: no-repeat;
+  background-position: 14px center;
+  background-size: 20px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #333333;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+.fuzzy-finder-search-place::placeholder {
+  color: #9ca3af;
+}
+.fuzzy-finder-search-place:focus {
+  background-color: #e5e7eb;
+}
+/* Search button */
+.fuzzy-finder-search-button {
+  padding: 14px 32px;
+  background-color: #1a1d29;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+.fuzzy-finder-search-button:hover {
+  background-color: #2a2d39;
+}
+.fuzzy-finder-search-button:active {
+  background-color: #0f111a;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+  .fuzzy-finder-container {
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+  }
+  .fuzzy-finder-search-job,
+  .fuzzy-finder-search-place {
+    width: 100%;
+    flex: 1;
+  }
+  .fuzzy-finder-search-button {
+    width: 100%;
+  }
+}

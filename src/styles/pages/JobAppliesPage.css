@@ -1,0 +1,296 @@
+/* Page container */
+.job-applies-page-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+/* Hero section - Title */
+.job-applies-page-title {
+  display: block;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 24px 0;
+  font-size: 36px;
+  font-weight: 700;
+  color: #111827;
+  text-align: center;
+}
+/* Hero section - Subtitle */
+.job-applies-page-subtitle {
+  display: block;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 24px 40px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #6b7280;
+  text-align: center;
+}
+/* Statistics counter container */
+.job-applies-page-counter {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 40px;
+}
+/* Individual counter cards */
+.job-applies-page-total-counting,
+.job-applies-page-waiting-counting,
+.job-applies-page-interview-counting,
+.job-applies-page-recieved-counting {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.job-applies-page-total-counting:hover,
+.job-applies-page-waiting-counting:hover,
+.job-applies-page-interview-counting:hover,
+.job-applies-page-recieved-counting:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+/* Counter values (numbers) */
+.job-applies-page-counting-value {
+  font-size: 40px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+.job-applies-page-waiting-value {
+  font-size: 40px;
+  font-weight: 700;
+  color: #f59e0b;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+.job-applies-page-interview-value {
+  font-size: 40px;
+  font-weight: 700;
+  color: #3b82f6;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+.job-applies-page-recieved-value {
+  font-size: 40px;
+  font-weight: 700;
+  color: #10b981;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+/* Counter titles (labels) */
+.job-applies-page-counting-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+}
+/* Application list container (for future job application cards) */
+.job-applies-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+/* Individual application card */
+.job-application-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px 24px;
+  transition: box-shadow 0.2s ease;
+}
+.job-application-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+/* Application icon */
+.job-application-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #818cf8 0%, #a855f7 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.job-application-icon::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+/* Application content */
+.job-application-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.job-application-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+.job-application-company {
+  font-size: 14px;
+  font-weight: 500;
+  color: #3b82f6;
+  margin-bottom: 8px;
+}
+.job-application-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #6b7280;
+}
+.job-application-date::before {
+  content: '📅 ';
+  margin-right: 4px;
+}
+/* Status badges */
+.job-application-status {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.job-application-status.waiting {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+.job-application-status.interview {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+.job-application-status.rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+.job-application-status.accepted {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+/* Action buttons */
+.job-application-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.job-application-view-button,
+.job-application-cancel-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.job-application-view-button:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+.job-application-cancel-button {
+  color: #dc2626;
+  border-color: #fecaca;
+}
+.job-application-cancel-button:hover {
+  background-color: #fef2f2;
+  border-color: #fca5a5;
+}
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .job-applies-page-title {
+    font-size: 32px;
+    padding: 40px 20px 0;
+  }
+  .job-applies-page-subtitle {
+    padding: 10px 20px 32px;
+  }
+  .job-applies-page-counter {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 0 20px 32px;
+  }
+  .job-applies-list-container {
+    padding: 0 20px 48px;
+  }
+}
+@media (max-width: 768px) {
+  .job-applies-page-title {
+    font-size: 28px;
+    padding: 32px 16px 0;
+  }
+  .job-applies-page-subtitle {
+    font-size: 14px;
+    padding: 8px 16px 24px;
+  }
+  .job-applies-page-counter {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 16px 24px;
+  }
+  .job-applies-page-total-counting,
+  .job-applies-page-waiting-counting,
+  .job-applies-page-interview-counting,
+  .job-applies-page-recieved-counting {
+    padding: 20px 16px;
+  }
+  .job-applies-page-counting-value,
+  .job-applies-page-waiting-value,
+  .job-applies-page-interview-value,
+  .job-applies-page-recieved-value {
+    font-size: 32px;
+  }
+  .job-applies-list-container {
+    padding: 0 16px 40px;
+  }
+  .job-application-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .job-application-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+  .job-application-view-button,
+  .job-application-cancel-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+@media (max-width: 480px) {
+  .job-applies-page-title {
+    font-size: 24px;
+  }
+  .job-applies-page-counter {
+    grid-template-columns: 1fr;
+  }
+  .job-application-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

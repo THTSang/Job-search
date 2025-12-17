@@ -1,0 +1,36 @@
+.login-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #1a1d29;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.login-button:hover {
+  background-color: #2a2d39;
+}
+
+.login-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.login-text {
+  white-space: nowrap;
+}
+.login-button:hover {
+  color: #000000;
+}
+.login-icon {
+  width: 16px;
+  height: 16px;
+}
