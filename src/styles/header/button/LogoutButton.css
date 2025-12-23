@@ -12,6 +12,7 @@
   transition: color 0.2s ease;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
+
 .logout-button:hover {
   color: #d32f2f;
 }
@@ -23,8 +24,4 @@
 
 .logout-text {
   white-space: nowrap;
-}
-.logout-icon {
-  width: 16px;
-  height: 16px;
 }

@@ -32,30 +32,6 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-/* Active button state (dark background) */
-.home-button.active,
-.find-job-button.active,
-.job-applies-button.active,
-.company-follow-button.active,
-.message-button.active,
-.profile-button.active,
-.ai-evaluation-button.active {
-  background-color: #1a1d29;
-  color: #ffffff;
-  border-radius: 8px;
-  padding: 8px 16px;
-}
-
-.home-button.active:hover,
-.find-job-button.active:hover,
-.job-applies-button.active:hover,
-.company-follow-button.active:hover,
-.message-button.active:hover,
-.profile-button.active:hover,
-.ai-evaluation-button.active:hover {
-  background-color: #2a2d39;
-}
-
 /* Responsive design */
 @media (max-width: 768px) {
   .header-manger-container-quest,

@@ -1,59 +1,78 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { LoginForm } from './components/auth/LoginForm'
-import { RegisterForm } from './components/auth/RegisterForm'
-import { ResetPasswordForm } from './components/auth/ResetPasswordForm'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { HomePage, JobPage, JobAppliesPage, FollowedCompaniesPage, MessagePage, ProfilePage, AIEvaluatePage } from './pages'
-
+import { HomePage, FindJobPage, JobAppliesPage, FollowedCompaniesPage, MessagePage, AIEvaluatePage, CompanyProfilePage } from './pages'
+import { PostJobPage, PersonalProfilePage, CreateCompanyPage, EmployerCompanyProfilePage } from './pages'
+import { ResetPasswordPage, AuthPage, ApplicantsPage, DashboardPage } from './pages'
 import './index.css'
 import App from './App.tsx'
 
 const router = createBrowserRouter([
   {
-    path: 'login',
-    element: <LoginForm />
-  },
-  {
-    path: 'register',
-    element: <RegisterForm />
+    path: 'auth',
+    element: <AuthPage />
   },
   {
     path: '',
     element: <App />
   },
   {
-    path: 'resetpassword',
-    element: <ResetPasswordForm />
+    path: 'reset',
+    element: <ResetPasswordPage />
   },
   {
-    path: 'home',
+    path: 'jobseeker/home',
     element: <HomePage />
   },
   {
-    path: 'findjob',
-    element: <JobPage />
+    path: 'jobseeker/findjob',
+    element: <FindJobPage />
   },
   {
-    path: 'jobapplies',
+    path: 'jobseeker/jobapplies',
     element: <JobAppliesPage />
   },
   {
-    path: 'followcompanies',
+    path: 'jobseeker/followcompanies',
     element: <FollowedCompaniesPage />
   },
   {
-    path: 'messages',
+    path: 'jobseeker/messages',
     element: <MessagePage />
   },
   {
-    path: 'profile',
-    element: <ProfilePage />
+    path: 'jobseeker/personalprofile',
+    element: <PersonalProfilePage />
   },
   {
-    path: 'aiEvaluation',
+    path: 'jobseeker/aiEvaluation',
     element: <AIEvaluatePage />
+  },
+  {
+    path: 'employer/home',
+    element: <HomePage />
+  },
+  {
+    path: 'employer/postjob',
+    element: <PostJobPage />
+  },
+  {
+    path: 'employer/applicantmanagement',
+    element: <ApplicantsPage />
+  },
+  {
+    path: 'employer/createcompany',
+    element: <CreateCompanyPage />
+  },
+  {
+    path: 'employer/companyprofile',
+    element: <EmployerCompanyProfilePage />
+  },
+  {
+    path: 'employer/dashboard',
+    element: <DashboardPage />
   }
+
 ])
 
 createRoot(document.getElementById('root')!).render(

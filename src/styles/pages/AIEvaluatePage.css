@@ -1,1 +1,381 @@
+/* Main container */
+.ai-evaluate-page-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
 
+/* Title and subtitle */
+.ai-evaluate-page-title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  color: #111827;
+  margin: 48px 0 16px 0;
+  padding: 0 24px;
+}
+
+.ai-evaluate-page-subtitle {
+  text-align: center;
+  font-size: 18px;
+  color: #6b7280;
+  margin: 0 auto 48px;
+  max-width: 600px;
+  padding: 0 24px;
+}
+
+/* Upload section */
+.ai-evaluate-page-upload-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+.ai-evaluate-page-upload-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 16px;
+}
+
+/* Upload box */
+.ai-evaluate-page-upload-box {
+  background-color: #ffffff;
+  border: 2px dashed #d1d5db;
+  border-radius: 16px;
+  padding: 64px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  min-height: 320px;
+}
+
+.ai-evaluate-page-upload-box:hover {
+  background-color: #f9fafb;
+  border-color: #3b82f6;
+}
+
+.ai-evaluate-page-upload-box::before {
+  content: '';
+  width: 80px;
+  height: 80px;
+  background-color: #eff6ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="%233b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 40px 40px;
+  margin-bottom: 16px;
+}
+
+.ai-evaluate-page-upload-box::after {
+  content: 'Kéo thả file CV của bạn vào đây hoặc nhấp để chọn file';
+  font-size: 16px;
+  font-weight: 500;
+  color: #111827;
+  text-align: center;
+  max-width: 400px;
+}
+
+/* Upload box hint */
+.ai-evaluate-page-upload-hint {
+  font-size: 14px;
+  color: #9ca3af;
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* File info (when file is selected) */
+.ai-evaluate-page-file-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f3f4f6;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-top: 16px;
+}
+
+.ai-evaluate-page-file-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-evaluate-page-file-icon {
+  width: 44px;
+  height: 44px;
+  background-color: #3b82f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.ai-evaluate-page-file-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.ai-evaluate-page-file-size {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.ai-evaluate-page-remove-button {
+  padding: 8px 16px;
+  background-color: #ffffff;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ai-evaluate-page-remove-button:hover {
+  background-color: #fef2f2;
+  border-color: #dc2626;
+}
+
+/* Analyze button */
+.ai-evaluate-page-analyze-button {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 32px auto 0;
+  padding: 16px 32px;
+  background-color: #1a1d29;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.ai-evaluate-page-analyze-button:hover {
+  background-color: #2a2d39;
+}
+
+.ai-evaluate-page-analyze-button:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* Results section */
+.ai-evaluate-page-results {
+  max-width: 1000px;
+  margin: 48px auto 0;
+  padding: 0 24px 48px;
+}
+
+.ai-evaluate-page-results-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 24px;
+}
+
+/* Score card */
+.ai-evaluate-page-score-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 32px;
+  color: #ffffff;
+}
+
+.ai-evaluate-page-score-label {
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-bottom: 12px;
+}
+
+.ai-evaluate-page-score-value {
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.ai-evaluate-page-score-max {
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+/* Analysis sections */
+.ai-evaluate-page-analysis-section {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.ai-evaluate-page-analysis-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 20px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-evaluate-page-analysis-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-evaluate-page-analysis-icon-strength {
+  background-color: #f0fdf4;
+  color: #10b981;
+}
+
+.ai-evaluate-page-analysis-icon-improvement {
+  background-color: #fffbeb;
+  color: #f59e0b;
+}
+
+.ai-evaluate-page-analysis-icon-suggestion {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+.ai-evaluate-page-analysis-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ai-evaluate-page-analysis-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.ai-evaluate-page-analysis-item::before {
+  content: '•';
+  font-size: 20px;
+  font-weight: 700;
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .ai-evaluate-page-title {
+    font-size: 28px;
+    margin: 32px 0 12px 0;
+  }
+
+  .ai-evaluate-page-subtitle {
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
+
+  .ai-evaluate-page-upload-section {
+    padding: 0 16px 32px;
+  }
+
+  .ai-evaluate-page-upload-box {
+    padding: 48px 24px;
+    min-height: 280px;
+  }
+
+  .ai-evaluate-page-upload-box::before {
+    width: 64px;
+    height: 64px;
+    background-size: 32px 32px;
+  }
+
+  .ai-evaluate-page-upload-box::after {
+    font-size: 14px;
+  }
+
+  .ai-evaluate-page-score-card {
+    padding: 32px 24px;
+  }
+
+  .ai-evaluate-page-score-value {
+    font-size: 56px;
+  }
+
+  .ai-evaluate-page-analysis-section {
+    padding: 24px;
+  }
+
+  .ai-evaluate-page-results {
+    padding: 0 16px 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-evaluate-page-title {
+    font-size: 24px;
+  }
+
+  .ai-evaluate-page-subtitle {
+    font-size: 14px;
+  }
+
+  .ai-evaluate-page-upload-box {
+    padding: 40px 16px;
+    min-height: 240px;
+  }
+
+  .ai-evaluate-page-score-value {
+    font-size: 48px;
+  }
+
+  .ai-evaluate-page-analysis-section {
+    padding: 20px;
+  }
+
+  .ai-evaluate-page-analysis-title {
+    font-size: 18px;
+  }
+
+  .ai-evaluate-page-file-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .ai-evaluate-page-remove-button {
+    width: 100%;
+  }
+}

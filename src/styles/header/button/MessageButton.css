@@ -9,8 +9,20 @@
   transition: color 0.2s ease;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
+
 .message-button:hover {
   color: #000000;
+}
+
+.message-button-isactive {
+  background-color: #1a1d29;
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+.message-button-isactive:hover {
+  background-color: #2a2d39;
+  color: #ffffff;
 }
 
 .message-text-button {

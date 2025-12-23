@@ -1,25 +1,28 @@
 .job-applies-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  background-color: #1a1d29;
-  color: #ffffff;
+  background: none;
   border: none;
-  border-radius: 8px;
+  color: #333333;
   font-size: 15px;
   font-weight: 500;
+  padding: 8px 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
+
 .job-applies-button:hover {
-  background-color: #2a2d39;
+  color: #000000;
 }
-.job-applies-icon {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
+
+.job-applies-button-isactive {
+  background-color: #1a1d29;
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+.job-applies-button-isactive:hover {
+  background-color: #2a2d39;
+  color: #ffffff;
 }
 
 .job-applies-text {

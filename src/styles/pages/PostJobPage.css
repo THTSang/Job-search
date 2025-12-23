@@ -1,0 +1,376 @@
+/* Page Container */
+.post-job-page-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  padding: 40px 24px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Page Header */
+.post-job-page-header {
+  max-width: 1400px;
+  margin: 0 auto 40px;
+}
+
+.post-job-page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px 0;
+  display: block;
+}
+
+.post-job-page-subtitle {
+  font-size: 16px;
+  font-weight: 400;
+  color: #6b7280;
+  margin: 0;
+  display: block;
+}
+
+/* Main Content - Two Column Layout */
+.post-job-page-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Left Section - Job Posting Form */
+.post-job-form-section {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.post-job-form-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 24px 0;
+  display: block;
+}
+
+/* Form Styles */
+.post-job-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.post-job-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.post-job-form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.post-job-form-label .required {
+  color: #dc2626;
+  margin-left: 2px;
+}
+
+/* Input Fields */
+.post-job-form-input {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: #f3f4f6;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #111827;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.post-job-form-input::placeholder {
+  color: #9ca3af;
+}
+
+.post-job-form-input:focus {
+  background-color: #e5e7eb;
+  border-color: #3b82f6;
+}
+
+/* Textarea Fields */
+.post-job-form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: #f3f4f6;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #111827;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  min-height: 100px;
+}
+
+.post-job-form-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.post-job-form-textarea:focus {
+  background-color: #e5e7eb;
+  border-color: #3b82f6;
+}
+
+/* Select Dropdowns */
+.post-job-form-select {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  background-color: #f3f4f6;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 20px 20px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #111827;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.post-job-form-select:focus {
+  background-color: #e5e7eb;
+  border-color: #3b82f6;
+}
+
+.post-job-form-select option {
+  background-color: #ffffff;
+  color: #111827;
+}
+
+/* Form Row - Two Columns */
+.post-job-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Submit Button */
+.post-job-submit-button {
+  width: 100%;
+  padding: 14px 24px;
+  background-color: #1a1d29;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.post-job-submit-button:hover {
+  background-color: #2a2d39;
+}
+
+.post-job-submit-button:active {
+  background-color: #0f111a;
+}
+
+.post-job-submit-icon {
+  font-size: 20px;
+  font-weight: 300;
+}
+
+/* Right Section - Posted Jobs List */
+.posted-jobs-section {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 24px;
+}
+
+.posted-jobs-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 20px 0;
+}
+
+/* Posted Jobs List */
+.posted-jobs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Posted Job Card */
+.posted-job-card {
+  padding: 16px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.posted-job-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #d1d5db;
+}
+
+.posted-job-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.posted-job-icon {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  background-color: #dbeafe;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.posted-job-info {
+  flex: 1;
+}
+
+.posted-job-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.posted-job-location {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.posted-job-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.posted-job-status {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.posted-job-status-active {
+  background-color: #1a1d29;
+  color: #ffffff;
+}
+
+.posted-job-date {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .post-job-page-content {
+    grid-template-columns: 1fr 350px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .post-job-page-content {
+    grid-template-columns: 1fr;
+  }
+
+  .posted-jobs-section {
+    position: relative;
+    top: 0;
+  }
+
+  .post-job-form-section {
+    order: 1;
+  }
+
+  .posted-jobs-section {
+    order: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .post-job-page-container {
+    padding: 24px 16px;
+  }
+
+  .post-job-page-header {
+    margin-bottom: 24px;
+  }
+
+  .post-job-page-title {
+    font-size: 28px;
+  }
+
+  .post-job-page-subtitle {
+    font-size: 14px;
+  }
+
+  .post-job-form-section,
+  .posted-jobs-section {
+    padding: 24px 20px;
+  }
+
+  .post-job-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .post-job-page-content {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .post-job-page-title {
+    font-size: 24px;
+  }
+
+  .post-job-form-section,
+  .posted-jobs-section {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .post-job-form-title {
+    font-size: 18px;
+  }
+
+  .posted-jobs-title {
+    font-size: 16px;
+  }
+}

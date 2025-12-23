@@ -1,0 +1,142 @@
+/* Header Container - Guest */
+.header-manger-container-quest {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 64px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Header Container - Logged in User */
+.header-manger-container-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 32px;
+  height: 64px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Common Button Styles */
+.header-manger-container-quest button,
+.header-manger-container-user button {
+  padding: 8px 16px;
+  background-color: transparent;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.header-manger-container-quest button:hover,
+.header-manger-container-user button:hover {
+  background-color: #f3f4f6;
+}
+
+/* Home Button */
+.home-button {
+  margin-right: auto;
+}
+
+.home-button-isactive {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+/* Dashboard Button */
+.dashboard-button-isactive {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+/* Post Job Button */
+.post-job-button-isactive {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+/* Applicant Management Button */
+.applicant-management-button-isactive {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+/* Message Button */
+.message-button-isactive {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+/* Company Profile Button */
+.company-profile-button-isactive {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+/* Login Button */
+.login-button {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+.login-button:hover {
+  background-color: #2a2d39 !important;
+}
+
+/* Logout Button */
+.logout-button {
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+}
+
+.logout-button:hover {
+  background-color: #b91c1c !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .header-manger-container-quest,
+  .header-manger-container-user {
+    padding: 0 16px;
+    gap: 4px;
+  }
+
+  .header-manger-container-quest button,
+  .header-manger-container-user button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-manger-container-quest,
+  .header-manger-container-user {
+    height: auto;
+    min-height: 64px;
+    flex-wrap: wrap;
+    padding: 12px 16px;
+  }
+
+  .home-button {
+    margin-right: 0;
+    order: -1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-manger-container-quest button,
+  .header-manger-container-user button {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}

@@ -1,6 +1,6 @@
 import React from 'react';
-import { HeaderManager } from '../components/header/HeaderManager.tsx';
-import '../styles/pages/AIEvaluatePage.css';
+import { HeaderManager } from '../../components/header/jobseeker/HeaderManager.tsx';
+import '../../styles/pages/AIEvaluatePage.css';
 
 function AIEvaluatePage() {
   return (

@@ -27,10 +27,3 @@
 .login-text {
   white-space: nowrap;
 }
-.login-button:hover {
-  color: #000000;
-}
-.login-icon {
-  width: 16px;
-  height: 16px;
-}

@@ -1,0 +1,171 @@
+import { HeaderManager } from '../../components/header/jobseeker/HeaderManager.tsx';
+import '../../styles/pages/PersonalProfilePage.css';
+
+function PersonalProfilePage() {
+  return (
+    <div className='personal-profile-page'>
+      <HeaderManager />
+
+      <div className='personal-profile-container'>
+        {/* Page Header */}
+        <div className='personal-profile-page-title-section'>
+          <h1 className='personal-profile-page-title'>Hồ sơ cá nhân</h1>
+          <button className='personal-profile-page-title-config'>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            Chỉnh sửa hồ sơ
+          </button>
+        </div>
+
+        {/* Profile Card */}
+        <div className='personal-profile-card'>
+          <div className='personal-profile-avatar'>N</div>
+          <div className='personal-profile-info'>
+            <h2 className='personal-profile-name'>Nguyễn Văn A</h2>
+            <div className='personal-profile-job-title'>Frontend Developer</div>
+            <div className='personal-profile-contact'>
+              <span className='personal-profile-contact-item'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                </svg>
+                nguyenvana@email.com
+              </span>
+              <span className='personal-profile-contact-item'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+                0123456789
+              </span>
+              <span className='personal-profile-contact-item'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                Hà Nội, Việt Nam
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Introduction Section */}
+        <div className='personal-profile-section'>
+          <h3 className='personal-profile-section-title'>Giới thiệu bản thân</h3>
+          <p className='personal-profile-section-content'>
+            Frontend Developer với 3 năm kinh nghiệm phát triển ứng dụng web sử dụng React, TypeScript và các công nghệ hiện đại.
+            Đam mê tạo ra những giao diện người dùng đẹp mắt và hiệu quả.
+          </p>
+        </div>
+
+        {/* Experience Section */}
+        <div className='personal-profile-section'>
+          <h3 className='personal-profile-section-title'>Kinh nghiệm làm việc</h3>
+
+          <div className='personal-profile-experience-list'>
+            <div className='personal-profile-experience-item'>
+              <div className='personal-profile-experience-icon'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                </svg>
+              </div>
+              <div className='personal-profile-experience-content'>
+                <h4 className='personal-profile-experience-title'>Senior Frontend Developer</h4>
+                <div className='personal-profile-experience-company'>Tech Company A</div>
+                <div className='personal-profile-experience-period'>2023 - Hiện tại</div>
+                <p className='personal-profile-experience-description'>
+                  Phát triển và duy trì các ứng dụng web sử dụng React, TypeScript, và Next.js
+                </p>
+              </div>
+            </div>
+
+            <div className='personal-profile-experience-item'>
+              <div className='personal-profile-experience-icon'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                </svg>
+              </div>
+              <div className='personal-profile-experience-content'>
+                <h4 className='personal-profile-experience-title'>Frontend Developer</h4>
+                <div className='personal-profile-experience-company'>Startup B</div>
+                <div className='personal-profile-experience-period'>2021 - 2023</div>
+                <p className='personal-profile-experience-description'>
+                  Xây dựng giao diện người dùng cho sản phẩm SaaS
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Education and Skills Section */}
+        <div className='personal-profile-two-columns'>
+          {/* Education */}
+          <div className='personal-profile-section'>
+            <h3 className='personal-profile-section-title'>Học vấn</h3>
+            <div className='personal-profile-education'>
+              <div className='personal-profile-education-degree'>Cử nhân Công nghệ thông tin</div>
+              <div className='personal-profile-education-school'>Đại học Bách Khoa Hà Nội</div>
+              <div className='personal-profile-education-period'>2017 - 2021</div>
+            </div>
+          </div>
+
+          {/* Skills */}
+          <div className='personal-profile-section'>
+            <h3 className='personal-profile-section-title'>Kỹ năng</h3>
+            <div className='personal-profile-skills'>
+              <span className='personal-profile-skill-tag'>React</span>
+              <span className='personal-profile-skill-tag'>TypeScript</span>
+              <span className='personal-profile-skill-tag'>JavaScript</span>
+              <span className='personal-profile-skill-tag'>HTML/CSS</span>
+              <span className='personal-profile-skill-tag'>Tailwind CSS</span>
+              <span className='personal-profile-skill-tag'>Next.js</span>
+              <span className='personal-profile-skill-tag'>Redux</span>
+              <span className='personal-profile-skill-tag'>Git</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Projects Section */}
+        <div className='personal-profile-section'>
+          <h3 className='personal-profile-section-title'>Dự án</h3>
+
+          <div className='personal-profile-projects-list'>
+            <div className='personal-profile-project-item'>
+              <h4 className='personal-profile-project-title'>E-commerce Platform</h4>
+              <p className='personal-profile-project-description'>
+                Phát triển nền tảng thương mại điện tử với React và Node.js
+              </p>
+              <div className='personal-profile-project-tech'>
+                <span className='personal-profile-project-tech-label'>Công nghệ:</span>
+                <span className='personal-profile-skill-tag'>React</span>
+                <span className='personal-profile-skill-tag'>Node.js</span>
+                <span className='personal-profile-skill-tag'>MongoDB</span>
+                <span className='personal-profile-skill-tag'>Tailwind CSS</span>
+              </div>
+              <div className='personal-profile-project-year'>2023</div>
+            </div>
+
+            <div className='personal-profile-project-item'>
+              <h4 className='personal-profile-project-title'>Admin Dashboard</h4>
+              <p className='personal-profile-project-description'>
+                Xây dựng dashboard quản trị cho hệ thống CRM
+              </p>
+              <div className='personal-profile-project-tech'>
+                <span className='personal-profile-project-tech-label'>Công nghệ:</span>
+                <span className='personal-profile-skill-tag'>React</span>
+                <span className='personal-profile-skill-tag'>TypeScript</span>
+                <span className='personal-profile-skill-tag'>Chart.js</span>
+                <span className='personal-profile-skill-tag'>Material-UI</span>
+              </div>
+              <div className='personal-profile-project-year'>2022</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+export { PersonalProfilePage };

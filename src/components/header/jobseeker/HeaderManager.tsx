@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import '../../styles/header/HeaderManager.css';
-import { useCredential, useCurrentPage } from '../../store';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import '../../../styles/header/HeaderManager.css';
+import { useCredential } from '../../../store';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function HeaderManager() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isLogin, setLoginStatus } = useCredential();
-  const { currentPage, setCurrentPage } = useCurrentPage();
 
-  const handLogin = () => {
+  const handleLogin = () => {
     setLoginStatus(true);
   }
 
@@ -18,22 +18,27 @@ function HeaderManager() {
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = e.currentTarget.name;
-    navigate('/' + name);
+    navigate('/jobseeker/' + name);
   }
 
   if (isLogin === false) {
     return (
 
       <div className="header-manger-container-quest">
-        <button className="home-button"
+        <button
+          className={`home-button ${location.pathname === '/jobseeker/home' ? 'home-button-isactive' : ''}`}
           name='home'
+          onClick={handleClick}
         >
           Trang chủ
         </button>
 
         <button className="login-button"
-          name='login'
-          onClick={handleClick}
+          name='auth'
+          onClick={() => {
+            handleLogin();
+            navigate('/home');
+          }}
         >
           <span className="login-text">Đăng nhập</span>
         </button>
@@ -44,49 +49,56 @@ function HeaderManager() {
   else {
     return (
       <div className='header-manger-container-user'>
-        <button className="home-button"
+        <button
+          className={`home-button ${location.pathname === '/jobseeker/home' ? 'home-button-isactive' : ''}`}
           onClick={handleClick}
           name='home'
         >
           Trang chủ
         </button>
 
-        <button className="find-job-button"
+        <button
+          className={`find-job-button ${location.pathname === '/jobseeker/findjob' ? 'find-job-button-isactive' : ''}`}
           name='findjob'
           onClick={handleClick}
         >
           <span className="find-job-text">Tìm việc</span>
         </button>
 
-        <button className="job-applies-button"
+        <button
+          className={`job-applies-button ${location.pathname === '/jobseeker/jobapplies' ? 'job-applies-button-isactive' : ''}`}
           name='jobapplies'
           onClick={handleClick}
         >
           <span className="job-applies-text">Đơn ứng tuyển</span>
         </button>
 
-        <button className="company-follow-button"
+        <button
+          className={`company-follow-button ${location.pathname === '/jobseeker/followcompanies' ? 'company-follow-button-isactive' : ''}`}
           name='followcompanies'
           onClick={handleClick}
         >
           <span className="company-follow-text">Công ty theo dõi</span>
         </button>
 
-        <button className="message-button"
+        <button
+          className={`message-button ${location.pathname === '/jobseeker/messages' ? 'message-button-isactive' : ''}`}
           name='messages'
           onClick={handleClick}
         >
           <span className="message-text-button">Tin nhắn</span>
         </button>
 
-        <button className="profile-button"
+        <button
+          className={`profile-button ${location.pathname === '/jobseeker/profile' ? 'profile-button-isactive' : ''}`}
           name='profile'
           onClick={handleClick}
         >
           <span className="profile-text">Hồ sơ của tôi</span>
         </button>
 
-        <button className="ai-evaluation-button"
+        <button
+          className={`ai-evaluation-button ${location.pathname === '/jobseeker/aiEvaluation' ? 'ai-evaluation-button-isactive' : ''}`}
           name='aiEvaluation'
           onClick={handleClick}
         >
@@ -94,8 +106,11 @@ function HeaderManager() {
         </button>
 
         <button className="logout-button"
-          name='register'
-          onClick={handleClick}
+          name='auth'
+          onClick={() => {
+            handleLogout();
+            navigate('/auth');
+          }}
         >
           <span className="logout-text">Đăng xuất</span>
         </button>

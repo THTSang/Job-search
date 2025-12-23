@@ -9,8 +9,20 @@
   transition: color 0.2s ease;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
+
 .ai-evaluation-button:hover {
   color: #000000;
+}
+
+.ai-evaluation-button-isactive {
+  background-color: #1a1d29;
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+.ai-evaluation-button-isactive:hover {
+  background-color: #2a2d39;
+  color: #ffffff;
 }
 
 .ai-evaluation-text {

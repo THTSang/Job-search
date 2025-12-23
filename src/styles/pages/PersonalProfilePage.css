@@ -1,0 +1,357 @@
+/* Main container */
+.personal-profile-page {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.personal-profile-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* Page Header */
+.personal-profile-page-title-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.personal-profile-page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.personal-profile-page-title-config {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #1a1d29;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.personal-profile-page-title-config:hover {
+  background-color: #2a2d39;
+}
+
+/* Profile Card */
+.personal-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.personal-profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.personal-profile-info {
+  flex: 1;
+}
+
+.personal-profile-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.personal-profile-job-title {
+  font-size: 16px;
+  color: #3b82f6;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.personal-profile-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.personal-profile-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.personal-profile-contact-item svg {
+  flex-shrink: 0;
+}
+
+/* Section */
+.personal-profile-section {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.personal-profile-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 20px 0;
+}
+
+.personal-profile-section-content {
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Experience List */
+.personal-profile-experience-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.personal-profile-experience-item {
+  display: flex;
+  gap: 16px;
+}
+
+.personal-profile-experience-icon {
+  width: 44px;
+  height: 44px;
+  background-color: #eff6ff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.personal-profile-experience-content {
+  flex: 1;
+}
+
+.personal-profile-experience-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.personal-profile-experience-company {
+  font-size: 14px;
+  color: #3b82f6;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.personal-profile-experience-period {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.personal-profile-experience-description {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Two Columns Layout */
+.personal-profile-two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Education */
+.personal-profile-education {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.personal-profile-education-degree {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.personal-profile-education-school {
+  font-size: 14px;
+  color: #3b82f6;
+  font-weight: 500;
+}
+
+.personal-profile-education-period {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Skills */
+.personal-profile-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.personal-profile-skill-tag {
+  padding: 6px 14px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Projects List */
+.personal-profile-projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.personal-profile-project-item {
+  padding: 20px;
+  background-color: #f9fafb;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.personal-profile-project-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.personal-profile-project-description {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0 0 12px 0;
+}
+
+.personal-profile-project-tech {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.personal-profile-project-tech-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.personal-profile-project-year {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .personal-profile-container {
+    padding: 24px 16px;
+  }
+
+  .personal-profile-page-title-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .personal-profile-page-title {
+    font-size: 24px;
+  }
+
+  .personal-profile-page-title-config {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .personal-profile-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+  }
+
+  .personal-profile-contact {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .personal-profile-section {
+    padding: 24px;
+  }
+
+  .personal-profile-two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .personal-profile-experience-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .personal-profile-page-title {
+    font-size: 20px;
+  }
+
+  .personal-profile-name {
+    font-size: 20px;
+  }
+
+  .personal-profile-avatar {
+    width: 64px;
+    height: 64px;
+    font-size: 28px;
+  }
+
+  .personal-profile-section {
+    padding: 20px;
+  }
+
+  .personal-profile-section-title {
+    font-size: 16px;
+  }
+
+  .personal-profile-project-item {
+    padding: 16px;
+  }
+}

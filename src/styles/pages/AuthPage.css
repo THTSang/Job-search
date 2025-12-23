@@ -1,0 +1,63 @@
+.auth-form-page-section {
+  min-height: 100vh;
+  background-color: #e8eaf0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.auth-form-wrapper {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  margin-top: 40px;
+}
+
+.auth-form-header {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.auth-form-subheader {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.auth-form-toggle-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  background-color: #f5f5f5;
+  border-radius: 24px;
+  padding: 4px;
+}
+
+.auth-form-toggle-button {
+  flex: 1;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  background-color: transparent;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-form-toggle-button.active {
+  background-color: white;
+  color: #1a1a1a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form-toggle-button:hover {
+  color: #1a1a1a;
+}

@@ -12,9 +12,22 @@
   transition: color 0.2s ease;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
+
 .profile-button:hover {
   color: #000000;
 }
+
+.profile-button-isactive {
+  background-color: #1a1d29;
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+.profile-button-isactive:hover {
+  background-color: #2a2d39;
+  color: #ffffff;
+}
+
 .profile-icon {
   width: 16px;
   height: 16px;
