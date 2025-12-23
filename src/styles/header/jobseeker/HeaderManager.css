@@ -1,12 +1,12 @@
-@import './button/AIEvaluationButton.css';
-@import './button/CompanyFollowButton.css';
-@import './button/FindJobButton.css';
-@import './button/HomeButton.css';
-@import './button/JobAppliesButton.css';
-@import './button/LoginButton.css';
-@import './button/LogoutButton.css';
-@import './button/MessageButton.css';
-@import './button/ProfileButton.css';
+@import '../button/AIEvaluationButton.css';
+@import '../button/CompanyFollowButton.css';
+@import '../button/FindJobButton.css';
+@import '../button/HomeButton.css';
+@import '../button/JobAppliesButton.css';
+@import '../button/LoginButton.css';
+@import '../button/LogoutButton.css';
+@import '../button/MessageButton.css';
+@import '../button/ProfileButton.css';
 
 /* Header container - Guest/Not logged in */
 .header-manger-container-quest {

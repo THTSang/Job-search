@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../styles/header/HeaderManager.css';
+import '../../../styles/header/jobseeker/HeaderManager.css';
 import { useCredential } from '../../../store';
 import { useNavigate, useLocation } from 'react-router-dom';
 
