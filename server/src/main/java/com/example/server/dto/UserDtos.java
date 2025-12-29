@@ -14,6 +14,11 @@ public class UserDtos {
             @NotBlank @Size(min = 8, max = 100) String password,
             Set<String> roles
     ) {}
+    public record SyncUserDto(
+            @Email @NotBlank String email,
+            @NotBlank @Size(min = 3, max = 50) String name,
+            Set<String> roles
+    ) {}
     public record UpdateUserDto(
             @Size(min = 3, max = 50) String name,
             @Size(min = 8, max = 100) String password,

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import com.example.server.dto.UserDtos;
 import com.example.server.model.User;
@@ -39,11 +41,24 @@ public class UserController {
         return toDto(service.get(id));
     }
 
+    /**
+     * Endpoint này đóng vai trò là "Đăng ký" hoặc "Sync User" sau khi login Auth0.
+     * Frontend gọi endpoint này kèm Token. Backend sẽ tạo user nếu chưa tồn tại
+     * dựa trên 'sub' (Auth0 ID) trong token.
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDtos.UserDto create(@Valid @RequestBody UserDtos.CreateUserDto dto) {
         User created = service.create(dto);
         return toDto(created);
+    }
+
+    @PostMapping("/sync")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDtos.UserDto syncUser(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody UserDtos.SyncUserDto dto) {
+        String auth0Id = jwt.getSubject();
+        User syncedUser = service.syncUser(auth0Id, dto);
+        return toDto(syncedUser);
     }
 
     @PutMapping("/{id}")
