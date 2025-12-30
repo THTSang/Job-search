@@ -84,3 +84,50 @@
 .auth-form-footer a:hover {
   text-decoration: underline;
 }
+
+/* Error states */
+.auth-form-error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.auth-form-input-error {
+  border-color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.auth-form-input-error:focus {
+  border-color: #dc2626;
+}
+
+.auth-form-field-error {
+  display: block;
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+/* Disabled and loading states */
+.auth-form-submit-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.auth-form-submit-button:disabled:hover {
+  background-color: #9ca3af;
+}
+
+.auth-form-submit-button-loading {
+  position: relative;
+  color: #666;
+}
+
+.auth-form-input:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}

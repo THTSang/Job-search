@@ -18,6 +18,15 @@
   background-color: #2a2d39;
 }
 
+.login-button:focus {
+  outline: none;
+  background-color: #1a1d29;
+}
+
+.login-button:active {
+  background-color: #0f1015;
+}
+
 .login-icon {
   width: 18px;
   height: 18px;

@@ -6,7 +6,8 @@
   font-weight: 500;
   padding: 8px 16px;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
+  border-radius: 8px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -14,13 +15,33 @@
   color: #000000;
 }
 
+.find-job-button:focus {
+  outline: none;
+  background-color: #1a1d29;
+  color: #ffffff;
+}
+
+.find-job-button:active {
+  background-color: #1a1d29;
+  color: #ffffff;
+}
+
 .find-job-button-isactive {
   background-color: #1a1d29;
   color: #ffffff;
-  border-radius: 8px;
 }
 
 .find-job-button-isactive:hover {
   background-color: #2a2d39;
   color: #ffffff;
+}
+
+.find-job-button-isactive:focus {
+  outline: none;
+  background-color: #1a1d29;
+  color: #ffffff;
+}
+
+.find-job-text {
+  white-space: nowrap;
 }

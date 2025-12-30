@@ -1,17 +1,89 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/form/LoginForm.css';
-
+import { login } from '../../api';
+import { useCredential } from "../../store";
+// BUG: API LOGIN MUST NOT CONTAINT ROLE 
 function LoginForm() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { setUserProfile, setLoginStatus } = useCredential();
+  const navigate = useNavigate();
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleLogin = async () => {
+    setError('');
+
+    // Validate empty fields
+    if (!email || !password) {
+      setError('Vui lòng điền đầy đủ thông tin');
+      return;
+    }
+
+    // Validate email format
+    if (!validateEmail(email)) {
+      setError('Email không hợp lệ');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await login(email, password);
+      setUserProfile(response);
+      setLoginStatus(true);
+
+      // Navigate based on role
+      const roles = response.role;
+      if (roles.includes('jobseeker')) {
+        navigate('/jobseeker/home');
+      } else if (roles.includes('recruiter')) {
+        navigate('/employer/home');
+      } else if (roles.includes('admin')) {
+        navigate('/admin/home');
+      } else {
+        navigate('/');
+      }
+    } catch (error) {
+      setError('Đăng nhập thất bại. Vui lòng kiểm tra lại Email và mật khẩu');
+      console.error('Login error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !isLoading && email && password) {
+      handleLogin();
+    }
+  };
+
+  const isFormValid = email && password && validateEmail(email);
+
   return (
     <div className="auth-form-container">
+      {error && <div className='auth-form-error'>{error}</div>}
+
       <div className='auth-form-field'>
         <label className='auth-form-label'>Email</label>
         <input
-          className='auth-form-input'
+          className={`auth-form-input ${email && !validateEmail(email) ? 'auth-form-input-error' : ''}`}
           type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder='email@example.com'
+          disabled={isLoading}
         />
+        {email && !validateEmail(email) && (
+          <span className='auth-form-field-error'>Email khong hop le</span>
+        )}
       </div>
 
       <div className='auth-form-field'>
@@ -19,7 +91,11 @@ function LoginForm() {
         <input
           className='auth-form-input'
           type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder='*******'
+          disabled={isLoading}
         />
       </div>
 
@@ -27,14 +103,15 @@ function LoginForm() {
         <Link to="/reset">Quên mật khẩu?</Link>
       </div>
 
-      <button className='auth-form-submit-button'>
-        Đăng nhập
+      <button
+        className={`auth-form-submit-button ${isLoading ? 'auth-form-submit-button-loading' : ''}`}
+        onClick={handleLogin}
+        disabled={!isFormValid || isLoading}
+      >
+        {isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
       </button>
-
-      {/* <div className="auth-form-footer"> */}
-      {/*   Chưa có tài khoản? <Link to="/">Đăng ký ngay</Link> */}
-      {/* </div> */}
     </div>
   );
 }
+
 export { LoginForm };

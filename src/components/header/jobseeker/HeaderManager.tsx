@@ -37,7 +37,7 @@ function HeaderManager() {
           name='auth'
           onClick={() => {
             handleLogin();
-            navigate('/home');
+            navigate('/jobseeker/home');
           }}
         >
           <span className="login-text">Đăng nhập</span>
@@ -59,8 +59,8 @@ function HeaderManager() {
 
         <button
           className={`find-job-button ${location.pathname === '/jobseeker/findjob' ? 'find-job-button-isactive' : ''}`}
-          name='findjob'
           onClick={handleClick}
+          name='findjob'
         >
           <span className="find-job-text">Tìm việc</span>
         </button>
@@ -90,8 +90,8 @@ function HeaderManager() {
         </button>
 
         <button
-          className={`profile-button ${location.pathname === '/jobseeker/profile' ? 'profile-button-isactive' : ''}`}
-          name='profile'
+          className={`profile-button ${location.pathname === '/jobseeker/personalprofile' ? 'profile-button-isactive' : ''}`}
+          name='personalprofile'
           onClick={handleClick}
         >
           <span className="profile-text">Hồ sơ của tôi</span>

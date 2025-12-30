@@ -6,7 +6,8 @@
   font-weight: 500;
   padding: 8px 16px;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
+  border-radius: 8px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -14,14 +15,30 @@
   color: #000000;
 }
 
+.job-applies-button:focus {
+  outline: none;
+  background-color: #1a1d29;
+  color: #ffffff;
+}
+
+.job-applies-button:active {
+  background-color: #1a1d29;
+  color: #ffffff;
+}
+
 .job-applies-button-isactive {
   background-color: #1a1d29;
   color: #ffffff;
-  border-radius: 8px;
 }
 
 .job-applies-button-isactive:hover {
   background-color: #2a2d39;
+  color: #ffffff;
+}
+
+.job-applies-button-isactive:focus {
+  outline: none;
+  background-color: #1a1d29;
   color: #ffffff;
 }
 
