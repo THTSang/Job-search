@@ -30,6 +30,8 @@ public class Job {
     private String description;
     private String location;
     private String employmentType; // full-time, part-time, contract
+    private String experience;
+    private String salary;
     private Set<String> tags;
     private String postedByUserId;
 

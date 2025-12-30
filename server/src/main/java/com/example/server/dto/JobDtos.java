@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 public class JobDtos {
     public record JobDto(String id, String title, String company, String description, String location,
-                         String employmentType, Set<String> tags, String postedByUserId) {}
+                         String employmentType, String experience, String salary, Set<String> tags, String postedByUserId) {}
 
     public record CreateJobDto(
             @NotBlank @Size(min = 3, max = 100) String title,
@@ -15,6 +15,8 @@ public class JobDtos {
             @NotBlank String description,
             String location,
             String employmentType,
+            String experience,
+            String salary,
             Set<String> tags,
             String postedByUserId
     ) {}
@@ -25,6 +27,8 @@ public class JobDtos {
             String description,
             String location,
             String employmentType,
+            String experience,
+            String salary,
             Set<String> tags
     ) {}
 }

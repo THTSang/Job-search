@@ -38,6 +38,8 @@ public class JobService {
         j.setDescription(dto.description());
         j.setLocation(dto.location());
         j.setEmploymentType(dto.employmentType());
+        j.setExperience(StringUtils.hasText(dto.experience()) ? dto.experience() : "Thỏa thuận");
+        j.setSalary(StringUtils.hasText(dto.salary()) ? dto.salary() : "Không yêu cầu");
         j.setTags(dto.tags());
         j.setPostedByUserId(dto.postedByUserId());
         j.setCreatedAt(Instant.now());
@@ -52,6 +54,8 @@ public class JobService {
         if (StringUtils.hasText(dto.description())) j.setDescription(dto.description());
         if (dto.location() != null) j.setLocation(dto.location());
         if (dto.employmentType() != null) j.setEmploymentType(dto.employmentType());
+        if (StringUtils.hasText(dto.experience())) j.setExperience(dto.experience());
+        if (StringUtils.hasText(dto.salary())) j.setSalary(dto.salary());
         if (dto.tags() != null) j.setTags(dto.tags());
         j.setUpdatedAt(Instant.now());
         return repository.save(j);

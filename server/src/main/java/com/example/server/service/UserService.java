@@ -33,7 +33,7 @@ public class UserService {
         u.setName(dto.name());
         // In production hash password with BCrypt. Here store a simple placeholder.
         u.setPasswordHash("{noop}" + dto.password());
-        u.setRoles(dto.roles());
+        u.setRole(StringUtils.hasText(dto.role()) ? dto.role() : "USER");
         u.setCreatedAt(Instant.now());
         u.setUpdatedAt(Instant.now());
         return repository.save(u);
@@ -45,7 +45,7 @@ public class UserService {
                     // Case 1: User đã tồn tại với Auth0 ID -> Update info
                     existing.setEmail(dto.email());
                     existing.setName(dto.name());
-                    existing.setRoles(dto.roles());
+                    existing.setRole(StringUtils.hasText(dto.role()) ? dto.role() : "USER");
                     existing.setUpdatedAt(Instant.now());
                     return repository.save(existing);
                 })
@@ -54,7 +54,7 @@ public class UserService {
                             // Case 2: User chưa có Auth0 ID nhưng có email trùng -> Link account
                             existing.setAuth0Id(auth0Id);
                             existing.setName(dto.name());
-                            existing.setRoles(dto.roles());
+                            existing.setRole(StringUtils.hasText(dto.role()) ? dto.role() : "USER");
                             existing.setUpdatedAt(Instant.now());
                             return repository.save(existing);
                         })
@@ -64,7 +64,7 @@ public class UserService {
                                     .email(dto.email())
                                     .name(dto.name())
                                     .auth0Id(auth0Id)
-                                    .roles(dto.roles())
+                                    .role(StringUtils.hasText(dto.role()) ? dto.role() : "USER")
                                     .createdAt(Instant.now())
                                     .updatedAt(Instant.now())
                                     .build();
@@ -76,7 +76,7 @@ public class UserService {
         User u = get(id);
         if (StringUtils.hasText(dto.name())) u.setName(dto.name());
         if (StringUtils.hasText(dto.password())) u.setPasswordHash("{noop}" + dto.password());
-        if (dto.roles() != null) u.setRoles(dto.roles());
+        if (StringUtils.hasText(dto.role())) u.setRole(dto.role());
         u.setUpdatedAt(Instant.now());
         return repository.save(u);
     }

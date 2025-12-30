@@ -1,7 +1,6 @@
 package com.example.server.model;
 
 import java.time.Instant;
-import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -30,7 +29,7 @@ public class User {
     private String passwordHash; // store hash, not raw password
     @Indexed(unique = true)
     private String auth0Id;
-    private Set<String> roles;
+    private String role;
 
     private Instant createdAt;
     private Instant updatedAt;

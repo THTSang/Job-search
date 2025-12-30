@@ -73,6 +73,6 @@ public class UserController {
     }
 
     private UserDtos.UserDto toDto(User u) {
-        return new UserDtos.UserDto(u.getId(), u.getEmail(), u.getName(), u.getRoles());
+        return new UserDtos.UserDto(u.getId(), u.getEmail(), u.getName(), u.getRole());
     }
 }

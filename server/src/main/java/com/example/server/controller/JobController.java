@@ -51,7 +51,7 @@ public class JobController {
     private JobDtos.JobDto toDto(Job j) {
         return new JobDtos.JobDto(
                 j.getId(), j.getTitle(), j.getCompany(), j.getDescription(),
-                j.getLocation(), j.getEmploymentType(), j.getTags(), j.getPostedByUserId()
+                j.getLocation(), j.getEmploymentType(), j.getExperience(), j.getSalary(), j.getTags(), j.getPostedByUserId()
         );
     }
 }
