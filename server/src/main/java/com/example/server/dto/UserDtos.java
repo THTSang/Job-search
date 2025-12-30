@@ -1,25 +1,28 @@
 package com.example.server.dto;
 
+import com.example.server.model.UserRole;
+import com.example.server.model.UserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class UserDtos {
-    public record UserDto(String id, String email, String name, String role) {}
+    public record UserDto(String id, String email, String name, UserRole role, UserStatus status) {}
     public record CreateUserDto(
             @Email @NotBlank String email,
             @NotBlank @Size(min = 3, max = 50) String name,
             @NotBlank @Size(min = 8, max = 100) String password,
-            String role
+            UserRole role
     ) {}
     public record SyncUserDto(
             @Email @NotBlank String email,
             @NotBlank @Size(min = 3, max = 50) String name,
-            String role
+            UserRole role
     ) {}
     public record UpdateUserDto(
             @Size(min = 3, max = 50) String name,
             @Size(min = 8, max = 100) String password,
-            String role
+            UserRole role,
+            UserStatus status
     ) {}
 }

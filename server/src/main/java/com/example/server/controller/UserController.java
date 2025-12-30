@@ -3,6 +3,8 @@ package com.example.server.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,8 +34,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDtos.UserDto> list() {
-        return service.list().stream().map(this::toDto).collect(Collectors.toList());
+    public Page<UserDtos.UserDto> list(Pageable pageable) {
+        return service.list(pageable).map(this::toDto);
     }
 
     @GetMapping("/{id}")
@@ -73,6 +75,6 @@ public class UserController {
     }
 
     private UserDtos.UserDto toDto(User u) {
-        return new UserDtos.UserDto(u.getId(), u.getEmail(), u.getName(), u.getRole());
+        return new UserDtos.UserDto(u.getId(), u.getEmail(), u.getName(), u.getRole(), u.getStatus());
     }
 }

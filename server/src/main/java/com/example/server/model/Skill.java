@@ -15,22 +15,17 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@Document(collection = "users")
+@Document(collection = "skills")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Skill {
     @Id
     private String id;
 
     @Indexed(unique = true)
-    private String email;
     private String name;
-    private String passwordHash; // store hash, not raw password
-    @Indexed(unique = true)
-    private String auth0Id;
-    private UserRole role;
-    private UserStatus status;
+    private SkillCategory category;
 
     private Instant createdAt;
     private Instant updatedAt;

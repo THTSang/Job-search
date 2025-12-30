@@ -6,6 +6,8 @@ import com.example.server.service.JobService;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +23,8 @@ public class JobController {
     }
 
     @GetMapping
-    public List<JobDtos.JobDto> list(@RequestParam(name = "q", required = false) String q) {
-        return service.list(q).stream().map(this::toDto).collect(Collectors.toList());
+    public Page<JobDtos.JobDto> list(@RequestParam(name = "q", required = false) String q, Pageable pageable) {
+        return service.list(q, pageable).map(this::toDto);
     }
 
     @GetMapping("/{id}")

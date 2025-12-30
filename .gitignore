@@ -65,3 +65,5 @@ replay_pid*
 node_modules/
 AGENTS.md
 .vite
+
+.github

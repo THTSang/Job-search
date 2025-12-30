@@ -1,6 +1,7 @@
 package com.example.server.model;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -15,22 +16,23 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@Document(collection = "users")
+@Document(collection = "educations")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Education {
     @Id
     private String id;
 
-    @Indexed(unique = true)
-    private String email;
-    private String name;
-    private String passwordHash; // store hash, not raw password
-    @Indexed(unique = true)
-    private String auth0Id;
-    private UserRole role;
-    private UserStatus status;
+    @Indexed
+    private String profileId; // Foreign Key to JobSeekerProfile
+
+    private String institution;
+    private String degree;
+    private String major;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Double gpa;
 
     private Instant createdAt;
     private Instant updatedAt;

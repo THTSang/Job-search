@@ -3,6 +3,8 @@ package com.example.server.service;
 import java.time.Instant;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -20,11 +22,11 @@ public class JobService {
         this.repository = repository;
     }
 
-    public List<Job> list(String q) {
+    public Page<Job> list(String q, Pageable pageable) {
         if (StringUtils.hasText(q)) {
-            return repository.findByTitleContainingIgnoreCase(q);
+            return repository.findByTitleContainingIgnoreCase(q, pageable);
         }
-        return repository.findAll();
+        return repository.findAll(pageable);
     }
 
     public Job get(@NonNull String id) {
