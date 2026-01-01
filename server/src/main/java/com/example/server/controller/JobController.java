@@ -1,59 +1,98 @@
 package com.example.server.controller;
 
-import com.example.server.model.Job;
-import com.example.server.dto.JobDtos;
-import com.example.server.service.JobService;
-import jakarta.validation.Valid;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.example.server.dto.JobDtos.CreateJobDto;
+import com.example.server.dto.JobDtos.JobDto;
+import com.example.server.dto.JobDtos.JobSearchRequest;
+import com.example.server.dto.JobDtos.UpdateJobDto;
+import com.example.server.service.JobService;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+/**
+ * Controller quản lý các tin tuyển dụng (Jobs).
+ * Expose API theo api-spec.md.
+ */
 @RestController
 @RequestMapping("/api/jobs")
+@RequiredArgsConstructor
 public class JobController {
-    private final JobService service;
 
-    public JobController(JobService service) {
-        this.service = service;
+    // Inject Interface, không inject Implementation (JobServiceImpl) trực tiếp
+    private final JobService jobService;
+
+    /**
+     * Tìm kiếm việc làm (Public Endpoint).
+     * GET /api/jobs/search?keyword=Java&locationId=...
+     * 
+     * @param request Object chứa các tham số search (Spring tự map từ Query Params).
+     * @param pageable Thông tin phân trang (Mặc định: page 0, size 10, sort createdAt desc).
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Page<JobDto>> searchJobs(
+            JobSearchRequest request, 
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(jobService.searchJobs(request, pageable));
     }
 
-    @GetMapping
-    public Page<JobDtos.JobDto> list(@RequestParam(name = "q", required = false) String q, Pageable pageable) {
-        return service.list(q, pageable).map(this::toDto);
-    }
-
+    /**
+     * Lấy chi tiết một công việc.
+     * GET /api/jobs/{id}
+     */
     @GetMapping("/{id}")
-    public JobDtos.JobDto get(@PathVariable String id) {
-        return toDto(service.get(id));
+    public ResponseEntity<JobDto> getJobById(@PathVariable String id) {
+        return ResponseEntity.ok(jobService.getJobById(id));
     }
 
+    /**
+     * Đăng tin tuyển dụng mới (Recruiter).
+     * POST /api/jobs
+     */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public JobDtos.JobDto create(@Valid @RequestBody JobDtos.CreateJobDto dto) {
-        Job created = service.create(dto);
-        return toDto(created);
+    @PreAuthorize("hasRole('RECRUITER') or hasRole('ADMIN')")
+    public ResponseEntity<JobDto> createJob(@Valid @RequestBody CreateJobDto dto) {
+        var createdJob = jobService.createJob(dto);
+        // Trả về 201 Created
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdJob);
     }
 
+    /**
+     * Cập nhật tin tuyển dụng.
+     * PUT /api/jobs/{id}
+     */
     @PutMapping("/{id}")
-    public JobDtos.JobDto update(@PathVariable String id, @Valid @RequestBody JobDtos.UpdateJobDto dto) {
-        return toDto(service.update(id, dto));
+    @PreAuthorize("hasRole('RECRUITER') or hasRole('ADMIN')")
+    public ResponseEntity<JobDto> updateJob(
+            @PathVariable String id,
+            @Valid @RequestBody UpdateJobDto dto) {
+        return ResponseEntity.ok(jobService.updateJob(id, dto));
     }
 
+    /**
+     * Xóa tin tuyển dụng.
+     * DELETE /api/jobs/{id}
+     */
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String id) {
-        service.delete(id);
-    }
-
-    private JobDtos.JobDto toDto(Job j) {
-        return new JobDtos.JobDto(
-                j.getId(), j.getTitle(), j.getCompany(), j.getDescription(),
-                j.getLocation(), j.getEmploymentType(), j.getExperience(), j.getSalary(), j.getTags(), j.getPostedByUserId()
-        );
+    @PreAuthorize("hasRole('RECRUITER') or hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteJob(@PathVariable String id) {
+        jobService.deleteJob(id);
+        // Trả về 204 No Content
+        return ResponseEntity.noContent().build();
     }
 }

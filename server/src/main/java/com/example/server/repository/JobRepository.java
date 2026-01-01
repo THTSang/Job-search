@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.example.server.model.Job;
 
 @Repository
-public interface JobRepository extends MongoRepository<Job, String> {
+public interface JobRepository extends MongoRepository<Job, String>, JobRepositoryCustom {
     Page<Job> findByTitleContainingIgnoreCase(String title, Pageable pageable);
     List<Job> findByCompanyContainingIgnoreCase(String company);
 }

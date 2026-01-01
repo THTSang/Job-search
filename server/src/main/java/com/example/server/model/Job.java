@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -26,12 +27,30 @@ public class Job {
 
     @Indexed
     private String title;
-    private String company;
+
+    @DBRef
+    private Company company;
+
     private String description;
-    private String location;
-    private String employmentType; // full-time, part-time, contract
-    private String experience;
-    private String salary;
+
+    @DBRef
+    private Location location;
+
+    private JobType employmentType;
+
+    private Integer minExperience; // Số năm kinh nghiệm (để lọc)
+
+    private Double salaryMin;      // Mức lương thấp nhất (để lọc)
+    private Double salaryMax;      // Mức lương cao nhất (để lọc)
+
+    @DBRef
+    private Category category;     // Ngành nghề/Lĩnh vực
+
+    @Indexed
+    private JobStatus status;      // Trạng thái tin tuyển dụng
+
+    private Instant deadline;      // Hạn nộp hồ sơ
+
     private Set<String> tags;
     private String postedByUserId;
 
