@@ -10,7 +10,7 @@ public class ServerApplication {
 
 	public static void main(String[] args) {
 		// Load .env variables
-        Dotenv dotenv = Dotenv.load();
+        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
         // Apply to System properties so Spring can read them
         dotenv.entries().forEach(entry ->
