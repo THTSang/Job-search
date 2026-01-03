@@ -77,8 +77,8 @@ public class JobController {
             dto.title(),
             dto.companyId(),
             dto.description(),
-            dto.locationId(),
-            dto.categoryId(),
+            dto.location(), // Truyền object CreateLocationDto
+            dto.category(), // Truyền object CreateCategoryDto
             dto.employmentType(),
             dto.minExperience(),
             dto.salaryMin(),

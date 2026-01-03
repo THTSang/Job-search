@@ -17,6 +17,9 @@ import lombok.NoArgsConstructor;
 public class Category {
     @Id
     private String id;
-    @Indexed(unique = true)
+
     private String name;
+
+    @Indexed
+    private String jobId; // Xác định Category này thuộc về Job nào (MVP)
 }

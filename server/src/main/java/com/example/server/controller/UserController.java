@@ -24,6 +24,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import com.example.server.dto.UserDtos;
 import com.example.server.model.User;
 import com.example.server.service.UserService;
+import com.example.server.security.CustomUserDetails;
 
 import jakarta.validation.Valid;
 
@@ -49,6 +50,16 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDtos.UserDto> get(@PathVariable String id) {
         return ResponseEntity.ok(toDto(service.get(id)));
+    }
+
+    /**
+     * Lấy thông tin cá nhân của người dùng hiện tại (My Profile).
+     * Endpoint này sử dụng Token để xác định danh tính.
+     */
+    @GetMapping("/me")
+    public ResponseEntity<UserDtos.UserDto> getMe(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        // Lấy ID từ principal (được parse từ JWT trong filter) và gọi service lấy dữ liệu mới nhất
+        return ResponseEntity.ok(toDto(service.get(userDetails.getId())));
     }
 
     /**

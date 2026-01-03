@@ -42,11 +42,19 @@ public class JobSeekerProfileController {
         return ResponseEntity.ok(profileService.getAllProfiles(pageable));
     }
 
+    /**
+     * Lấy hồ sơ của chính người dùng đang đăng nhập.
+     * @param userDetails: Được inject từ Security Context (Token).
+     */
     @GetMapping("/me")
     public ResponseEntity<JobSeekerProfileDto> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok(profileService.getProfileByUserId(userDetails.getId()));
     }
 
+    /**
+     * Tạo mới hồ sơ (Composite Create).
+     * Nhận vào DTO chứa cả thông tin cơ bản + list skills (DTOs) + list experiences/educations/projects.
+     */
     @PostMapping("/me")
     public ResponseEntity<JobSeekerProfileDto> createMyProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -57,6 +65,10 @@ public class JobSeekerProfileController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProfile);
     }
 
+    /**
+     * Cập nhật hồ sơ (Composite Update).
+     * Nếu gửi list con (vd: experiences) thì sẽ thay thế toàn bộ list cũ bằng list mới (Replace Strategy).
+     */
     @PutMapping("/me")
     public ResponseEntity<JobSeekerProfileDto> updateMyProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails,

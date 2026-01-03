@@ -34,8 +34,6 @@ public class JobSeekerProfile {
     private String avatarUrl;
     private String summary;
 
-    private Set<String> skillIds; // N-N relationship reference to Skill entity
-
     private Instant createdAt;
     private Instant updatedAt;
 }

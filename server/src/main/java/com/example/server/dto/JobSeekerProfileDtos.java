@@ -132,6 +132,11 @@ public class JobSeekerProfileDtos {
         SkillCategory category
     ) {}
 
+    public record UpdateSkillDto(
+        String name,
+        SkillCategory category
+    ) {}
+
     // --- Main Profile DTOs ---
     public record JobSeekerProfileDto(
         String id,
@@ -144,7 +149,7 @@ public class JobSeekerProfileDtos {
         String summary,
 
         // Nested DTOs for full profile view
-        Set<SkillDto> skills,
+        List<SkillDto> skills,
         List<ExperienceDto> experiences,
         List<EducationDto> educations,
         List<ProjectDto> projects,
@@ -163,7 +168,7 @@ public class JobSeekerProfileDtos {
         String avatarUrl,
         String summary,
 
-        Set<String> skillIds,
+        List<CreateSkillDto> skills, // Changed from skillIds to full objects
         List<CreateExperienceDto> experiences, // DTO để tạo mới
         List<CreateEducationDto> educations,
         List<CreateProjectDto> projects
@@ -177,7 +182,7 @@ public class JobSeekerProfileDtos {
         String avatarUrl,
         String summary,
         
-        Set<String> skillIds,
+        List<UpdateSkillDto> skills, // Changed from skillIds to full objects
         List<UpdateExperienceDto> experiences,
         List<UpdateEducationDto> educations,
         List<UpdateProjectDto> projects

@@ -2,6 +2,7 @@ package com.example.server.service;
 
 import java.time.Instant;
 
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -59,11 +60,15 @@ public class JobServiceImpl implements JobService {
     @Override
     public JobDto createJob(CreateJobDto dto) {
         // Mentor Note: Logic tạo mới thường bao gồm:
-        // 1. Validate các ID tham chiếu (Company, Location...) có tồn tại không.
-        // 2. Map dữ liệu từ DTO sang Entity.
+        // 1. Validate Company tồn tại
+        if (!companyRepository.existsById(dto.companyId())) {
+            throw new NotFoundException("Company not found with id: " + dto.companyId());
+        }
         
+        // 2. Tạo và lưu Job (Parent Entity) trước để lấy ID
         Job job = Job.builder()
                 .title(dto.title())
+                .companyId(dto.companyId()) // Lưu ID thay vì Object
                 .description(dto.description())
                 .employmentType(dto.employmentType())
                 .minExperience(dto.minExperience())
@@ -77,24 +82,25 @@ public class JobServiceImpl implements JobService {
                 .updatedAt(Instant.now())
                 .build();
 
-        // Fetch Relations
-        Company company = companyRepository.findById(dto.companyId())
-                .orElseThrow(() -> new NotFoundException("Company not found with id: " + dto.companyId()));
-        job.setCompany(company);
+        Job savedJob = jobRepository.save(job);
 
-        if (StringUtils.hasText(dto.locationId())) {
-            Location location = locationRepository.findById(dto.locationId())
-                    .orElseThrow(() -> new NotFoundException("Location not found with id: " + dto.locationId()));
-            job.setLocation(location);
-        }
+        // 3. Tạo và lưu Location (Weak Entity) - Composite
+        Location location = Location.builder()
+                .city(dto.location().city())
+                .address(dto.location().address())
+                .jobId(savedJob.getId()) // Link ngược về Job
+                .build();
+        locationRepository.save(location);
 
-        if (StringUtils.hasText(dto.categoryId())) {
-            Category category = categoryRepository.findById(dto.categoryId())
-                    .orElseThrow(() -> new NotFoundException("Category not found with id: " + dto.categoryId()));
-            job.setCategory(category);
+        // 4. Tạo và lưu Category (Weak Entity) - Optional
+        if (dto.category() != null) {
+            Category category = Category.builder()
+                    .name(dto.category().name())
+                    .jobId(savedJob.getId()) // Link ngược về Job
+                    .build();
+            categoryRepository.save(category);
         }
         
-        Job savedJob = jobRepository.save(job);
         return toDto(savedJob);
     }
 
@@ -107,16 +113,33 @@ public class JobServiceImpl implements JobService {
         if (StringUtils.hasText(dto.title())) job.setTitle(dto.title());
         if (StringUtils.hasText(dto.description())) job.setDescription(dto.description());
         
-        if (StringUtils.hasText(dto.locationId())) {
-            Location location = locationRepository.findById(dto.locationId())
-                    .orElseThrow(() -> new NotFoundException("Location not found with id: " + dto.locationId()));
-            job.setLocation(location);
+        // Update Location (Composite Update)
+        if (dto.location() != null) {
+            // Tìm Location thuộc về Job này (dùng Example để không phải sửa Repository Interface)
+            Location location = locationRepository.findOne(Example.of(Location.builder().jobId(id).build()))
+                    .orElseThrow(() -> new NotFoundException("Location not found for job: " + id));
+            
+            if (StringUtils.hasText(dto.location().city())) location.setCity(dto.location().city());
+            if (StringUtils.hasText(dto.location().address())) location.setAddress(dto.location().address());
+            locationRepository.save(location);
         }
 
-        if (StringUtils.hasText(dto.categoryId())) {
-            Category category = categoryRepository.findById(dto.categoryId())
-                    .orElseThrow(() -> new NotFoundException("Category not found with id: " + dto.categoryId()));
-            job.setCategory(category);
+        // Update Category (Composite Update)
+        if (dto.category() != null) {
+            Category category = categoryRepository.findOne(Example.of(Category.builder().jobId(id).build()))
+                    .orElse(null);
+            
+            // Nếu chưa có category thì tạo mới, có rồi thì update
+            if (category != null) {
+                if (StringUtils.hasText(dto.category().name())) category.setName(dto.category().name());
+                categoryRepository.save(category);
+            } else {
+                Category newCategory = Category.builder()
+                        .name(dto.category().name())
+                        .jobId(id)
+                        .build();
+                categoryRepository.save(newCategory);
+            }
         }
 
         if (dto.employmentType() != null) job.setEmploymentType(dto.employmentType());
@@ -136,6 +159,14 @@ public class JobServiceImpl implements JobService {
         if (!jobRepository.existsById(id)) {
             throw new NotFoundException("Job not found with id: " + id);
         }
+        
+        // Cleanup Weak Entities (Orphan Removal)
+        Location location = locationRepository.findOne(Example.of(Location.builder().jobId(id).build())).orElse(null);
+        if (location != null) locationRepository.delete(location);
+
+        Category category = categoryRepository.findOne(Example.of(Category.builder().jobId(id).build())).orElse(null);
+        if (category != null) categoryRepository.delete(category);
+
         jobRepository.deleteById(id);
     }
 
@@ -147,33 +178,39 @@ public class JobServiceImpl implements JobService {
     private JobDto toDto(Job job) {
         if (job == null) return null;
 
-        // 1. Map Company (Nested DTO)
+        // 1. Fetch Company (Reference)
+        // Vì Job chỉ lưu companyId, ta cần fetch Company để lấy thông tin hiển thị
+        Company company = companyRepository.findById(job.getCompanyId()).orElse(null);
         CompanyDto companyDto = null;
-        if (job.getCompany() != null) {
+        if (company != null) {
             companyDto = new CompanyDto(
-                job.getCompany().getId(),
-                job.getCompany().getName(),
-                job.getCompany().getLogoUrl(),
-                job.getCompany().getWebsite()
+                company.getId(),
+                company.getName(),
+                company.getLogoUrl(),
+                company.getWebsite()
             );
         }
 
-        // 2. Map Location (Nested DTO)
+        // 2. Fetch Location (Weak Entity - by JobId)
+        Location location = locationRepository.findOne(Example.of(Location.builder().jobId(job.getId()).build())).orElse(null);
         LocationDto locationDto = null;
-        if (job.getLocation() != null) {
+        if (location != null) {
             locationDto = new LocationDto(
-                job.getLocation().getId(),
-                job.getLocation().getCity(),
-                job.getLocation().getAddress()
+                location.getId(),
+                location.getJobId(),
+                location.getCity(),
+                location.getAddress()
             );
         }
 
-        // 3. Map Category (Nested DTO)
+        // 3. Fetch Category (Weak Entity - by JobId)
+        Category category = categoryRepository.findOne(Example.of(Category.builder().jobId(job.getId()).build())).orElse(null);
         CategoryDto categoryDto = null;
-        if (job.getCategory() != null) {
+        if (category != null) {
             categoryDto = new CategoryDto(
-                job.getCategory().getId(),
-                job.getCategory().getName()
+                category.getId(),
+                category.getJobId(),
+                category.getName()
             );
         }
 

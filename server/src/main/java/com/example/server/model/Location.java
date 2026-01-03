@@ -17,7 +17,10 @@ import lombok.NoArgsConstructor;
 public class Location {
     @Id
     private String id;
-    @Indexed
-    private String city; // Ví dụ: Hồ Chí Minh, Hà Nội
+
+    private String city;
     private String address;
+
+    @Indexed
+    private String jobId; // Xác định Location này thuộc về Job nào
 }

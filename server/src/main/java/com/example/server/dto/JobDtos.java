@@ -14,7 +14,8 @@ import jakarta.validation.constraints.Size;
 
 public class JobDtos {
 
-    // 1. Nested DTOs (Support for JobDto)
+    // --- Company DTOs (Reference only) ---
+    // Company có lifecycle riêng, Job chỉ tham chiếu hoặc hiển thị
     public record CompanyDto(
         String id,
         String name,
@@ -22,30 +23,18 @@ public class JobDtos {
         String website
     ) {}
 
-    public record CreateCompanyDto(
-        @NotBlank(message = "Company name is required")
-        String name,
-        String logoUrl,
-        String website,
-        String description
-    ) {}
-
-    public record UpdateCompanyDto(
-        String name,
-        String logoUrl,
-        String website,
-        String description
-    ) {}
-
+    // --- Location DTOs (Weak Entity of Job) ---
     public record LocationDto(
         String id,
+        String jobId,
         String city,
         String address
     ) {}
 
     public record CreateLocationDto(
-        @NotBlank(message = "City is required")
+        @NotBlank(message = "City is required") // Validate chặt chẽ khi tạo mới
         String city,
+        @NotBlank(message = "Address is required")
         String address
     ) {}
 
@@ -54,16 +43,35 @@ public class JobDtos {
         String address
     ) {}
 
+    // --- Category DTOs (Weak Entity of Job - MVP) ---
     public record CategoryDto(
         String id,
+        String jobId,
         String name
     ) {}
 
-    public record CreateCategoryDto(@NotBlank String name) {}
-    
-    public record UpdateCategoryDto(String name) {}
+    public record CreateCategoryDto(
+        @NotBlank(message = "Category name is required")
+        String name
+    ) {}
 
-    // 2. Main Response DTO
+    public record UpdateCategoryDto(
+        String name
+    ) {}
+
+    // --- Search Request DTO ---
+    public record JobSearchRequest(
+        String keyword,
+        String locationCity,   // Tìm theo tên thành phố thay vì ID
+        String categoryName,   // Tìm theo tên ngành nghề thay vì ID
+        Double minSalary,
+        Double maxSalary,
+        Integer minExperience,
+        JobType jobType,
+        JobStatus status
+    ) {}
+
+    // --- Main Job DTOs ---
     public record JobDto(
         String id,
         String title,
@@ -83,19 +91,6 @@ public class JobDtos {
         Instant updatedAt
     ) {}
 
-    // 3. Search Request DTO (Filter Criteria)
-    public record JobSearchRequest(
-        String keyword,        // Tìm theo title hoặc description
-        String locationId,
-        String categoryId,
-        Double minSalary,      // Lọc các job có salaryMax >= minSalary
-        Double maxSalary,      // Lọc các job có salaryMin <= maxSalary
-        Integer minExperience, // Lọc các job yêu cầu kinh nghiệm <= minExperience
-        JobType jobType,
-        JobStatus status       // Thường mặc định là OPEN nếu không truyền
-    ) {}
-
-    // 4. Create Request DTO
     public record CreateJobDto(
         @NotBlank(message = "Title is required")
         @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
@@ -107,9 +102,11 @@ public class JobDtos {
         @NotBlank(message = "Description is required")
         String description,
 
-        String locationId,
-        String categoryId,
-        
+        @NotNull(message = "Location is required")
+        CreateLocationDto location, // Composite: Tạo Location cùng lúc với Job
+
+        CreateCategoryDto category, // Composite: Tạo Category cùng lúc với Job (Optional)
+
         @NotNull(message = "Employment type is required")
         JobType employmentType,
 
@@ -129,12 +126,11 @@ public class JobDtos {
         String postedByUserId
     ) {}
 
-    // 5. Update Request DTO
     public record UpdateJobDto(
         String title,
         String description,
-        String locationId,
-        String categoryId,
+        UpdateLocationDto location, // Composite Update
+        UpdateCategoryDto category, // Composite Update
         JobType employmentType,
         Integer minExperience,
         Double salaryMin,

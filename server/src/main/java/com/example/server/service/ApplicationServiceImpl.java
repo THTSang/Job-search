@@ -20,9 +20,11 @@ import com.example.server.dto.ApplicationDtos.UpdateApplicationStatusDto;
 import com.example.server.exception.NotFoundException;
 import com.example.server.model.Application;
 import com.example.server.model.ApplicationStatus;
+import com.example.server.model.Company;
 import com.example.server.model.Job;
 import com.example.server.model.JobStatus;
 import com.example.server.repository.ApplicationRepository;
+import com.example.server.repository.CompanyRepository;
 import com.example.server.repository.JobRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final JobRepository jobRepository;
+    private final CompanyRepository companyRepository;
 
     @Override
     @Transactional
@@ -145,9 +148,14 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     private ApplicationResponse toDto(Application app, Job job) {
         JobSummary jobSummary = (job != null) ? new JobSummary(job.getId(), job.getTitle()) : null;
-        CompanySummary companySummary = (job != null && job.getCompany() != null) 
-                ? new CompanySummary(job.getCompany().getName(), job.getCompany().getLogoUrl()) 
-                : null;
+        
+        CompanySummary companySummary = null;
+        if (job != null && job.getCompanyId() != null) {
+            Company company = companyRepository.findById(job.getCompanyId()).orElse(null);
+            if (company != null) {
+                companySummary = new CompanySummary(company.getName(), company.getLogoUrl());
+            }
+        }
 
         return new ApplicationResponse(app.getId(), jobSummary, companySummary, app.getStatus(), app.getAppliedAt());
     }

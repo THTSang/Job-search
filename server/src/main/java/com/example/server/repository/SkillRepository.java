@@ -1,5 +1,6 @@
 package com.example.server.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -11,4 +12,5 @@ import com.example.server.model.Skill;
 public interface SkillRepository extends MongoRepository<Skill, String> {
     Optional<Skill> findByName(String name);
     boolean existsByName(String name);
+    List<Skill> findByProfileId(String profileId);
 }

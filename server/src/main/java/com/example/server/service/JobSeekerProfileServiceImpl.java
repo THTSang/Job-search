@@ -2,7 +2,7 @@ package com.example.server.service;
 
 import java.time.Instant;
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -16,6 +16,7 @@ import com.example.server.model.Education;
 import com.example.server.model.Experience;
 import com.example.server.model.JobSeekerProfile;
 import com.example.server.model.Project;
+import com.example.server.model.Skill;
 import com.example.server.repository.EducationRepository;
 import com.example.server.repository.ExperienceRepository;
 import com.example.server.repository.JobSeekerProfileRepository;
@@ -63,7 +64,6 @@ public class JobSeekerProfileServiceImpl implements JobSeekerProfileService {
                 .address(dto.address())
                 .avatarUrl(dto.avatarUrl())
                 .summary(dto.summary())
-                .skillIds(dto.skillIds())
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
@@ -72,6 +72,13 @@ public class JobSeekerProfileServiceImpl implements JobSeekerProfileService {
 
         // 2. Tạo các Sub-entities (Composite Create)
         // Mentor Note: Chúng ta lưu các entity con ngay sau khi có ID của profile cha.
+        if (dto.skills() != null) {
+            var skills = dto.skills().stream()
+                    .map(s -> mapToSkill(s, savedProfile.getId()))
+                    .toList();
+            skillRepository.saveAll(skills);
+        }
+
         if (dto.experiences() != null) {
             var experiences = dto.experiences().stream()
                     .map(e -> mapToExperience(e, savedProfile.getId()))
@@ -108,7 +115,6 @@ public class JobSeekerProfileServiceImpl implements JobSeekerProfileService {
         if (StringUtils.hasText(dto.address())) profile.setAddress(dto.address());
         if (StringUtils.hasText(dto.avatarUrl())) profile.setAvatarUrl(dto.avatarUrl());
         if (StringUtils.hasText(dto.summary())) profile.setSummary(dto.summary());
-        if (dto.skillIds() != null) profile.setSkillIds(dto.skillIds());
 
         profile.setUpdatedAt(Instant.now());
         var savedProfile = profileRepository.save(profile);
@@ -117,6 +123,16 @@ public class JobSeekerProfileServiceImpl implements JobSeekerProfileService {
         // Mentor Note: Nếu client gửi danh sách mới, ta xóa hết cái cũ và lưu cái mới.
         // Đây là cách đơn giản nhất để đồng bộ danh sách con trong NoSQL/Document model khi không dùng Embedded Document.
         
+        if (dto.skills() != null) {
+            var oldSkills = skillRepository.findByProfileId(savedProfile.getId());
+            skillRepository.deleteAll(oldSkills);
+
+            var newSkills = dto.skills().stream()
+                    .map(s -> mapToSkill(s, savedProfile.getId()))
+                    .toList();
+            skillRepository.saveAll(newSkills);
+        }
+
         if (dto.experiences() != null) {
             var oldExps = experienceRepository.findByProfileId(savedProfile.getId());
             experienceRepository.deleteAll(oldExps);
@@ -156,12 +172,9 @@ public class JobSeekerProfileServiceImpl implements JobSeekerProfileService {
      */
     private JobSeekerProfileDtos.JobSeekerProfileDto toDto(JobSeekerProfile profile) {
         // Fetch Skills
-        Set<JobSeekerProfileDtos.SkillDto> skills = Collections.emptySet();
-        if (profile.getSkillIds() != null && !profile.getSkillIds().isEmpty()) {
-            skills = skillRepository.findAllById(profile.getSkillIds()).stream()
-                    .map(s -> new JobSeekerProfileDtos.SkillDto(s.getId(), s.getName(), s.getCategory()))
-                    .collect(Collectors.toSet());
-        }
+        List<JobSeekerProfileDtos.SkillDto> skills = skillRepository.findByProfileId(profile.getId()).stream()
+                .map(s -> new JobSeekerProfileDtos.SkillDto(s.getId(), s.getName(), s.getCategory()))
+                .toList();
 
         // Fetch Sub-entities
         var experiences = experienceRepository.findByProfileId(profile.getId()).stream()
@@ -202,6 +215,14 @@ public class JobSeekerProfileServiceImpl implements JobSeekerProfileService {
 
     // --- Mappers for Sub-entities (Create & Update) ---
     // Mentor Note: Sử dụng nested DTOs từ JobSeekerProfileDtos
+
+    private Skill mapToSkill(JobSeekerProfileDtos.CreateSkillDto dto, String profileId) {
+        return Skill.builder().profileId(profileId).name(dto.name()).category(dto.category()).createdAt(Instant.now()).updatedAt(Instant.now()).build();
+    }
+
+    private Skill mapToSkill(JobSeekerProfileDtos.UpdateSkillDto dto, String profileId) {
+        return Skill.builder().profileId(profileId).name(dto.name()).category(dto.category()).createdAt(Instant.now()).updatedAt(Instant.now()).build();
+    }
 
     private Experience mapToExperience(JobSeekerProfileDtos.CreateExperienceDto dto, String profileId) {
         return Experience.builder().profileId(profileId).companyName(dto.companyName()).position(dto.position()).startDate(dto.startDate()).endDate(dto.endDate()).isCurrent(dto.isCurrent()).description(dto.description()).createdAt(Instant.now()).updatedAt(Instant.now()).build();
