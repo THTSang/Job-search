@@ -27,8 +27,6 @@ public class User {
     private String email;
     private String name;
     private String passwordHash; // store hash, not raw password
-    @Indexed(unique = true)
-    private String auth0Id;
     private UserRole role;
     private UserStatus status;
 

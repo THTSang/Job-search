@@ -7,6 +7,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import com.example.server.dto.JobDtos.CreateJobDto;
 import com.example.server.dto.JobDtos.JobDto;
 import com.example.server.dto.JobDtos.JobSearchRequest;
 import com.example.server.dto.JobDtos.UpdateJobDto;
+import com.example.server.security.CustomUserDetails;
 import com.example.server.service.JobService;
 
 import jakarta.validation.Valid;
@@ -66,8 +68,27 @@ public class JobController {
      */
     @PostMapping
     @PreAuthorize("hasRole('RECRUITER') or hasRole('ADMIN')")
-    public ResponseEntity<JobDto> createJob(@Valid @RequestBody CreateJobDto dto) {
-        var createdJob = jobService.createJob(dto);
+    public ResponseEntity<JobDto> createJob(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @Valid @RequestBody CreateJobDto dto) {
+        
+        // Reconstruct DTO để đảm bảo postedByUserId là người đang login
+        CreateJobDto secureDto = new CreateJobDto(
+            dto.title(),
+            dto.companyId(),
+            dto.description(),
+            dto.locationId(),
+            dto.categoryId(),
+            dto.employmentType(),
+            dto.minExperience(),
+            dto.salaryMin(),
+            dto.salaryMax(),
+            dto.deadline(),
+            dto.tags(),
+            userDetails.getId() // Force set userId from token
+        );
+        
+        var createdJob = jobService.createJob(secureDto);
         // Trả về 201 Created
         return ResponseEntity.status(HttpStatus.CREATED).body(createdJob);
     }

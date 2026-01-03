@@ -58,18 +58,18 @@ public class ApplicationServiceImpl implements ApplicationService {
             throw new IllegalArgumentException("You have already applied for this job.");
         }
 
-        // 4. Map DTO -> Entity (Manual Mapping)
-        var application = new Application();
-        application.setJobId(request.jobId());
-        application.setJobSeekerId(jobSeekerId);
-        application.setResumeUrl(request.resumeUrl());
-        // application.setCoverLetter(request.coverLetter()); // Uncomment nếu Entity có field này
-        
-        // Set default status & timestamps
-        application.setStatus(ApplicationStatus.PENDING);
+        // 4. Map DTO -> Entity (Builder Pattern)
+        // Mentor Note: Sử dụng Builder Pattern để code gọn gàng và immutable khi khởi tạo.
         var now = Instant.now();
-        application.setAppliedAt(now);
-        application.setUpdatedAt(now);
+        var application = Application.builder()
+                .jobId(request.jobId())
+                .jobSeekerId(jobSeekerId)
+                .resumeUrl(request.resumeUrl())
+                // .coverLetter(request.coverLetter()) // Uncomment nếu Entity có field này
+                .status(ApplicationStatus.PENDING)
+                .appliedAt(now)
+                .updatedAt(now)
+                .build();
 
         // 5. Save to DB
         var savedApp = applicationRepository.save(application);

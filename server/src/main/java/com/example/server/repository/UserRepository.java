@@ -10,5 +10,4 @@ import com.example.server.model.User;
 @Repository
 public interface UserRepository extends MongoRepository<User, String>, UserRepositoryCustom {
     Optional<User> findByEmail(String email);
-    Optional<User> findByAuth0Id(String auth0Id);
 }

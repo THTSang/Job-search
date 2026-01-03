@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +20,7 @@ import com.example.server.dto.ApplicationDtos.ApplicationResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationStats;
 import com.example.server.dto.ApplicationDtos.ApplyRequest;
 import com.example.server.dto.ApplicationDtos.UpdateApplicationStatusDto;
+import com.example.server.security.CustomUserDetails;
 import com.example.server.service.ApplicationService;
 
 import jakarta.validation.Valid;
@@ -41,15 +41,15 @@ public class ApplicationController {
      * Ứng viên nộp đơn vào một công việc.
      * POST /api/applications
      * 
-     * @param jwt Token xác thực của người dùng.
+     * @param userDetails Thông tin user từ Security Context.
      * @param request DTO chứa jobId và resumeUrl.
      */
     @PostMapping
     public ResponseEntity<ApplicationResponse> apply(
-            @AuthenticationPrincipal Jwt jwt,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody ApplyRequest request) {
-        // Lấy ID người dùng từ 'sub' claim trong JWT (Auth0 ID)
-        String jobSeekerId = jwt.getSubject();
+        // Lấy ID người dùng từ CustomUserDetails
+        String jobSeekerId = userDetails.getId();
         
         var response = applicationService.create(jobSeekerId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -61,9 +61,9 @@ public class ApplicationController {
      */
     @GetMapping("/me")
     public ResponseEntity<Page<ApplicationResponse>> getMyApplications(
-            @AuthenticationPrincipal Jwt jwt,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @PageableDefault(size = 10, sort = "appliedAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        String jobSeekerId = jwt.getSubject();
+        String jobSeekerId = userDetails.getId();
         return ResponseEntity.ok(applicationService.getMyApplications(jobSeekerId, pageable));
     }
 
@@ -72,8 +72,8 @@ public class ApplicationController {
      * GET /api/applications/me/stats
      */
     @GetMapping("/me/stats")
-    public ResponseEntity<ApplicationStats> getMyStats(@AuthenticationPrincipal Jwt jwt) {
-        String jobSeekerId = jwt.getSubject();
+    public ResponseEntity<ApplicationStats> getMyStats(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        String jobSeekerId = userDetails.getId();
         return ResponseEntity.ok(applicationService.getMyStats(jobSeekerId));
     }
 
@@ -82,13 +82,13 @@ public class ApplicationController {
      * PUT /api/applications/{id}/status
      */
     @PutMapping("/{id}/status")
-    @PreAuthorize("hasAuthority('SCOPE_read:messages') or hasRole('RECRUITER')") // Ví dụ về check quyền
+    @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<ApplicationResponse> updateStatus(
             @PathVariable String id,
-            @AuthenticationPrincipal Jwt jwt,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody UpdateApplicationStatusDto dto) {
         // Recruiter ID lấy từ token để validate quyền sở hữu Job trong Service
-        String recruiterId = jwt.getSubject();
+        String recruiterId = userDetails.getId();
         var response = applicationService.updateStatus(id, recruiterId, dto);
         return ResponseEntity.ok(response);
     }

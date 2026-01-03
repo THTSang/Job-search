@@ -15,11 +15,6 @@ public class UserDtos {
             @NotBlank @Size(min = 8, max = 100) String password,
             UserRole role
     ) {}
-    public record SyncUserDto(
-            @Email @NotBlank String email,
-            @NotBlank @Size(min = 3, max = 50) String name,
-            UserRole role
-    ) {}
     public record UpdateUserDto(
             @Size(min = 3, max = 50) String name,
             @Size(min = 8, max = 100) String password,
@@ -29,4 +24,11 @@ public class UserDtos {
     public record ChangeStatusDto(
             @NotNull UserStatus status
     ) {}
+    
+    public record LoginRequest(
+            @Email @NotBlank String email,
+            @NotBlank String password
+    ) {}
+
+    public record LoginResponse(String token) {}
 }

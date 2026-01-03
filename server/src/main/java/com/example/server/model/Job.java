@@ -36,6 +36,7 @@ public class Job {
     @DBRef
     private Location location;
 
+    // Ensure JobType is accessible or imported if it's in a different package, though usually same package is fine.
     private JobType employmentType;
 
     private Integer minExperience; // Số năm kinh nghiệm (để lọc)

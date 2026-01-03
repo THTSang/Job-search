@@ -19,6 +19,7 @@ import com.example.server.model.Category;
 import com.example.server.model.Company;
 import com.example.server.model.Job;
 import com.example.server.model.JobStatus;
+import com.example.server.model.JobType;
 import com.example.server.model.Location;
 import com.example.server.repository.CategoryRepository;
 import com.example.server.repository.CompanyRepository;
@@ -61,21 +62,20 @@ public class JobServiceImpl implements JobService {
         // 1. Validate các ID tham chiếu (Company, Location...) có tồn tại không.
         // 2. Map dữ liệu từ DTO sang Entity.
         
-        Job job = new Job();
-        job.setTitle(dto.title());
-        job.setDescription(dto.description());
-        job.setEmploymentType(dto.employmentType());
-        job.setMinExperience(dto.minExperience());
-        job.setSalaryMin(dto.salaryMin());
-        job.setSalaryMax(dto.salaryMax());
-        job.setDeadline(dto.deadline());
-        job.setTags(dto.tags());
-        job.setPostedByUserId(dto.postedByUserId());
-        
-        // Set default values
-        job.setStatus(JobStatus.OPEN);
-        job.setCreatedAt(Instant.now());
-        job.setUpdatedAt(Instant.now());
+        Job job = Job.builder()
+                .title(dto.title())
+                .description(dto.description())
+                .employmentType(dto.employmentType())
+                .minExperience(dto.minExperience())
+                .salaryMin(dto.salaryMin())
+                .salaryMax(dto.salaryMax())
+                .deadline(dto.deadline())
+                .tags(dto.tags())
+                .postedByUserId(dto.postedByUserId())
+                .status(JobStatus.OPEN)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
 
         // Fetch Relations
         Company company = companyRepository.findById(dto.companyId())

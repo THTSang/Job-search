@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.server.dto.JobSeekerProfileDtos.CreateJobSeekerProfileDto;
 import com.example.server.dto.JobSeekerProfileDtos.JobSeekerProfileDto;
 import com.example.server.dto.JobSeekerProfileDtos.UpdateJobSeekerProfileDto;
+import com.example.server.security.CustomUserDetails;
 import com.example.server.service.JobSeekerProfileService;
 
 import jakarta.validation.Valid;
@@ -43,24 +43,24 @@ public class JobSeekerProfileController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<JobSeekerProfileDto> getMyProfile(@AuthenticationPrincipal Jwt jwt) {
-        return ResponseEntity.ok(profileService.getProfileByUserId(jwt.getSubject()));
+    public ResponseEntity<JobSeekerProfileDto> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(profileService.getProfileByUserId(userDetails.getId()));
     }
 
     @PostMapping("/me")
     public ResponseEntity<JobSeekerProfileDto> createMyProfile(
-            @AuthenticationPrincipal Jwt jwt,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody CreateJobSeekerProfileDto dto) {
         
         // Mentor Note: Sử dụng ResponseEntity để trả về 201 Created rõ ràng
-        JobSeekerProfileDto createdProfile = profileService.createProfile(jwt.getSubject(), dto);
+        JobSeekerProfileDto createdProfile = profileService.createProfile(userDetails.getId(), dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProfile);
     }
 
     @PutMapping("/me")
     public ResponseEntity<JobSeekerProfileDto> updateMyProfile(
-            @AuthenticationPrincipal Jwt jwt,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody UpdateJobSeekerProfileDto dto) {
-        return ResponseEntity.ok(profileService.updateProfile(jwt.getSubject(), dto));
+        return ResponseEntity.ok(profileService.updateProfile(userDetails.getId(), dto));
     }
 }

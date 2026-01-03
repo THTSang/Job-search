@@ -4,6 +4,7 @@ import java.time.Instant;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -14,6 +15,7 @@ import com.example.server.model.User;
 import com.example.server.model.UserRole;
 import com.example.server.model.UserStatus;
 import com.example.server.repository.UserRepository;
+import com.example.server.security.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +25,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 
     @Override
     public Page<User> list(Pageable pageable) {
@@ -36,50 +39,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserDtos.CreateUserDto dto) {
-        User u = new User();
-        u.setEmail(dto.email());
-        u.setName(dto.name());
-        u.setPasswordHash(passwordEncoder.encode(dto.password()));
-        u.setRole(dto.role() != null ? dto.role() : UserRole.USER);
-        u.setStatus(UserStatus.ACTIVE);
-        u.setCreatedAt(Instant.now());
-        u.setUpdatedAt(Instant.now());
+        // Check email duplicate để báo lỗi rõ ràng
+        if (repository.findByEmail(dto.email()).isPresent()) {
+            throw new IllegalArgumentException("Email already exists: " + dto.email());
+        }
+
+        // Mentor Note: Sử dụng Builder Pattern theo chuẩn dev-workflow.md
+        User u = User.builder()
+                .email(dto.email())
+                .name(dto.name())
+                .passwordHash(passwordEncoder.encode(dto.password()))
+                .role(dto.role() != null ? dto.role() : UserRole.USER)
+                .status(UserStatus.ACTIVE)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
         return repository.save(u);
     }
 
     @Override
-    public User syncUser(String auth0Id, UserDtos.SyncUserDto dto) {
-        return repository.findByAuth0Id(auth0Id)
-                .map(existing -> {
-                    // Case 1: User đã tồn tại với Auth0 ID -> Update info
-                    existing.setEmail(dto.email());
-                    existing.setName(dto.name());
-                    existing.setRole(dto.role() != null ? dto.role() : UserRole.USER);
-                    existing.setUpdatedAt(Instant.now());
-                    return repository.save(existing);
-                })
-                .orElseGet(() -> repository.findByEmail(dto.email())
-                        .map(existing -> {
-                            // Case 2: User chưa có Auth0 ID nhưng có email trùng -> Link account
-                            existing.setAuth0Id(auth0Id);
-                            existing.setName(dto.name());
-                            existing.setRole(dto.role() != null ? dto.role() : UserRole.USER);
-                            existing.setUpdatedAt(Instant.now());
-                            return repository.save(existing);
-                        })
-                        .orElseGet(() -> {
-                            // Case 3: User mới hoàn toàn -> Create new
-                            User newUser = User.builder()
-                                    .email(dto.email())
-                                    .name(dto.name())
-                                    .auth0Id(auth0Id)
-                                    .role(dto.role() != null ? dto.role() : UserRole.USER)
-                                    .status(UserStatus.ACTIVE)
-                                    .createdAt(Instant.now())
-                                    .updatedAt(Instant.now())
-                                    .build();
-                            return repository.save(newUser);
-                        }));
+    public String login(String email, String password) {
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+        
+        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
+            throw new BadCredentialsException("Invalid email or password");
+        }
+        
+        return jwtUtils.generateToken(user);
     }
 
     @Override
