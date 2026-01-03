@@ -41,15 +41,19 @@ public class JobController {
 
     /**
      * Tìm kiếm việc làm (Public Endpoint).
-     * GET /api/jobs/search?keyword=Java&locationId=...
+     * GET /api/jobs/search
      * 
-     * @param request Object chứa các tham số search (Spring tự map từ Query Params).
+     * @param request Object chứa các tham số search (Query Params).
      * @param pageable Thông tin phân trang (Mặc định: page 0, size 10, sort createdAt desc).
      */
     @GetMapping("/search")
     public ResponseEntity<Page<JobDto>> searchJobs(
             JobSearchRequest request, 
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        // Xử lý trường hợp request null (phòng ngừa, dù Spring thường tự khởi tạo object rỗng với GET)
+        if (request == null) {
+            request = new JobSearchRequest(null, null, null, null, null, null, null, null);
+        }
         return ResponseEntity.ok(jobService.searchJobs(request, pageable));
     }
 
