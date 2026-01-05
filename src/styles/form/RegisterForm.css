@@ -125,3 +125,51 @@
 .auth-form-submit-button:disabled:hover {
   background-color: #d1d5db;
 }
+
+/* Success notification */
+.auth-form-success {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.auth-form-success-icon {
+  width: 60px;
+  height: 60px;
+  background-color: #10b981;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0 auto 20px;
+  animation: successPop 0.3s ease-out;
+}
+
+@keyframes successPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.auth-form-success-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.auth-form-success-message {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}

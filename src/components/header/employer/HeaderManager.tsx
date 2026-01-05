@@ -5,13 +5,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 function HeaderManager() {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const { token } = useUserCredential()
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = e.currentTarget.name;
     navigate('/employer/' + name);
   }
 
-  if (false === false) {
+  if (token === '') {
     return (
       <div className="header-manger-container-quest">
         <button
@@ -25,7 +25,7 @@ function HeaderManager() {
         <button className="login-button"
           name='auth'
           onClick={() => {
-            navigate('/home');
+            navigate('/auth');
           }}
         >
           <span className="login-text">Đăng nhập</span>

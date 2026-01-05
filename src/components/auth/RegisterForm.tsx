@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import '../../styles/form/RegisterForm.css';
 import { useNavigate } from "react-router-dom";
+import { SignUpAPI } from '../../api';
 
-// BUG: REGENERATE WHEN SAME EMAIL ADDRESS  
 function RegisterForm() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('jobseeker');
+  const [role, setRole] = useState('USER');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async () => {
@@ -34,14 +35,15 @@ function RegisterForm() {
     }
 
     try {
-      // Navigate based on role
-      if (role === 'jobseeker') {
-        navigate('/jobseeker/home');
-      } else if (role === 'recruiter') {
-        navigate('/employer/home');
-      } else {
-        navigate('/admin/home');
-      }
+      await SignUpAPI(email, username, password, role);
+
+      // Show success notification
+      setSuccess(true);
+
+      // Redirect to login page after 3 seconds
+      setTimeout(() => {
+        navigate('/auth');
+      }, 3000);
     } catch (err) {
       setError('Đăng ký thất bại. Vui lòng thử lại.');
       console.error("Register error:", err);
@@ -50,101 +52,115 @@ function RegisterForm() {
 
   return (
     <div className="auth-form-container">
-      {error && <div className='auth-form-error'>{error}</div>}
-
-      <div className='auth-form-field'>
-        <label className='auth-form-label'>Họ tên</label>
-        <input
-          className='auth-form-input'
-          type="text"
-          placeholder='Nguyễn Văn A'
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-
-      <div className='auth-form-field'>
-        <label className='auth-form-label'>Email</label>
-        <input
-          className='auth-form-input'
-          type="email"
-          placeholder='email@example.com'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-
-      <div className='auth-form-field'>
-        <label className='auth-form-label'>Mật khẩu</label>
-        <input
-          className='auth-form-input'
-          type="password"
-          placeholder='*******'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-
-      <div className='auth-form-field'>
-        <label className='auth-form-label'>Xác nhận mật khẩu</label>
-        <input
-          className={`auth-form-input ${confirmPassword && password !== confirmPassword ? 'auth-form-input-error' : ''}`}
-          type="password"
-          placeholder='*******'
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-        {confirmPassword && password !== confirmPassword && (
-          <span className='auth-form-field-error'>Mật khẩu không khớp</span>
-        )}
-      </div>
-
-      <div className='auth-form-account-type'>
-        <label className='auth-form-account-type-label'>Loại tài khoản</label>
-        <div className='auth-form-radio-group'>
-          <div className='auth-form-radio-option'>
-            <input
-              type="radio"
-              id="jobseeker"
-              name="accountType"
-              value="jobseeker"
-              checked={role === 'jobseeker'}
-              onChange={(e) => setRole(e.target.value)}
-            />
-            <label htmlFor="jobseeker">Người tìm việc</label>
-          </div>
-          <div className='auth-form-radio-option'>
-            <input
-              type="radio"
-              id="recruiter"
-              name="accountType"
-              value="recruiter"
-              checked={role === 'recruiter'}
-              onChange={(e) => setRole(e.target.value)}
-            />
-            <label htmlFor="recruiter">Nhà tuyển dụng</label>
-          </div>
-          <div className='auth-form-radio-option'>
-            <input
-              type="radio"
-              id="admin"
-              name="accountType"
-              value="admin"
-              checked={role === 'admin'}
-              onChange={(e) => setRole(e.target.value)}
-            />
-            <label htmlFor="admin">Quản trị viên (Admin)</label>
+      {success && (
+        <div className='auth-form-success'>
+          <div className='auth-form-success-icon'>✓</div>
+          <div className='auth-form-success-title'>Đăng ký thành công!</div>
+          <div className='auth-form-success-message'>
+            Tài khoản của bạn đã được tạo. Hãy đăng nhập lại.
           </div>
         </div>
-      </div>
+      )}
 
-      <button
-        className='auth-form-submit-button'
-        onClick={handleRegister}
-        disabled={!email || !username || !password || !confirmPassword || password !== confirmPassword}
-      >
-        Đăng ký
-      </button>
+      {!success && (
+        <>
+          {error && <div className='auth-form-error'>{error}</div>}
+
+          <div className='auth-form-field'>
+            <label className='auth-form-label'>Họ tên</label>
+            <input
+              className='auth-form-input'
+              type="text"
+              placeholder='Nguyễn Văn A'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+
+          <div className='auth-form-field'>
+            <label className='auth-form-label'>Email</label>
+            <input
+              className='auth-form-input'
+              type="email"
+              placeholder='email@example.com'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className='auth-form-field'>
+            <label className='auth-form-label'>Mật khẩu</label>
+            <input
+              className='auth-form-input'
+              type="password"
+              placeholder='*******'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <div className='auth-form-field'>
+            <label className='auth-form-label'>Xác nhận mật khẩu</label>
+            <input
+              className={`auth-form-input ${confirmPassword && password !== confirmPassword ? 'auth-form-input-error' : ''}`}
+              type="password"
+              placeholder='*******'
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            {confirmPassword && password !== confirmPassword && (
+              <span className='auth-form-field-error'>Mật khẩu không khớp</span>
+            )}
+          </div>
+
+          <div className='auth-form-account-type'>
+            <label className='auth-form-account-type-label'>Loại tài khoản</label>
+            <div className='auth-form-radio-group'>
+              <div className='auth-form-radio-option'>
+                <input
+                  type="radio"
+                  id="jobseeker"
+                  name="accountType"
+                  value="USER"
+                  checked={role === 'USER'}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+                <label htmlFor="jobseeker">Người tìm việc</label>
+              </div>
+              <div className='auth-form-radio-option'>
+                <input
+                  type="radio"
+                  id="recruiter"
+                  name="accountType"
+                  value="RECRUITER"
+                  checked={role === 'RECRUITER'}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+                <label htmlFor="recruiter">Nhà tuyển dụng</label>
+              </div>
+              <div className='auth-form-radio-option'>
+                <input
+                  type="radio"
+                  id="admin"
+                  name="accountType"
+                  value="ADMIN"
+                  checked={role === 'ADMIN'}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+                <label htmlFor="admin">Quản trị viên (Admin)</label>
+              </div>
+            </div>
+          </div>
+
+          <button
+            className='auth-form-submit-button'
+            onClick={handleRegister}
+            disabled={!email || !username || !password || !confirmPassword || password !== confirmPassword}
+          >
+            Đăng ký
+          </button>
+        </>
+      )}
     </div>
   );
 }

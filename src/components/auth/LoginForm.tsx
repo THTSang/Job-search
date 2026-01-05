@@ -43,7 +43,7 @@ function LoginForm() {
       const roles = userBasicInfo.role;
       if (roles === 'USER') {
         navigate('/jobseeker/home');
-      } else if (roles === 'EMPLOYER') {
+      } else if (roles === 'RECRUITER') {
         navigate('/employer/home');
       } else if (roles === 'ADMIN') {
         navigate('/admin/home');
