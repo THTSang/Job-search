@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { HeaderManager } from '../../components/header/jobseeker/HeaderManager';
 import { LoginForm, RegisterForm } from '../../components/auth';
 import '../../styles/pages/AuthPage.css';

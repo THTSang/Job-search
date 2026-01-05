@@ -55,12 +55,16 @@ function CompanyProfilePage() {
 
   const handlePutAndPostCompany = async (profileToSave: CompanyProfileInterface) => {
     try {
-
-      if (companyProfile.id === null) await PostCompanyAPI(emptyCompanyProfile);
-      else
-        await PutCompanyAPI(profileToSave, companyProfile.id);
+      let savedProfile: CompanyProfileInterface | null;
+      if (companyProfile.id === null) {
+        savedProfile = await PostCompanyAPI(profileToSave);
+      } else {
+        savedProfile = await PutCompanyAPI(profileToSave);
+      }
+      return savedProfile;
     } catch (error) {
-      console.error('Error: Post company', error)
+      console.error('Error: Saving company', error);
+      throw error;
     }
   }
   const handleOpenEditModal = () => {
@@ -97,11 +101,15 @@ function CompanyProfilePage() {
         recruiterId: userBasicInfo?.id || ''
       };
 
-      await handlePutAndPostCompany(profileToSave);
-      console.log('Saving company profile:', profileToSave);
+      const savedProfile = await handlePutAndPostCompany(profileToSave);
+      console.log('Saved company profile:', savedProfile);
 
-      // Update local state
-      setCompanyProfile(profileToSave);
+      // Update local state with the saved profile (includes server-generated ID)
+      if (savedProfile) {
+        setCompanyProfile(savedProfile);
+      } else {
+        setCompanyProfile(profileToSave);
+      }
       setSuccess('Cập nhật thông tin công ty thành công!');
 
       // Close modal after a short delay

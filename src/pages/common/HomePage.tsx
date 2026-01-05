@@ -71,10 +71,11 @@ function HomePage() {
                 title={job.title}
                 company={job.company}
                 location={job.location}
-                salary="Thỏa thuận"
-                experience="Không yêu cầu"
+                salaryMin={job.salaryMin}
+                salaryMax={job.salaryMax}
+                minExperience={job.minExperience}
                 type={job.employmentType}
-                postedDate={new Date().toISOString().split('T')[0]}
+                postedDate={job.createdAt ? job.createdAt.split('T')[0] : undefined}
               />
             ))
           ) : (

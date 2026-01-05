@@ -29,15 +29,81 @@ export interface AuthToken {
 
 
 // NOTE: JOB INFORMATION
+
+// Employment type enum
+export type EmploymentType = 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | 'INTERNSHIP' | 'REMOTE';
+
+// Job status enum
+export type JobStatus = 'OPEN' | 'CLOSED' | 'DRAFT' | 'EXPIRED';
+
+// Nested: Company info within job
+export interface JobCompany {
+  id: string | null;
+  name: string;
+  logoUrl: string;
+  website: string;
+}
+
+// Nested: Location info within job
+export interface JobLocation {
+  id: string | null;
+  jobId: string;
+  city: string;
+  address: string;
+}
+
+// Nested: Category info within job
+export interface JobCategory {
+  id: string | null;
+  jobId: string;
+  name: string;
+}
+
+// Job location for POST request (without id and jobId)
+export interface JobLocationRequest {
+  city: string;
+  address: string;
+}
+
+// Job category for POST request (without id and jobId)
+export interface JobCategoryRequest {
+  name: string;
+}
+
+// POST request body for creating a job
+export interface JobPostRequest {
+  title: string;
+  companyId: string;
+  description: string;
+  location: JobLocationRequest;
+  category: JobCategoryRequest;
+  employmentType: EmploymentType;
+  minExperience: number;
+  salaryMin: number;
+  salaryMax: number;
+  deadline: string;           // ISO datetime format
+  tags: string[];
+  postedByUserId: string;
+}
+
+// Main Job interface (API response)
 export interface JobData {
-  id: string | null,
-  title: string,
-  company: string,
-  description: string,
-  location: string,
-  employmentType: string,
-  tags: string[],
-  postByUserId: string
+  id: string | null;
+  title: string;
+  company: JobCompany;
+  description: string;
+  location: JobLocation;
+  employmentType: EmploymentType;
+  minExperience: number;
+  salaryMin: number;
+  salaryMax: number;
+  category: JobCategory;
+  status: JobStatus;
+  deadline: string;           // ISO datetime format
+  tags: string[];
+  postedByUserId: string;
+  createdAt: string | null;   // ISO datetime format
+  updatedAt: string | null;   // ISO datetime format
 }
 
 // NOTE: USER PROFILE

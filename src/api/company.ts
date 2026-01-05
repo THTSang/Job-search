@@ -26,7 +26,7 @@ export const PostCompanyAPI = async (req: CompanyProfileInterface): Promise<Comp
 }
 
 // NOTE: PUT COMPANY API
-export const PutCompanyAPI = async (req: CompanyProfileInterface, id: string | null): Promise<CompanyProfileInterface | null> => {
+export const PutCompanyAPI = async (req: CompanyProfileInterface): Promise<CompanyProfileInterface | null> => {
   try {
     const { id, recruiterId, isVerified, createdAt, updatedAt, ...companyProfileRequest }: CompanyProfileInterface = req;
     const response = await axiosInstance.put<CompanyProfileInterface>(`/companies/${id}`, companyProfileRequest)

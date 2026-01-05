@@ -1,4 +1,4 @@
-import React from 'react';
+
 import '../../styles/finder/ExtractFinder.css';
 
 function ExtractFinder() {

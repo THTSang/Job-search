@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { HomePage, FindJobPage, JobAppliesPage, FollowedCompaniesPage, MessagePage, AIEvaluatePage, CompanyProfilePage } from './pages'
+import { HomePage, FindJobPage, JobAppliesPage, FollowedCompaniesPage, MessagePage, AIEvaluatePage } from './pages'
 import { PostJobPage, PersonalProfilePage, CreateCompanyPage, EmployerCompanyProfilePage } from './pages'
 import { ResetPasswordPage, AuthPage, ApplicantsPage, DashboardPage } from './pages'
 import './index.css'

@@ -1,4 +1,4 @@
-import React from "react";
+
 import { HeaderManager } from "./components/header/jobseeker/HeaderManager";
 import { useCurrentPage } from './store';
 import { useNavigate } from 'react-router-dom';

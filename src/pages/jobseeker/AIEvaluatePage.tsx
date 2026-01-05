@@ -1,4 +1,3 @@
-import React from 'react';
 import { HeaderManager } from '../../components/header/jobseeker/HeaderManager.tsx';
 import '../../styles/pages/AIEvaluatePage.css';
 

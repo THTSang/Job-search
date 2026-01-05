@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { HeaderManager } from '../../components/header/jobseeker/HeaderManager';
 import { ResetPasswordForm } from '../../components/auth/ResetPasswordForm';
 

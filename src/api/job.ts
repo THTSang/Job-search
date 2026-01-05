@@ -1,11 +1,11 @@
 import { axiosInstance } from './config';
-import type { JobData } from '../utils/interface';
+import type { JobData, JobPostRequest } from '../utils/interface';
 
 
 // NOTE: POST JOB API
-export const PostJobAPI = async (JobInfo: JobData): Promise<JobData[] | null> => {
+export const PostJobAPI = async (jobInfo: JobPostRequest): Promise<JobData | null> => {
   try {
-    const response = await axiosInstance.post('/jobs', JobInfo);
+    const response = await axiosInstance.post('/jobs', jobInfo);
     return response.data;
   } catch (error) {
     console.error('Error: Post job API', error);
