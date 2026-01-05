@@ -298,6 +298,159 @@
   color: #9ca3af;
 }
 
+/* Company name in posted job card */
+.posted-job-company {
+  font-size: 14px;
+  color: #374151;
+  margin: 0 0 2px 0;
+  font-weight: 500;
+}
+
+/* Error and Success Messages */
+.post-job-error {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  border: 1px solid #fecaca;
+}
+
+.post-job-success {
+  background-color: #f0fdf4;
+  color: #16a34a;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  border: 1px solid #bbf7d0;
+}
+
+/* Tags Input Container */
+.post-job-tags-input-container {
+  display: flex;
+  gap: 8px;
+}
+
+.post-job-tags-input {
+  flex: 1;
+}
+
+.post-job-add-tag-button {
+  padding: 12px 20px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.post-job-add-tag-button:hover {
+  background-color: #2563eb;
+}
+
+/* Tags List */
+.post-job-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.post-job-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: #e0e7ff;
+  color: #4338ca;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.post-job-tag-remove {
+  background: none;
+  border: none;
+  color: #6366f1;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.post-job-tag-remove:hover {
+  color: #dc2626;
+}
+
+/* Posted Jobs Tags */
+.posted-job-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.posted-job-tag-chip {
+  padding: 4px 10px;
+  background-color: #e0e7ff;
+  color: #4338ca;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.posted-job-tag-more {
+  padding: 4px 10px;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Empty State for Posted Jobs */
+.posted-jobs-empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.posted-jobs-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.posted-jobs-empty-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 8px 0;
+}
+
+.posted-jobs-empty-subtext {
+  font-size: 14px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* Disabled Submit Button */
+.post-job-submit-button:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.post-job-submit-button:disabled:hover {
+  background-color: #d1d5db;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .post-job-page-content {

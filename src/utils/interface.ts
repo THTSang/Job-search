@@ -92,3 +92,21 @@ export interface UserProfileInterface {
   createdAt: string | null;  // ISO datetime format
   updatedAt: string | null;  // ISO datetime format
 }
+
+// NOTE: COMPANY INTERFACE
+export interface CompanyProfileInterface {
+  id: string | null,
+  name: string,
+  industry: string,
+  scale: string,
+  address: string,
+  logoUrl: string,
+  contactEmail: string,
+  phone: string,
+  website: string,
+  description: string,
+  recruiterId: string,
+  isVerified: boolean,
+  createdAt: string | null,
+  updatedAt: string | null
+}
