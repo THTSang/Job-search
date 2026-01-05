@@ -1,7 +1,9 @@
 import { axiosInstance } from './config';
-import type { AuthResponse } from "../utils/interface";
+import type { AuthResponse, AuthToken } from "../utils/interface";
 
-const register = async (email: string, username: string, password: string, role: string): Promise<AuthResponse> => {
+// NOTE: SignUpAPI
+
+export const SignUpAPI = async (email: string, username: string, password: string, role: string): Promise<AuthResponse> => {
   try {
     const response = await axiosInstance.post('/users', {
       email: email,
@@ -11,22 +13,35 @@ const register = async (email: string, username: string, password: string, role:
     });
     return response.data;
   } catch (error) {
-    console.error("Registration failed:", error);
+    console.error("Registration API failed:", error);
     throw error;
   }
 };
 
-const login = async (email: string, password: string): Promise<AuthResponse> => {
+// NOTE: Login API
+export const LoginAPI = async (email: string, password: string): Promise<AuthToken> => {
   try {
-    const response = await axiosInstance.post('/users/sync', {
+    const response = await axiosInstance.post('/users/login', {
       email: email,
       password: password
     });
     return response.data;
   } catch (error) {
-    console.error('Login failed:', error);
+    console.error('Login API failed:', error);
     throw error;
   }
 };
 
-export { register, login };
+// NOTE: BasicUserInfoAPI
+export const BasicUserInfoAPI = async (): Promise<AuthResponse> => {
+  try {
+    const response = await axiosInstance.get('/users/me');
+    return response.data;
+
+  } catch (error) {
+    console.error('Error getting basic user info', error);
+    throw error;
+  }
+}
+
+

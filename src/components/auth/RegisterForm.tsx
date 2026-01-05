@@ -1,12 +1,9 @@
 import { useState } from 'react';
 import '../../styles/form/RegisterForm.css';
-import { register } from '../../api';
 import { useNavigate } from "react-router-dom";
-import { useCredential } from "../../store";
 
 // BUG: REGENERATE WHEN SAME EMAIL ADDRESS  
 function RegisterForm() {
-  const { setUserProfile } = useCredential();
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -37,8 +34,6 @@ function RegisterForm() {
     }
 
     try {
-      const profile = await register(email, username, password, role);
-      setUserProfile(profile);
       // Navigate based on role
       if (role === 'jobseeker') {
         navigate('/jobseeker/home');

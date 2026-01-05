@@ -2,12 +2,12 @@ import { useLocation } from 'react-router-dom';
 import { HeaderManager as JobSeekerHeader } from '../../components/header/jobseeker/HeaderManager.tsx';
 import { HeaderManager as EmployerHeader } from '../../components/header/employer/HeaderManager.tsx';
 import { ExtractFinder } from '../../components/finder/ExtractFinder.tsx';
-import { useCredential } from '../../store.ts';
+import { useUserCredential } from '../../store.ts';
 
 // import '../../styles/pages/FindJobPage.css';
 
 function FindJobPage() {
-  // const { userId } = useCredential();
+  // const { userId } = useUserCredential();
   const location = useLocation();
   const isEmployer = location.pathname.startsWith('/employer');
   const HeaderManager = isEmployer ? EmployerHeader : JobSeekerHeader;

@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/form/LoginForm.css';
-import { login } from '../../api';
-import { useCredential } from "../../store";
-// BUG: API LOGIN MUST NOT CONTAINT ROLE 
+import { LoginAPI, BasicUserInfoAPI } from '../../api';
+import { useUserCredential } from '../../store';
+
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { setUserProfile, setLoginStatus } = useCredential();
+  const { setToken, setUserBasicInfo } = useUserCredential();
   const navigate = useNavigate();
 
   const validateEmail = (email: string): boolean => {
@@ -35,22 +35,24 @@ function LoginForm() {
     setIsLoading(true);
 
     try {
-      const response = await login(email, password);
-      setUserProfile(response);
-      setLoginStatus(true);
-
+      const response = await LoginAPI(email, password);
+      setToken(response.token);
+      const userBasicInfo = await BasicUserInfoAPI();
+      setUserBasicInfo(userBasicInfo);
       // Navigate based on role
-      const roles = response.role;
-      if (roles.includes('jobseeker')) {
+      const roles = userBasicInfo.role;
+      if (roles === 'USER') {
         navigate('/jobseeker/home');
-      } else if (roles.includes('recruiter')) {
+      } else if (roles === 'EMPLOYER') {
         navigate('/employer/home');
-      } else if (roles.includes('admin')) {
+      } else if (roles === 'ADMIN') {
         navigate('/admin/home');
       } else {
         navigate('/');
       }
     } catch (error) {
+      console.log(email);
+      console.log(password);
       setError('Đăng nhập thất bại. Vui lòng kiểm tra lại Email và mật khẩu');
       console.error('Login error:', error);
     } finally {

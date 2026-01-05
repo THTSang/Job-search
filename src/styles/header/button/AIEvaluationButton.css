@@ -27,8 +27,8 @@
 }
 
 .ai-evaluation-button-isactive {
-  background-color: #1a1d29;
-  color: #ffffff;
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
 }
 
 .ai-evaluation-button-isactive:hover {

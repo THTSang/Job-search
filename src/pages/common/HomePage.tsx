@@ -5,7 +5,7 @@ import { HeaderManager as EmployerHeader } from '../../components/header/employe
 import { FuzzyFinder } from "../../components/finder/FuzzyFinder.tsx";
 import { JobCard } from "../../components/job/jobCard.tsx";
 import '../../styles/pages/jobseeker/HomePage.css';
-import { jobList } from "../../api";
+import { GetJobListAPI } from "../../api";
 import type { JobData } from '../../utils/interface';
 
 function HomePage() {
@@ -18,7 +18,7 @@ function HomePage() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await jobList();
+        const response = await GetJobListAPI();
         setJobArray(response || []);
         console.log('Jobs fetched:', response);
       } catch (error) {

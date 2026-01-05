@@ -27,8 +27,8 @@
 }
 
 .find-job-button-isactive {
-  background-color: #1a1d29;
-  color: #ffffff;
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
 }
 
 .find-job-button-isactive:hover {

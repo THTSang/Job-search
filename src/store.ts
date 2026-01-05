@@ -1,5 +1,7 @@
 import { create } from 'zustand';
-import type { CurrentPage, Credential, AuthResponse } from './utils/interface';
+import { persist } from 'zustand/middleware';
+import type { CurrentPage, UserCredential, AuthResponse } from './utils/interface';
+
 
 export const useCurrentPage = create<CurrentPage>((set) => ({
   currentPage: '',
@@ -8,16 +10,20 @@ export const useCurrentPage = create<CurrentPage>((set) => ({
   })),
 }));
 
-export const useCredential = create<Credential>((set) => ({
-  isLogin: true,
-  userProfile: null,
-  setLoginStatus: (status: boolean) => set(() => ({
-    isLogin: status,
-  })),
-
-  setUserProfile: (info: AuthResponse | null) => set(() => ({
-    userProfile: info,
-  })),
-}));
-
-
+export const useUserCredential = create<UserCredential>()(
+  persist(
+    (set) => ({
+      token: '',
+      userBasicInfo: null,
+      setToken: (newToken: string) => set(() => ({
+        token: newToken
+      })),
+      setUserBasicInfo: (userInfo: AuthResponse) => set(() => ({
+        userBasicInfo: userInfo
+      }))
+    }),
+    {
+      name: 'user-credential', // Key name in localStorage
+    }
+  )
+);

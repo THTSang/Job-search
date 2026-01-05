@@ -1,27 +1,19 @@
 import React from 'react';
 import '../../../styles/header/jobseeker/HeaderManager.css';
-import { useCredential } from '../../../store';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useUserCredential } from '../../../store'
 
 function HeaderManager() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLogin, setLoginStatus } = useCredential();
-
-  const handleLogin = () => {
-    setLoginStatus(true);
-  }
-
-  const handleLogout = () => {
-    setLoginStatus(false);
-  }
+  const { token } = useUserCredential();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = e.currentTarget.name;
     navigate('/jobseeker/' + name);
   }
 
-  if (isLogin === false) {
+  if (token === '') {
     return (
 
       <div className="header-manger-container-quest">
@@ -36,8 +28,7 @@ function HeaderManager() {
         <button className="login-button"
           name='auth'
           onClick={() => {
-            handleLogin();
-            navigate('/jobseeker/home');
+            navigate('/auth');
           }}
         >
           <span className="login-text">Đăng nhập</span>
@@ -108,7 +99,6 @@ function HeaderManager() {
         <button className="logout-button"
           name='auth'
           onClick={() => {
-            handleLogout();
             navigate('/auth');
           }}
         >

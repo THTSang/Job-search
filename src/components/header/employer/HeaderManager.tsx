@@ -1,26 +1,17 @@
 import '../../../styles/header/employer/HeaderManager.css';
-import { useCredential } from '../../../store';
+import { useUserCredential } from '../../../store';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function HeaderManager() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLogin, setLoginStatus } = useCredential();
-
-  const handleLogin = () => {
-    setLoginStatus(true);
-  }
-
-  const handleLogout = () => {
-    setLoginStatus(false);
-  }
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = e.currentTarget.name;
     navigate('/employer/' + name);
   }
 
-  if (isLogin === false) {
+  if (false === false) {
     return (
       <div className="header-manger-container-quest">
         <button
@@ -34,7 +25,6 @@ function HeaderManager() {
         <button className="login-button"
           name='auth'
           onClick={() => {
-            handleLogin();
             navigate('/home');
           }}
         >
@@ -97,7 +87,6 @@ function HeaderManager() {
         <button className="logout-button"
           name='auth'
           onClick={() => {
-            handleLogout();
             navigate('/auth');
           }}
         >
