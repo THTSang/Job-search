@@ -58,6 +58,11 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public Page<JobDto> getJobsByCompanyId(String companyId, Pageable pageable) {
+        return jobRepository.findByCompanyId(companyId, pageable).map(this::toDto);
+    }
+
+    @Override
     public JobDto createJob(CreateJobDto dto) {
         // Mentor Note: Logic tạo mới thường bao gồm:
         // 1. Validate Company tồn tại

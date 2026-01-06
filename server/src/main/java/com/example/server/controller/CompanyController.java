@@ -1,5 +1,9 @@
 package com.example.server.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.server.dto.CompanyDtos.CompanyResponse;
 import com.example.server.dto.CompanyDtos.CreateCompanyRequest;
 import com.example.server.dto.CompanyDtos.UpdateCompanyRequest;
+import com.example.server.dto.JobDtos.JobDto;
 import com.example.server.security.CustomUserDetails;
 import com.example.server.service.CompanyService;
+import com.example.server.service.JobService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class CompanyController {
 
     private final CompanyService companyService;
+    private final JobService jobService;
 
     @PostMapping
     @PreAuthorize("hasRole('RECRUITER')")
@@ -47,6 +54,13 @@ public class CompanyController {
     @GetMapping("/{id}")
     public ResponseEntity<CompanyResponse> get(@PathVariable String id) {
         return ResponseEntity.ok(companyService.getCompanyById(id));
+    }
+
+    @GetMapping("/{id}/jobs")
+    public ResponseEntity<Page<JobDto>> getJobsByCompany(
+            @PathVariable String id,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(jobService.getJobsByCompanyId(id, pageable));
     }
 
     @PutMapping("/{id}")

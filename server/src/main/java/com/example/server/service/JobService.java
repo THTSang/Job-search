@@ -14,4 +14,5 @@ public interface JobService {
     JobDto createJob(CreateJobDto createDto);
     JobDto updateJob(String id, UpdateJobDto updateDto);
     void deleteJob(String id);
+    Page<JobDto> getJobsByCompanyId(String companyId, Pageable pageable);
 }

@@ -12,6 +12,5 @@ import com.example.server.model.Job;
 @Repository
 public interface JobRepository extends MongoRepository<Job, String>, JobRepositoryCustom {
     Page<Job> findByTitleContainingIgnoreCase(String title, Pageable pageable);
-    // Thay thế tìm theo tên (không còn field company) bằng tìm theo ID chính xác
-    List<Job> findByCompanyId(String companyId);
+    Page<Job> findByCompanyId(String companyId, Pageable pageable);
 }
