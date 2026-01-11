@@ -484,6 +484,7 @@ function PostJobPage() {
             totalPages={totalPages}
             totalElements={totalElements}
             onPageChange={handlePageChange}
+            onJobDeleted={() => fetchJobs(currentPage)}
           />
         </div>
       </div>

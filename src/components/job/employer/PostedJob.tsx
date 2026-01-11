@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import type { JobData, EmploymentType } from '../../../utils/interface';
+import { DeleteJobAPI } from '../../../api';
 import '../../../styles/job/PostedJob.css';
 
 interface PostedJobProps {
@@ -9,6 +11,7 @@ interface PostedJobProps {
   totalPages: number;
   totalElements: number;
   onPageChange: (page: number) => void;
+  onJobDeleted?: () => void;
 }
 
 function PostedJob({
@@ -17,8 +20,32 @@ function PostedJob({
   currentPage,
   totalPages,
   totalElements,
-  onPageChange
+  onPageChange,
+  onJobDeleted
 }: PostedJobProps) {
+  const [deletingJobId, setDeletingJobId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  const handleDeleteClick = (jobId: string) => {
+    setConfirmDeleteId(jobId);
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmDeleteId(null);
+  };
+
+  const handleConfirmDelete = async (jobId: string) => {
+    setDeletingJobId(jobId);
+    try {
+      await DeleteJobAPI(jobId);
+      setConfirmDeleteId(null);
+      onJobDeleted?.();
+    } catch (error) {
+      console.error('Error deleting job:', error);
+    } finally {
+      setDeletingJobId(null);
+    }
+  };
 
   const formatSalary = (amount: number) => {
     if (amount >= 1000000) {
@@ -181,12 +208,47 @@ function PostedJob({
                   <span className={`posted-job-status posted-job-status-${job.status.toLowerCase()}`}>
                     {job.status === 'OPEN' ? 'Đang mở' : job.status === 'DRAFT' ? 'Bản nháp' : 'Đã đóng'}
                   </span>
-                  {job.deadline && (
-                    <span className='posted-job-deadline'>
-                      Hạn: {new Date(job.deadline).toLocaleDateString('vi-VN')}
-                    </span>
-                  )}
+                  <div className='posted-job-actions'>
+                    {job.deadline && (
+                      <span className='posted-job-deadline'>
+                        Hạn: {new Date(job.deadline).toLocaleDateString('vi-VN')}
+                      </span>
+                    )}
+                    {job.id && (
+                      <button
+                        className='posted-job-delete-btn'
+                        onClick={() => handleDeleteClick(job.id!)}
+                        disabled={deletingJobId === job.id}
+                        title='Xóa tin'
+                      >
+                        {deletingJobId === job.id ? '...' : '×'}
+                      </button>
+                    )}
+                  </div>
                 </div>
+
+                {/* Delete Confirmation */}
+                {job.id && confirmDeleteId === job.id && (
+                  <div className='posted-job-confirm-delete'>
+                    <p>Bạn có chắc muốn xóa tin này?</p>
+                    <div className='posted-job-confirm-actions'>
+                      <button
+                        className='posted-job-confirm-cancel'
+                        onClick={handleCancelDelete}
+                        disabled={deletingJobId === job.id}
+                      >
+                        Hủy
+                      </button>
+                      <button
+                        className='posted-job-confirm-delete-btn'
+                        onClick={() => handleConfirmDelete(job.id!)}
+                        disabled={deletingJobId === job.id}
+                      >
+                        {deletingJobId === job.id ? 'Đang xóa...' : 'Xóa'}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
 

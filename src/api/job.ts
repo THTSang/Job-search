@@ -94,3 +94,14 @@ export const GetJobByIdAPI = async (jobId: string): Promise<JobData | null> => {
     throw error;
   }
 };
+
+// NOTE: DELETE JOB API
+// Endpoint: DELETE /api/jobs/{id}
+export const DeleteJobAPI = async (jobId: string): Promise<void> => {
+  try {
+    await axiosInstance.delete(`/jobs/${jobId}`);
+  } catch (error) {
+    console.error('Error: Deleting job', error);
+    throw error;
+  }
+};
