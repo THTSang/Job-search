@@ -33,12 +33,19 @@
   gap: 16px;
   margin-bottom: 20px;
 }
-/* Row 3: Experience + Button */
+/* Row 3: Experience + Buttons */
 .extract-finder-box-row-3 {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 16px;
   align-items: end;
+}
+
+/* Buttons container */
+.extract-finder-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 /* Common styles for all field sections */
 .extract-finder-find-work-section,
@@ -197,6 +204,41 @@
 .extract-finder-search-button:active {
   background-color: #0f111a;
 }
+
+/* Clear filters button */
+.extract-finder-clear-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  height: 48px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.extract-finder-clear-button:hover {
+  background-color: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+.extract-finder-clear-button:active {
+  background-color: #d1d5db;
+}
+
+/* Disabled state for search button */
+.extract-finder-search-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .etract-finder-box-row-2 {
@@ -219,7 +261,12 @@
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  .extract-finder-search-button {
+  .extract-finder-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  .extract-finder-search-button,
+  .extract-finder-clear-button {
     width: 100%;
   }
 }
