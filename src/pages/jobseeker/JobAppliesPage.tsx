@@ -87,9 +87,9 @@ function JobAppliesPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Navigate to job detail
+  // Navigate to job detail with applied state
   const handleViewJob = (jobId: string) => {
-    navigate(`/jobseeker/job/${jobId}`);
+    navigate(`/jobseeker/job/${jobId}`, { state: { hasApplied: true } });
   };
 
   // Format date

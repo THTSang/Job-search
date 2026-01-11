@@ -23,6 +23,10 @@ type ModalTab = 'basic' | 'experience' | 'education' | 'skills' | 'projects';
 function PersonalProfilePage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<ModalTab>('basic');
+  
+  // Loading states
+  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Main profile state using UserProfileInterface
   const [profileData, setProfileData] = useState<UserProfileInterface>({
@@ -71,10 +75,13 @@ function PersonalProfilePage() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
+        setIsPageLoading(true);
         const response = await GetProfileAPI()
         setProfileData(response);
       } catch (error) {
         console.error('Error: Fetching user profile failed', error);
+      } finally {
+        setIsPageLoading(false);
       }
     }
     fetchUserProfile()
@@ -107,23 +114,31 @@ function PersonalProfilePage() {
   };
 
   const handleCloseEditModal = () => {
+    if (isSaving) return; // Prevent closing while saving
     setIsEditModalOpen(false);
     setNewSkillName('');
     setNewSkillCategory('TECHNICAL');
   };
 
-  const handleSaveProfile = () => {
-    const updatedProfile = {
-      ...profileData,
-      ...editBasicInfo,
-      experiences: editExperiences,
-      educations: editEducations,
-      skills: editSkills,
-      projects: editProjects
-    };
-    setProfileData(updatedProfile);
-    setIsEditModalOpen(false);
-    handleChangeProfile(updatedProfile);
+  const handleSaveProfile = async () => {
+    setIsSaving(true);
+    try {
+      const updatedProfile = {
+        ...profileData,
+        ...editBasicInfo,
+        experiences: editExperiences,
+        educations: editEducations,
+        skills: editSkills,
+        projects: editProjects
+      };
+      await handleChangeProfile(updatedProfile);
+      setProfileData(updatedProfile);
+      setIsEditModalOpen(false);
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Basic info handlers
@@ -602,6 +617,19 @@ function PersonalProfilePage() {
     }
   };
 
+  // Show loading state while fetching profile
+  if (isPageLoading) {
+    return (
+      <div className='personal-profile-page'>
+        <HeaderManager />
+        <div className='personal-profile-loading'>
+          <div className='personal-profile-loading-spinner'></div>
+          <p>Đang tải hồ sơ...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='personal-profile-page'>
       <HeaderManager />
@@ -773,11 +801,15 @@ function PersonalProfilePage() {
 
       {/* Edit Profile Modal */}
       {isEditModalOpen && (
-        <div className='personal-profile-modal-overlay' onClick={handleCloseEditModal}>
+        <div className='personal-profile-modal-overlay' onClick={isSaving ? undefined : handleCloseEditModal}>
           <div className='personal-profile-modal personal-profile-modal-large' onClick={(e) => e.stopPropagation()}>
             <div className='personal-profile-modal-header'>
               <h2 className='personal-profile-modal-title'>Chỉnh sửa hồ sơ</h2>
-              <button className='personal-profile-modal-close' onClick={handleCloseEditModal}>
+              <button 
+                className='personal-profile-modal-close' 
+                onClick={handleCloseEditModal}
+                disabled={isSaving}
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />
@@ -824,11 +856,26 @@ function PersonalProfilePage() {
             </div>
 
             <div className='personal-profile-modal-footer'>
-              <button className='personal-profile-modal-btn-cancel' onClick={handleCloseEditModal}>
+              <button 
+                className='personal-profile-modal-btn-cancel' 
+                onClick={handleCloseEditModal}
+                disabled={isSaving}
+              >
                 Hủy
               </button>
-              <button className='personal-profile-modal-btn-save' onClick={handleSaveProfile}>
-                Lưu thay đổi
+              <button 
+                className='personal-profile-modal-btn-save' 
+                onClick={handleSaveProfile}
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <>
+                    <span className='personal-profile-btn-spinner'></span>
+                    Đang lưu...
+                  </>
+                ) : (
+                  'Lưu thay đổi'
+                )}
               </button>
             </div>
           </div>

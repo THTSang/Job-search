@@ -302,13 +302,36 @@
   background: #4338ca;
 }
 
+/* Applied Status Badge */
+.applied-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 24px;
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  box-sizing: border-box;
+}
+
+.applied-status svg {
+  flex-shrink: 0;
+}
+
 /* Job Status Badge */
 .job-status {
+  width: 100%;
   text-align: center;
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 15px;
   font-weight: 600;
+  box-sizing: border-box;
 }
 
 .job-status-open {

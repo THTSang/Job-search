@@ -29,6 +29,10 @@ function JobDetailPage() {
   const isEmployer = location.pathname.startsWith('/employer');
   const HeaderManager = isEmployer ? EmployerHeader : JobSeekerHeader;
 
+  // Check if user has already applied (passed via navigation state)
+  const hasApplied = (location.state as { hasApplied?: boolean })?.hasApplied || false;
+  const [hasAppliedState, setHasAppliedState] = useState(hasApplied);
+
   useEffect(() => {
     const fetchJob = async () => {
       if (!jobId) {
@@ -151,6 +155,7 @@ function JobDetailPage() {
 
       await ApplyJobAPI(applicationData);
       setApplyStatus('success');
+      setHasAppliedState(true);
     } catch (err: unknown) {
       setApplyStatus('error');
       
@@ -386,11 +391,21 @@ function JobDetailPage() {
               )}
             </div>
 
-            {/* Apply Button */}
+            {/* Apply Button or Applied Status */}
             {!isEmployer && job.status === 'OPEN' && (
-              <button className="apply-button" onClick={openApplyModal}>
-                Ứng tuyển ngay
-              </button>
+              hasAppliedState ? (
+                <div className="applied-status">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                  Đã ứng tuyển
+                </div>
+              ) : (
+                <button className="apply-button" onClick={openApplyModal}>
+                  Ứng tuyển ngay
+                </button>
+              )
             )}
 
             {/* Job Status */}
