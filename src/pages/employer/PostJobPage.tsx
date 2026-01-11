@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import '../../styles/pages/PostJobPage.css'
 import { HeaderManager } from '../../components/header/employer/HeaderManager';
+import { PostedJob } from '../../components/job/employer/PostedJob';
 import { useUserCredential } from '../../store';
 import type { JobData, JobPostRequest, EmploymentType, JobLocationRequest, JobCategoryRequest, CompanyProfileInterface } from '../../utils/interface';
-import { PostJobAPI } from '../../api';
-import { GetCompanyAPI } from '../../api/company';
+import { PostJobAPI, GetCompanyJobsAPI, GetCompanyAPI } from '../../api';
 
-// TODO: UPDATE LOGO COMPANY FOR JOB
-//
+// TODO: Job company icon
 interface JobFormData {
   title: string;
   description: string;
@@ -39,17 +38,47 @@ const emptyFormData: JobFormData = {
   tags: []
 };
 
+const PAGE_SIZE = 5;
+
 function PostJobPage() {
   const { userBasicInfo } = useUserCredential();
 
+  // Form state
   const [formData, setFormData] = useState<JobFormData>(emptyFormData);
   const [tagInput, setTagInput] = useState('');
-  const [postedJobs, setPostedJobs] = useState<JobData[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  // Company state
   const [company, setCompany] = useState<CompanyProfileInterface | null>(null);
   const [isLoadingCompany, setIsLoadingCompany] = useState(true);
+
+  // Posted jobs state (with pagination)
+  const [postedJobs, setPostedJobs] = useState<JobData[]>([]);
+  const [isLoadingJobs, setIsLoadingJobs] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+
+  // Fetch company's posted jobs
+  const fetchJobs = useCallback(async (page: number) => {
+    if (!company?.id) return;
+
+    setIsLoadingJobs(true);
+    try {
+      const response = await GetCompanyJobsAPI(company.id, page, PAGE_SIZE);
+      if (response) {
+        setPostedJobs(response.content);
+        setTotalPages(response.totalPages);
+        setTotalElements(response.totalElements);
+      }
+    } catch (err) {
+      console.error('Error fetching jobs:', err);
+    } finally {
+      setIsLoadingJobs(false);
+    }
+  }, [company?.id]);
 
   // Fetch user's company on mount
   useEffect(() => {
@@ -67,7 +96,19 @@ function PostJobPage() {
     fetchCompany();
   }, []);
 
-  // Handle simple field changes
+  // Fetch jobs when company is loaded or page changes
+  useEffect(() => {
+    if (company?.id) {
+      fetchJobs(currentPage);
+    }
+  }, [company?.id, currentPage, fetchJobs]);
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Handle input fields changes
   const handleInputChange = (field: keyof JobFormData, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -136,7 +177,6 @@ function PostJobPage() {
     setIsSubmitting(true);
 
     try {
-      // Build request body matching API schema
       const jobPostRequest: JobPostRequest = {
         title: formData.title,
         companyId: company.id,
@@ -158,16 +198,15 @@ function PostJobPage() {
       };
 
       console.log('Posting job:', jobPostRequest);
-      const createdJob = await PostJobAPI(jobPostRequest);
-
-      // Add to local list if successful
-      if (createdJob) {
-        setPostedJobs(prev => [createdJob, ...prev]);
-      }
+      await PostJobAPI(jobPostRequest);
 
       // Reset form
       setFormData(emptyFormData);
       setSuccess('Đăng tin tuyển dụng thành công!');
+
+      // Refresh jobs list - go to first page to see the new job
+      setCurrentPage(0);
+      await fetchJobs(0);
 
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
@@ -181,23 +220,6 @@ function PostJobPage() {
   const isFormValid = formData.title && formData.description &&
     formData.location.city && formData.employmentType && company?.id;
 
-  const formatSalary = (amount: number) => {
-    if (amount >= 1000000) {
-      return `${(amount / 1000000).toFixed(0)} triệu`;
-    }
-    return amount.toLocaleString('vi-VN');
-  };
-
-  const getEmploymentTypeLabel = (type: EmploymentType) => {
-    const labels: Record<EmploymentType, string> = {
-      'FULL_TIME': 'Toàn thời gian',
-      'PART_TIME': 'Bán thời gian',
-      'CONTRACT': 'Hợp đồng',
-      'INTERNSHIP': 'Thực tập',
-      'REMOTE': 'Làm việc từ xa'
-    };
-    return labels[type] || type;
-  };
 
   if (isLoadingCompany) {
     return (
@@ -454,86 +476,15 @@ function PostJobPage() {
             </form>
           </div>
 
-          {/* Right Section - Posted Jobs List */}
-          <div className='posted-jobs-section'>
-            <h2 className='posted-jobs-title'>
-              Tin đã đăng ({postedJobs.length})
-            </h2>
-
-            <div className='posted-jobs-list'>
-              {postedJobs.length === 0 ? (
-                <div className='posted-jobs-empty'>
-                  <div className='posted-jobs-empty-icon'>📋</div>
-                  <p className='posted-jobs-empty-text'>Chưa có tin tuyển dụng nào</p>
-                  <p className='posted-jobs-empty-subtext'>Đăng tin đầu tiên của bạn ngay!</p>
-                </div>
-              ) : (
-                postedJobs.map((job) => (
-                  <div key={job.id} className='posted-job-card'>
-                    <div className='posted-job-header'>
-                      <div className='posted-job-icon'>
-                        {job.company.logoUrl ? (
-                          <img src={job.company.logoUrl} alt={job.company.name} />
-                        ) : (
-                          '📋'
-                        )}
-                      </div>
-                      <div className='posted-job-info'>
-                        <h3 className='posted-job-title'>{job.title}</h3>
-                        <p className='posted-job-company'>{job.company.name}</p>
-                        <p className='posted-job-location'>{job.location.city}</p>
-                      </div>
-                    </div>
-
-                    {/* Job Details */}
-                    <div className='posted-job-details'>
-                      <span className='posted-job-detail'>
-                        {getEmploymentTypeLabel(job.employmentType)}
-                      </span>
-                      {job.minExperience > 0 && (
-                        <span className='posted-job-detail'>
-                          {job.minExperience}+ năm KN
-                        </span>
-                      )}
-                      {(job.salaryMin > 0 || job.salaryMax > 0) && (
-                        <span className='posted-job-detail'>
-                          {job.salaryMin > 0 && job.salaryMax > 0
-                            ? `${formatSalary(job.salaryMin)} - ${formatSalary(job.salaryMax)}`
-                            : job.salaryMax > 0
-                              ? `Đến ${formatSalary(job.salaryMax)}`
-                              : `Từ ${formatSalary(job.salaryMin)}`
-                          }
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Tags */}
-                    {job.tags.length > 0 && (
-                      <div className='posted-job-tags'>
-                        {job.tags.slice(0, 3).map((tag, index) => (
-                          <span key={index} className='posted-job-tag-chip'>{tag}</span>
-                        ))}
-                        {job.tags.length > 3 && (
-                          <span className='posted-job-tag-more'>+{job.tags.length - 3}</span>
-                        )}
-                      </div>
-                    )}
-
-                    <div className='posted-job-footer'>
-                      <span className={`posted-job-status posted-job-status-${job.status.toLowerCase()}`}>
-                        {job.status === 'OPEN' ? 'Đang mở' : job.status === 'DRAFT' ? 'Bản nháp' : 'Đã đóng'}
-                      </span>
-                      {job.deadline && (
-                        <span className='posted-job-deadline'>
-                          Hạn: {new Date(job.deadline).toLocaleDateString('vi-VN')}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+          {/* Right Section - Posted Jobs List with Pagination */}
+          <PostedJob
+            postedJobs={postedJobs}
+            isLoading={isLoadingJobs}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalElements={totalElements}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </>

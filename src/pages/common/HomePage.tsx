@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { HeaderManager as JobSeekerHeader } from '../../components/header/jobseeker/HeaderManager.tsx';
 import { HeaderManager as EmployerHeader } from '../../components/header/employer/HeaderManager.tsx';
 import { FuzzyFinder } from "../../components/finder/FuzzyFinder.tsx";
-import { JobCard } from "../../components/job/jobCard.tsx";
+import { JobCard } from "../../components/job/jobseeker/jobCard.tsx";
 import '../../styles/pages/jobseeker/HomePage.css';
 import { GetJobListAPI } from "../../api";
 import type { JobData } from '../../utils/interface';
@@ -18,7 +18,7 @@ function HomePage() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await GetJobListAPI();
+        const response = await GetJobListAPI(0);
         setJobArray(response || []);
         console.log('Jobs fetched:', response);
       } catch (error) {

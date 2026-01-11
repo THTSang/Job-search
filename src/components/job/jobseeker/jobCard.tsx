@@ -1,5 +1,5 @@
-import '../../styles/job/jobCard.css';
-import type { JobCompany, JobLocation, EmploymentType } from '../../utils/interface';
+import '../../../styles/job/jobCard.css';
+import type { JobCompany, JobLocation, EmploymentType } from '../../../utils/interface';
 
 interface JobCardProps {
   title: string;
@@ -49,8 +49,8 @@ function JobCard({
     : 'Thỏa thuận';
 
   // Format experience
-  const experienceText = minExperience > 0 
-    ? `${minExperience}+ năm kinh nghiệm` 
+  const experienceText = minExperience > 0
+    ? `${minExperience}+ năm kinh nghiệm`
     : 'Không yêu cầu';
 
   // Format employment type

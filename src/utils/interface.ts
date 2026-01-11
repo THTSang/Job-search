@@ -86,7 +86,7 @@ export interface JobPostRequest {
   postedByUserId: string;
 }
 
-// Main Job interface (API response)
+// Job interface (API response)
 export interface JobData {
   id: string | null;
   title: string;
@@ -175,4 +175,25 @@ export interface CompanyProfileInterface {
   isVerified: boolean,
   createdAt: string | null,
   updatedAt: string | null
+}
+
+
+// NOTE: APPLICATION INTERFACE
+// * APPLICATION REQUEST *
+export interface ApplicationRequestInterface {
+  jobId: string,
+  resumeUrl: string,
+  coverLetter: string
+}
+
+// NOTE: PAGINATED RESPONSE (Spring Boot Page format)
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;  // current page (0-based)
+  first: boolean;
+  last: boolean;
+  empty: boolean;
 }

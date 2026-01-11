@@ -1,5 +1,5 @@
 import { axiosInstance } from './config';
-import type { JobData, JobPostRequest } from '../utils/interface';
+import type { JobData, JobPostRequest, PageResponse } from '../utils/interface';
 
 
 // NOTE: POST JOB API
@@ -13,8 +13,8 @@ export const PostJobAPI = async (jobInfo: JobPostRequest): Promise<JobData | nul
   }
 };
 
-// NOTE: GET JOB API
-export const GetJobListAPI = async (): Promise<JobData[] | null> => {
+// NOTE: GET JOB API GIVING PAGE, SIZE = 10
+export const GetJobListAPI = async (_pagenumber: number): Promise<JobData[] | null> => {
   try {
     const response = await axiosInstance.get('/jobs/search');
     return response.data;
@@ -24,3 +24,20 @@ export const GetJobListAPI = async (): Promise<JobData[] | null> => {
   }
 }
 
+// NOTE: GET COMPANY POSTED JOBS API (with pagination)
+// Endpoint: GET /api/companies/{id}/jobs
+export const GetCompanyJobsAPI = async (
+  companyId: string,
+  page: number = 0,
+  size: number = 5
+): Promise<PageResponse<JobData> | null> => {
+  try {
+    const response = await axiosInstance.get(`/companies/${companyId}/jobs`, {
+      params: { page, size }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error: Fetching company jobs', error);
+    throw error;
+  }
+}
