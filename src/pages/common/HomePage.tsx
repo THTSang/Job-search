@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { HeaderManager as JobSeekerHeader } from '../../components/header/jobseeker/HeaderManager.tsx';
 import { HeaderManager as EmployerHeader } from '../../components/header/employer/HeaderManager.tsx';
 import { FuzzyFinder } from "../../components/finder/FuzzyFinder.tsx";
@@ -24,6 +24,7 @@ function HomePage() {
   const [searchFilters, setSearchFilters] = useState<JobSearchRequest>({});
 
   const location = useLocation();
+  const navigate = useNavigate();
   const isEmployer = location.pathname.startsWith('/employer');
   const HeaderManager = isEmployer ? EmployerHeader : JobSeekerHeader;
 
@@ -76,8 +77,8 @@ function HomePage() {
 
   // Handle job card click
   const handleJobClick = (jobId: string) => {
-    console.log('Job clicked:', jobId);
-    // TODO: Navigate to job detail page
+    const basePath = isEmployer ? '/employer' : '/jobseeker';
+    navigate(`${basePath}/job/${jobId}`);
   };
 
   // Generate page numbers for pagination

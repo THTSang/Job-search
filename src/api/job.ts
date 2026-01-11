@@ -82,3 +82,15 @@ export const GetCompanyJobsAPI = async (
     throw error;
   }
 };
+
+// NOTE: GET JOB BY ID API
+// Endpoint: GET /api/jobs/{id}
+export const GetJobByIdAPI = async (jobId: string): Promise<JobData | null> => {
+  try {
+    const response = await axiosInstance.get(`/jobs/${jobId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error: Fetching job by ID', error);
+    throw error;
+  }
+};

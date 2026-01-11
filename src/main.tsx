@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { HomePage, FindJobPage, JobAppliesPage, FollowedCompaniesPage, MessagePage, AIEvaluatePage } from './pages'
+import { HomePage, FindJobPage, JobDetailPage, JobAppliesPage, FollowedCompaniesPage, MessagePage, AIEvaluatePage } from './pages'
 import { PostJobPage, PersonalProfilePage, CreateCompanyPage, EmployerCompanyProfilePage } from './pages'
 import { ResetPasswordPage, AuthPage, ApplicantsPage, DashboardPage } from './pages'
 import './index.css'
@@ -49,6 +49,10 @@ const router = createBrowserRouter([
     element: <AIEvaluatePage />
   },
   {
+    path: 'jobseeker/job/:jobId',
+    element: <JobDetailPage />
+  },
+  {
     path: 'employer/home',
     element: <HomePage />
   },
@@ -71,6 +75,10 @@ const router = createBrowserRouter([
   {
     path: 'employer/dashboard',
     element: <DashboardPage />
+  },
+  {
+    path: 'employer/job/:jobId',
+    element: <JobDetailPage />
   }
 
 ])

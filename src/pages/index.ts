@@ -1,5 +1,6 @@
 export { HomePage } from './common/HomePage';
 export { FindJobPage } from './common/FindJobPage';
+export { JobDetailPage } from './common/JobDetailPage';
 export { FollowedCompaniesPage } from './common/FollowedCompaniesPage';
 export { MessagePage } from './common/MessagePage';
 
