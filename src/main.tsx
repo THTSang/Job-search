@@ -57,6 +57,10 @@ const router = createBrowserRouter([
     element: <HomePage />
   },
   {
+    path: 'employer/findjob',
+    element: <FindJobPage />
+  },
+  {
     path: 'employer/postjob',
     element: <PostJobPage />
   },

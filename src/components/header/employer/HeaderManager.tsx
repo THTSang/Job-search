@@ -45,6 +45,14 @@ function HeaderManager() {
         </button>
 
         <button
+          className={`find-job-button ${location.pathname === '/employer/findjob' ? 'find-job-button-isactive' : ''}`}
+          onClick={handleClick}
+          name='findjob'
+        >
+          <span className="find-job-text">Tìm việc</span>
+        </button>
+
+        <button
           className={`dashboard-button ${location.pathname === '/employer/dashboard' ? 'dashboard-button-isactive' : ''}`}
           name='dashboard'
           onClick={handleClick}
