@@ -197,3 +197,21 @@ export interface PageResponse<T> {
   last: boolean;
   empty: boolean;
 }
+
+// NOTE: JOB SEARCH REQUEST (for /api/jobs/search endpoint)
+export interface JobSearchRequest {
+  keyword?: string;
+  locationCity?: string;
+  categoryName?: string;
+  minSalary?: number;
+  maxSalary?: number;
+  minExperience?: number;
+  jobType?: EmploymentType;
+  status?: JobStatus;
+}
+
+export interface JobSearchPageable {
+  page: number;
+  size: number;
+  sort?: string[];
+}
