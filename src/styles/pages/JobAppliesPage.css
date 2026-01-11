@@ -113,6 +113,26 @@
 .job-application-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
+/* Application logo */
+.job-application-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  overflow: hidden;
+}
+.job-application-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 /* Application icon */
 .job-application-icon {
   width: 48px;
@@ -292,5 +312,223 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+  }
+}
+
+/* ========================================
+   Loading Skeleton Styles
+   ======================================== */
+.job-application-card.skeleton {
+  pointer-events: none;
+}
+
+.job-application-card .skeleton-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.job-application-card .skeleton-title {
+  width: 200px;
+  height: 20px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  margin-bottom: 8px;
+}
+
+.job-application-card .skeleton-company {
+  width: 150px;
+  height: 16px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  margin-bottom: 8px;
+}
+
+.job-application-card .skeleton-meta {
+  width: 100px;
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.job-application-card .skeleton-status {
+  width: 80px;
+  height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  margin-left: auto;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ========================================
+   Empty State Styles
+   ======================================== */
+.job-applies-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.job-applies-empty-icon {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: #9ca3af;
+}
+
+.job-applies-empty h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.job-applies-empty p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 24px 0;
+  max-width: 300px;
+}
+
+.job-applies-empty-button {
+  padding: 14px 28px;
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.job-applies-empty-button:hover {
+  background: #4f46e5;
+}
+
+/* ========================================
+   Additional Status Styles
+   ======================================== */
+.job-application-status.reviewed {
+  background-color: #e0e7ff;
+  color: #3730a3;
+}
+
+/* ========================================
+   Pagination Styles
+   ======================================== */
+.job-applies-pagination {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-button {
+  padding: 10px 16px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-button.active {
+  background: #6366f1;
+  border-color: #6366f1;
+  color: #fff;
+}
+
+.pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pagination-number {
+  min-width: 40px;
+  text-align: center;
+}
+
+.pagination-ellipsis {
+  padding: 8px 12px;
+  color: #9ca3af;
+}
+
+.pagination-info {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ========================================
+   Responsive Pagination
+   ======================================== */
+@media (max-width: 640px) {
+  .pagination-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .pagination-nav {
+    order: 1;
+  }
+  
+  .pagination-pages {
+    order: 0;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 8px;
   }
 }

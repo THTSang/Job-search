@@ -232,3 +232,11 @@ export interface JobSearchPageable {
   size: number;
   sort?: string[];
 }
+
+// * APPLICATION STATS RESPONSE *
+export interface ApplicationStatsInterface {
+  total: number;
+  pending: number;
+  interviewing: number;
+  offered: number;
+}
