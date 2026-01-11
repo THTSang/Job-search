@@ -107,6 +107,13 @@ function JobDetailPage() {
     return job?.company.name ? job.company.name.charAt(0).toUpperCase() : 'C';
   };
 
+  const handleCompanyClick = () => {
+    if (job?.company.id) {
+      const basePath = isEmployer ? '/employer' : '/jobseeker';
+      navigate(`${basePath}/company/${job.company.id}`);
+    }
+  };
+
   // Apply modal handlers
   const openApplyModal = () => {
     setShowApplyModal(true);
@@ -374,20 +381,17 @@ function JobDetailPage() {
                 </div>
                 <h3>{job.company.name}</h3>
               </div>
-              {job.company.website && (
-                <a 
-                  href={job.company.website} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="company-website"
+              {job.company.id && (
+                <button 
+                  className="view-company-button"
+                  onClick={handleCompanyClick}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="2" y1="12" x2="22" y2="12"/>
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
                   </svg>
-                  Xem website
-                </a>
+                  Xem công ty
+                </button>
               )}
             </div>
 

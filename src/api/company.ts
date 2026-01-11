@@ -37,3 +37,14 @@ export const PutCompanyAPI = async (req: CompanyProfileInterface): Promise<Compa
   }
 }
 
+// NOTE: GET COMPANY BY ID API
+export const GetCompanyByIdAPI = async (companyId: string): Promise<CompanyProfileInterface | null> => {
+  try {
+    const response = await axiosInstance.get<CompanyProfileInterface>(`/companies/${companyId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error: Getting company by ID', error);
+    throw error;
+  }
+}
+
