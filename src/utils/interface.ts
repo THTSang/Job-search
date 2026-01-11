@@ -186,6 +186,23 @@ export interface ApplicationRequestInterface {
   coverLetter: string
 }
 
+// * APPLICATION RESPONSE *
+export type ApplicationStatus = 'PENDING' | 'REVIEWED' | 'SHORTLISTED' | 'REJECTED' | 'ACCEPTED';
+
+export interface ApplicationResponseInterface {
+  id: string;
+  job: {
+    id: string;
+    title: string;
+  };
+  company: {
+    name: string;
+    logoUrl: string;
+  };
+  status: ApplicationStatus;
+  appliedAt: string;  // ISO datetime format
+}
+
 // NOTE: PAGINATED RESPONSE (Spring Boot Page format)
 export interface PageResponse<T> {
   content: T[];
