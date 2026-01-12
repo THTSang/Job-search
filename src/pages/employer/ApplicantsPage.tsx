@@ -1,136 +1,133 @@
-import '../../styles/pages/ApplicantsPage.css'
+import { useState, useEffect } from 'react';
+import '../../styles/pages/ApplicantsPage.css';
 import { HeaderManager } from '../../components/header/employer/HeaderManager';
+import { JobApplicantsList } from '../../components/applicant/JobApplicantsList';
+import { GetCompanyAPI, GetCompanyJobsAPI } from '../../api';
+import type { JobData, CompanyProfileInterface } from '../../utils/interface';
 
 function ApplicantsPage() {
+  const [company, setCompany] = useState<CompanyProfileInterface | null>(null);
+  const [jobs, setJobs] = useState<JobData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [expandedJobIds, setExpandedJobIds] = useState<Set<string>>(new Set());
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetchCompanyAndJobs();
+  }, []);
+
+  const fetchCompanyAndJobs = async () => {
+    setIsLoading(true);
+    try {
+      const companyData = await GetCompanyAPI();
+      setCompany(companyData);
+
+      if (companyData?.id) {
+        const jobsResponse = await GetCompanyJobsAPI(companyData.id, 0, 50);
+        if (jobsResponse) {
+          setJobs(jobsResponse.content);
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Không thể tải dữ liệu. Vui lòng thử lại.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleToggleJob = (jobId: string | null) => {
+    if (!jobId) return;
+    setExpandedJobIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(jobId)) {
+        newSet.delete(jobId);
+      } else {
+        newSet.add(jobId);
+      }
+      return newSet;
+    });
+  };
+
+  const getTotalJobs = () => jobs.length;
+
+  if (isLoading) {
+    return (
+      <>
+        <HeaderManager />
+        <div className='applicants-page-container'>
+          <div className='applicants-page-loading'>
+            <span>Đang tải...</span>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <HeaderManager />
+        <div className='applicants-page-container'>
+          <div className='applicants-page-error'>
+            <span>{error}</span>
+            <button onClick={fetchCompanyAndJobs}>Thử lại</button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (!company) {
+    return (
+      <>
+        <HeaderManager />
+        <div className='applicants-page-container'>
+          <div className='applicants-page-no-company'>
+            <h2>Chưa có hồ sơ công ty</h2>
+            <p>Vui lòng tạo hồ sơ công ty trước khi quản lý ứng viên.</p>
+            <a href='/employer/createcompany'>Tạo hồ sơ công ty</a>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <HeaderManager />
       <div className='applicants-page-container'>
         <div className='applicants-page-header'>
-          <h1 className='applicants-page-title'>Quản lý đơn ứng tuyển</h1>
-          <p className='applicants-page-counting'>3 đơn ứng tuyển</p>
+          <h1 className='applicants-page-title'>Quản lý ứng viên</h1>
+          <p className='applicants-page-subtitle'>
+            {getTotalJobs()} vị trí tuyển dụng • Nhấn vào từng vị trí để xem danh sách ứng viên
+          </p>
         </div>
 
-        <div className='applicants-page-search'>
-          <div className='applicants-search-input-wrapper'>
-            <input
-              type='text'
-              className='applicants-search-input'
-              placeholder='Tìm kiếm ứng viên hoặc vị trí...'
-            />
+        {jobs.length === 0 ? (
+          <div className='applicants-page-empty'>
+            <div className='applicants-page-empty-icon'>📋</div>
+            <h2>Chưa có tin tuyển dụng</h2>
+            <p>Hãy đăng tin tuyển dụng để bắt đầu nhận đơn ứng tuyển.</p>
+            <a href='/employer/postjob' className='applicants-page-post-job-link'>
+              Đăng tin tuyển dụng
+            </a>
           </div>
-          <select className='applicants-filter-select'>
-            <option value='all'>Tất cả</option>
-            <option value='pending'>Chờ xử lý</option>
-            <option value='reviewing'>Đang xem xét</option>
-            <option value='interview'>Phỏng vấn</option>
-            <option value='rejected'>Từ chối</option>
-            <option value='accepted'>Chấp nhận</option>
-          </select>
-        </div>
-
-        <div className='applicants-page-list'>
-          {/* Applicant Card 1 */}
-          <div className='applicant-card'>
-            <div className='applicant-avatar applicant-avatar-purple'>N</div>
-
-            <div className='applicant-info'>
-              <h3 className='applicant-name'>Nguyễn Văn A</h3>
-              <p className='applicant-email'>nguyenvana@email.com</p>
-              <p className='applicant-job'>
-                Ứng tuyển: <a href='#' className='applicant-job-link'>Senior Frontend Developer (ReactJS)</a>
-              </p>
-              <p className='applicant-date'>Ngày nộp: 2025-01-15</p>
-            </div>
-
-            <div className='applicant-status'>
-              <span className='applicant-status-badge status-pending'>Chờ xử lý</span>
-            </div>
-
-            <div className='applicant-actions'>
-              <button className='applicant-action-button action-view'>
-                <span className='action-icon'>👁</span>
-                Xem CV
-              </button>
-              <button className='applicant-action-button action-interview'>
-                <span className='action-icon'>📅</span>
-                Mời phỏng vấn
-              </button>
-              <button className='applicant-action-button action-accept'>
-                <span className='action-icon'>✓</span>
-                Chấp nhận
-              </button>
-              <button className='applicant-action-button action-reject'>
-                <span className='action-icon'>✕</span>
-                Từ chối
-              </button>
-              <button className='applicant-action-button action-message'>
-                <span className='action-icon'>💬</span>
-                Nhắn tin
-              </button>
-            </div>
+        ) : (
+          <div className='applicants-page-jobs-list'>
+            {jobs.map((job) => (
+              <JobApplicantsList
+                key={job.id}
+                job={job}
+                isExpanded={expandedJobIds.has(job.id || '')}
+                onToggle={() => handleToggleJob(job.id)}
+              />
+            ))}
           </div>
-
-          {/* Applicant Card 2 */}
-          <div className='applicant-card'>
-            <div className='applicant-avatar applicant-avatar-blue'>T</div>
-
-            <div className='applicant-info'>
-              <h3 className='applicant-name'>Trần Thị B</h3>
-              <p className='applicant-email'>tranthib@email.com</p>
-              <p className='applicant-job'>
-                Ứng tuyển: <a href='#' className='applicant-job-link'>Senior Frontend Developer (ReactJS)</a>
-              </p>
-              <p className='applicant-date'>Ngày nộp: 2025-01-14</p>
-            </div>
-
-            <div className='applicant-status'>
-              <span className='applicant-status-badge status-reviewing'>Đang xem xét</span>
-            </div>
-
-            <div className='applicant-actions'>
-              <button className='applicant-action-button action-view'>
-                <span className='action-icon'>👁</span>
-                Xem CV
-              </button>
-              <button className='applicant-action-button action-message'>
-                <span className='action-icon'>💬</span>
-                Nhắn tin
-              </button>
-            </div>
-          </div>
-
-          {/* Applicant Card 3 */}
-          <div className='applicant-card'>
-            <div className='applicant-avatar applicant-avatar-green'>L</div>
-
-            <div className='applicant-info'>
-              <h3 className='applicant-name'>Lê Văn C</h3>
-              <p className='applicant-email'>levanc@email.com</p>
-              <p className='applicant-job'>
-                Ứng tuyển: <a href='#' className='applicant-job-link'>Backend Developer (Node.js)</a>
-              </p>
-              <p className='applicant-date'>Ngày nộp: 2025-01-13</p>
-            </div>
-
-            <div className='applicant-status'>
-              <span className='applicant-status-badge status-interview'>Phỏng vấn</span>
-            </div>
-
-            <div className='applicant-actions'>
-              <button className='applicant-action-button action-view'>
-                <span className='action-icon'>👁</span>
-                Xem CV
-              </button>
-              <button className='applicant-action-button action-message'>
-                <span className='action-icon'>💬</span>
-                Nhắn tin
-              </button>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </>
   );
-};
+}
+
 export { ApplicantsPage };

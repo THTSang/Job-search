@@ -83,7 +83,7 @@ function HeaderManager() {
           </button>
 
           <button
-            className={`applicant-management-button ${location.pathname === '/employer/applicants' ? 'applicant-management-button-isactive' : ''}`}
+            className={`applicant-management-button ${location.pathname === '/employer/applicantmanagement' ? 'applicant-management-button-isactive' : ''}`}
             name='applicantmanagement'
             onClick={handleClick}
           >

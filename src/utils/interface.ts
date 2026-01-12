@@ -218,6 +218,24 @@ export interface ApplicationResponseInterface {
   appliedAt: string;  // ISO datetime format
 }
 
+// * JOB APPLICANT (for employer view) *
+export interface JobApplicantInfo {
+  id: string;
+  fullName: string;
+  email: string;
+  avatarUrl: string;
+  professionalTitle: string;
+}
+
+export interface JobApplicationInterface {
+  id: string;
+  applicant: JobApplicantInfo;
+  status: ApplicationStatus;
+  appliedAt: string;  // ISO datetime format
+  resumeUrl: string;
+  coverLetter: string;
+}
+
 // NOTE: PAGINATED RESPONSE (Spring Boot Page format)
 export interface PageResponse<T> {
   content: T[];
