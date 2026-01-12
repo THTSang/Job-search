@@ -1,5 +1,7 @@
 package com.example.server.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -21,6 +23,9 @@ public interface ApplicationRepository extends MongoRepository<Application, Stri
     // Mentor Note: Kiểm tra xem ứng viên đã nộp đơn vào Job này chưa
     // Dùng để chặn việc nộp đơn trùng lặp (Duplicate Application) ngay từ tầng DB.
     boolean existsByJobSeekerIdAndJobId(String jobSeekerId, String jobId);
+
+    // Tìm đơn ứng tuyển cụ thể của user cho job (để lấy chi tiết status/date)
+    Optional<Application> findByJobSeekerIdAndJobId(String jobSeekerId, String jobId);
 
     // --- Stats Methods (Dashboard) ---
 

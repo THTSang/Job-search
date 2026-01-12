@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.server.dto.ApplicationDtos.ApplicationCheckResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationStats;
 import com.example.server.dto.ApplicationDtos.ApplyRequest;
@@ -193,6 +194,18 @@ public class ApplicationServiceImpl implements ApplicationService {
             JobSeekerProfile profile = profileMap.get(uid);
             return toRecruiterDto(app, user, profile);
         });
+    }
+
+    @Override
+    public ApplicationCheckResponse checkApplied(String jobSeekerId, String jobId) {
+        // Mentor Note: Sử dụng findBy... để lấy chi tiết nếu tồn tại thay vì chỉ check exists
+        return applicationRepository.findByJobSeekerIdAndJobId(jobSeekerId, jobId)
+                .map(app -> new ApplicationCheckResponse(
+                        true, 
+                        app.getId(), 
+                        app.getStatus(), 
+                        app.getAppliedAt()))
+                .orElse(new ApplicationCheckResponse(false, null, null, null));
     }
 
     private ApplicationResponse toDto(Application app, Job job) {

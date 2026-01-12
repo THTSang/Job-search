@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import com.example.server.dto.ApplicationDtos.ApplicationResponse;
+import com.example.server.dto.ApplicationDtos.ApplicationCheckResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationStats;
 import com.example.server.dto.ApplicationDtos.ApplyRequest;
 import com.example.server.dto.ApplicationDtos.RecruiterApplicationDto;
@@ -106,5 +107,17 @@ public class ApplicationController {
             @PageableDefault(size = 20, sort = "appliedAt", direction = Sort.Direction.DESC) Pageable pageable) {
         String recruiterId = userDetails.getId();
         return ResponseEntity.ok(applicationService.getJobApplications(jobId, recruiterId, pageable));
+    }
+
+    /**
+     * Kiểm tra trạng thái ứng tuyển của user với một Job.
+     * GET /api/applications/check/{jobId}
+     */
+    @GetMapping("/check/{jobId}")
+    public ResponseEntity<ApplicationCheckResponse> checkApplied(
+            @PathVariable String jobId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        // Lấy ID user từ token để đảm bảo bảo mật
+        return ResponseEntity.ok(applicationService.checkApplied(userDetails.getId(), jobId));
     }
 }

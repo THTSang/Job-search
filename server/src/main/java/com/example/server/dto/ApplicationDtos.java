@@ -69,4 +69,12 @@ public class ApplicationDtos {
         ApplicationStatus status,
         String note // Ghi chú tùy chọn (ví dụ: lý do từ chối)
     ) {}
+
+    // --- 5. Check Status DTO ---
+    public record ApplicationCheckResponse(
+        boolean hasApplied,
+        String applicationId,
+        ApplicationStatus status,
+        Instant appliedAt
+    ) {}
 }

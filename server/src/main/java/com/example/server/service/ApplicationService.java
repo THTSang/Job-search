@@ -3,6 +3,7 @@ package com.example.server.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.example.server.dto.ApplicationDtos.ApplicationCheckResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationStats;
 import com.example.server.dto.ApplicationDtos.ApplyRequest;
@@ -48,4 +49,12 @@ public interface ApplicationService {
      * @return Page<RecruiterApplicationDto> chứa thông tin ứng viên.
      */
     Page<RecruiterApplicationDto> getJobApplications(String jobId, String recruiterId, Pageable pageable);
+
+    /**
+     * Kiểm tra xem user hiện tại đã nộp đơn vào job này chưa.
+     * @param jobSeekerId ID của người tìm việc.
+     * @param jobId ID của Job.
+     * @return ApplicationCheckResponse (hasApplied, status, appliedAt).
+     */
+    ApplicationCheckResponse checkApplied(String jobSeekerId, String jobId);
 }
