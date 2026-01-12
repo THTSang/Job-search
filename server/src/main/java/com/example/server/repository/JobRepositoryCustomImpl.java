@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.ConvertOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.util.StringUtils;
 import org.bson.Document;
@@ -29,12 +30,18 @@ public class JobRepositoryCustomImpl implements JobRepositoryCustom {
     public Page<Job> searchJobs(JobSearchRequest request, Pageable pageable) {
         List<AggregationOperation> operations = new ArrayList<>();
 
-        // 1. Lookup Relations (Left Outer Join) để filter theo Location và Category
-        // "locations" và "categories" là tên collection trong MongoDB
-        operations.add(Aggregation.lookup("locations", "_id", "jobId", "locationInfo"));
-        operations.add(Aggregation.lookup("categories", "_id", "jobId", "categoryInfo"));
+        // 1. Convert _id (ObjectId) to String để join với jobId (String) trong Location/Category
+        // Mentor Note: Fix lỗi Lookup không khớp do lệch kiểu dữ liệu (ObjectId vs String)
+        operations.add(Aggregation.addFields()
+            .addField("jobIdStr").withValue(ConvertOperators.ToString.toString("$_id"))
+            .build());
 
-        // 2. Build Criteria
+        // 2. Lookup Relations (Left Outer Join) sử dụng jobIdStr
+        // "locations" và "categories" là tên collection trong MongoDB
+        operations.add(Aggregation.lookup("locations", "jobIdStr", "jobId", "locationInfo"));
+        operations.add(Aggregation.lookup("categories", "jobIdStr", "jobId", "categoryInfo"));
+
+        // 3. Build Criteria
         List<Criteria> criteriaList = new ArrayList<>();
 
         // Keyword Search (Title or Description)
