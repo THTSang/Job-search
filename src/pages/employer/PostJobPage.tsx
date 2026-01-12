@@ -373,13 +373,23 @@ function PostJobPage() {
 
               <div className='post-job-form-field'>
                 <label className='post-job-form-label'>Danh mục công việc</label>
-                <input
-                  type='text'
-                  className='post-job-form-input'
-                  placeholder='VD: Công nghệ thông tin'
+                <select
+                  className='post-job-form-select'
                   value={formData.category.name}
                   onChange={(e) => handleCategoryChange('name', e.target.value)}
-                />
+                >
+                  <option value=''>Chọn danh mục</option>
+                  <option value='Công nghệ thông tin'>Công nghệ thông tin</option>
+                  <option value='Marketing'>Marketing</option>
+                  <option value='Kinh doanh'>Kinh doanh / Bán hàng</option>
+                  <option value='Tài chính'>Tài chính / Kế toán</option>
+                  <option value='Nhân sự'>Nhân sự</option>
+                  <option value='Thiết kế'>Thiết kế</option>
+                  <option value='Sản xuất'>Sản xuất</option>
+                  <option value='Giáo dục'>Giáo dục / Đào tạo</option>
+                  <option value='Y tế'>Y tế / Sức khỏe</option>
+                  <option value='Khác'>Khác</option>
+                </select>
               </div>
 
               {/* Salary Section */}
