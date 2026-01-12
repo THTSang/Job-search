@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import com.example.server.dto.ApplicationDtos.ApplicationResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationStats;
 import com.example.server.dto.ApplicationDtos.ApplyRequest;
+import com.example.server.dto.ApplicationDtos.RecruiterApplicationDto;
 import com.example.server.dto.ApplicationDtos.UpdateApplicationStatusDto;
 
 /**
@@ -38,4 +39,13 @@ public interface ApplicationService {
     ApplicationStats getMyStats(String jobSeekerId);
 
     ApplicationResponse updateStatus(String applicationId, String recruiterId, UpdateApplicationStatusDto dto);
+
+    /**
+     * Lấy danh sách ứng viên đã nộp đơn vào một Job (Dành cho Recruiter).
+     * @param jobId ID của Job.
+     * @param recruiterId ID của Recruiter (để check quyền sở hữu).
+     * @param pageable Phân trang.
+     * @return Page<RecruiterApplicationDto> chứa thông tin ứng viên.
+     */
+    Page<RecruiterApplicationDto> getJobApplications(String jobId, String recruiterId, Pageable pageable);
 }

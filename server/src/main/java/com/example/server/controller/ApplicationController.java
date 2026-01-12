@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import com.example.server.dto.ApplicationDtos.ApplicationResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationStats;
 import com.example.server.dto.ApplicationDtos.ApplyRequest;
+import com.example.server.dto.ApplicationDtos.RecruiterApplicationDto;
 import com.example.server.dto.ApplicationDtos.UpdateApplicationStatusDto;
 import com.example.server.security.CustomUserDetails;
 import com.example.server.service.ApplicationService;
@@ -91,5 +92,19 @@ public class ApplicationController {
         String recruiterId = userDetails.getId();
         var response = applicationService.updateStatus(id, recruiterId, dto);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Nhà tuyển dụng xem danh sách ứng viên của một Job cụ thể.
+     * GET /api/applications/job/{jobId}
+     */
+    @GetMapping("/job/{jobId}")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<Page<RecruiterApplicationDto>> getJobApplications(
+            @PathVariable String jobId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PageableDefault(size = 20, sort = "appliedAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        String recruiterId = userDetails.getId();
+        return ResponseEntity.ok(applicationService.getJobApplications(jobId, recruiterId, pageable));
     }
 }

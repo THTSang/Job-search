@@ -15,6 +15,24 @@ public class ApplicationDtos {
     public record JobSummary(String id, String title) {}
     public record CompanySummary(String name, String logoUrl) {}
 
+    // --- Recruiter View DTOs ---
+    public record ApplicantSummary(
+        String id,              // User ID (JobSeeker ID)
+        String fullName,
+        String email,
+        String avatarUrl,
+        String professionalTitle
+    ) {}
+
+    public record RecruiterApplicationDto(
+        String id,              // Application ID
+        ApplicantSummary applicant,
+        ApplicationStatus status,
+        Instant appliedAt,
+        String resumeUrl,
+        String coverLetter
+    ) {}
+
     // --- 1. Response DTO ---
     public record ApplicationResponse(
         String id,

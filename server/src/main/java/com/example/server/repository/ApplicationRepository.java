@@ -15,6 +15,9 @@ public interface ApplicationRepository extends MongoRepository<Application, Stri
     // Hỗ trợ phân trang để hiển thị danh sách dài.
     Page<Application> findAllByJobSeekerId(String jobSeekerId, Pageable pageable);
 
+    // Tìm danh sách đơn ứng tuyển cho một Job cụ thể (Dành cho Recruiter)
+    Page<Application> findAllByJobId(String jobId, Pageable pageable);
+
     // Mentor Note: Kiểm tra xem ứng viên đã nộp đơn vào Job này chưa
     // Dùng để chặn việc nộp đơn trùng lặp (Duplicate Application) ngay từ tầng DB.
     boolean existsByJobSeekerIdAndJobId(String jobSeekerId, String jobId);

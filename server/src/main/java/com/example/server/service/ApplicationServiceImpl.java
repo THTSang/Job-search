@@ -2,6 +2,7 @@ package com.example.server.service;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -14,18 +15,24 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.server.dto.ApplicationDtos.ApplicationResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationStats;
 import com.example.server.dto.ApplicationDtos.ApplyRequest;
+import com.example.server.dto.ApplicationDtos.ApplicantSummary;
 import com.example.server.dto.ApplicationDtos.CompanySummary;
 import com.example.server.dto.ApplicationDtos.JobSummary;
+import com.example.server.dto.ApplicationDtos.RecruiterApplicationDto;
 import com.example.server.dto.ApplicationDtos.UpdateApplicationStatusDto;
 import com.example.server.exception.NotFoundException;
 import com.example.server.model.Application;
 import com.example.server.model.ApplicationStatus;
 import com.example.server.model.Company;
 import com.example.server.model.Job;
+import com.example.server.model.JobSeekerProfile;
 import com.example.server.model.JobStatus;
+import com.example.server.model.User;
 import com.example.server.repository.ApplicationRepository;
 import com.example.server.repository.CompanyRepository;
 import com.example.server.repository.JobRepository;
+import com.example.server.repository.JobSeekerProfileRepository;
+import com.example.server.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,6 +47,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final JobRepository jobRepository;
     private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
+    private final JobSeekerProfileRepository jobSeekerProfileRepository;
 
     @Override
     @Transactional
@@ -146,6 +155,46 @@ public class ApplicationServiceImpl implements ApplicationService {
         return toDto(savedApp, job); 
     }
 
+    @Override
+    public Page<RecruiterApplicationDto> getJobApplications(String jobId, String recruiterId, Pageable pageable) {
+        // 1. Check Job Existence
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new NotFoundException("Job not found"));
+
+        // 2. Check Owner (Chỉ người đăng mới được xem danh sách ứng viên)
+        if (!job.getPostedByUserId().equals(recruiterId)) {
+            throw new org.springframework.security.access.AccessDeniedException("You are not authorized to view applications for this job");
+        }
+
+        // 3. Fetch Applications
+        Page<Application> applications = applicationRepository.findAllByJobId(jobId, pageable);
+
+        if (applications.isEmpty()) {
+            return Page.empty(pageable);
+        }
+
+        // 4. Collect User IDs to fetch details
+        Set<String> userIds = applications.stream()
+                .map(Application::getJobSeekerId)
+                .collect(Collectors.toSet());
+
+        // 5. Fetch User Info (Email) & Profile Info (Name, Avatar, Title)
+        Map<String, User> userMap = userRepository.findAllById(userIds).stream()
+                .collect(Collectors.toMap(User::getId, Function.identity()));
+
+        // Assuming JobSeekerProfileRepository has findByUserIdIn(Collection<String> userIds)
+        Map<String, JobSeekerProfile> profileMap = jobSeekerProfileRepository.findByUserIdIn(userIds).stream()
+                .collect(Collectors.toMap(JobSeekerProfile::getUserId, Function.identity()));
+
+        // 6. Map to DTO
+        return applications.map(app -> {
+            String uid = app.getJobSeekerId();
+            User user = userMap.get(uid);
+            JobSeekerProfile profile = profileMap.get(uid);
+            return toRecruiterDto(app, user, profile);
+        });
+    }
+
     private ApplicationResponse toDto(Application app, Job job) {
         JobSummary jobSummary = (job != null) ? new JobSummary(job.getId(), job.getTitle()) : null;
         
@@ -160,5 +209,22 @@ public class ApplicationServiceImpl implements ApplicationService {
         return new ApplicationResponse(app.getId(), jobSummary, companySummary, app.getStatus(), app.getAppliedAt());
     }
 
-    // Import các class cần thiết: JobRepository, ApplicationRepository, NotFoundException, AccessDeniedException
+    private RecruiterApplicationDto toRecruiterDto(Application app, User user, JobSeekerProfile profile) {
+        String fullName = (profile != null && profile.getFullName() != null) ? profile.getFullName() 
+                        : (user != null ? user.getName() : "Unknown Candidate");
+        
+        String email = (user != null) ? user.getEmail() : "";
+        String avatarUrl = (profile != null) ? profile.getAvatarUrl() : null;
+        String professionalTitle = (profile != null) ? profile.getProfessionalTitle() : "";
+
+        ApplicantSummary applicant = new ApplicantSummary(
+            app.getJobSeekerId(),
+            fullName,
+            email,
+            avatarUrl,
+            professionalTitle
+        );
+
+        return new RecruiterApplicationDto(app.getId(), applicant, app.getStatus(), app.getAppliedAt(), app.getResumeUrl(), app.getCoverLetter());
+    }
 }
