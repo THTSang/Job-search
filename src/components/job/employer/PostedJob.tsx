@@ -12,6 +12,9 @@ interface PostedJobProps {
   totalElements: number;
   onPageChange: (page: number) => void;
   onJobDeleted?: () => void;
+  // Edit mode
+  onJobEdit?: (job: JobData) => void;
+  editingJobId?: string | null;
 }
 
 function PostedJob({
@@ -21,7 +24,9 @@ function PostedJob({
   totalPages,
   totalElements,
   onPageChange,
-  onJobDeleted
+  onJobDeleted,
+  onJobEdit,
+  editingJobId
 }: PostedJobProps) {
   const [deletingJobId, setDeletingJobId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -154,7 +159,10 @@ function PostedJob({
         ) : (
           <>
             {postedJobs.map((job) => (
-              <div key={job.id} className='posted-job-card'>
+              <div
+                key={job.id}
+                className={`posted-job-card ${editingJobId === job.id ? 'posted-job-card-editing' : ''}`}
+              >
                 <div className='posted-job-header'>
                   <div className='posted-job-icon'>
                     {job.company.logoUrl ? (
@@ -213,6 +221,15 @@ function PostedJob({
                       <span className='posted-job-deadline'>
                         Hạn: {new Date(job.deadline).toLocaleDateString('vi-VN')}
                       </span>
+                    )}
+                    {job.id && onJobEdit && (
+                      <button
+                        className={`posted-job-edit-btn ${editingJobId === job.id ? 'posted-job-edit-btn-active' : ''}`}
+                        onClick={() => onJobEdit(job)}
+                        title='Chỉnh sửa tin'
+                      >
+                        Chỉnh Sửa
+                      </button>
                     )}
                     {job.id && (
                       <button

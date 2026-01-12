@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import '../../styles/pages/PostJobPage.css'
 import { HeaderManager } from '../../components/header/employer/HeaderManager';
 import { PostedJob } from '../../components/job/employer/PostedJob';
 import { useUserCredential } from '../../store';
-import type { JobData, JobPostRequest, EmploymentType, JobLocationRequest, JobCategoryRequest, CompanyProfileInterface } from '../../utils/interface';
-import { PostJobAPI, GetCompanyJobsAPI, GetCompanyAPI } from '../../api';
+import type { JobData, JobPostRequest, JobUpdateRequest, EmploymentType, JobStatus, JobLocationRequest, JobCategoryRequest, CompanyProfileInterface } from '../../utils/interface';
+import { PostJobAPI, GetCompanyJobsAPI, GetCompanyAPI, UpdateJobAPI } from '../../api';
 
 // TODO: Job company icon
 interface JobFormData {
@@ -16,6 +16,7 @@ interface JobFormData {
   salaryMin: number;
   salaryMax: number;
   category: JobCategoryRequest;
+  status: JobStatus;
   deadline: string;
   tags: string[];
 }
@@ -34,6 +35,7 @@ const emptyFormData: JobFormData = {
   category: {
     name: ''
   },
+  status: 'OPEN',
   deadline: '',
   tags: []
 };
@@ -50,6 +52,9 @@ function PostJobPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  // Edit mode state
+  const [editingJobId, setEditingJobId] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   // Company state
   const [company, setCompany] = useState<CompanyProfileInterface | null>(null);
   const [isLoadingCompany, setIsLoadingCompany] = useState(true);
@@ -152,6 +157,41 @@ function PostJobPage() {
     }));
   };
 
+  // Handle edit job - populate form with job data
+  const handleEditJob = (job: JobData) => {
+    setEditingJobId(job.id);
+    setFormData({
+      title: job.title,
+      description: job.description,
+      location: {
+        city: job.location.city,
+        address: job.location.address
+      },
+      employmentType: job.employmentType,
+      minExperience: job.minExperience,
+      salaryMin: job.salaryMin,
+      salaryMax: job.salaryMax,
+      category: {
+        name: job.category.name
+      },
+      status: job.status,
+      deadline: job.deadline ? job.deadline.split('T')[0] : '',
+      tags: job.tags || []
+    });
+    setError('');
+    setSuccess('');
+    // Scroll to form
+    formRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Cancel edit mode
+  const handleCancelEdit = () => {
+    setEditingJobId(null);
+    setFormData(emptyFormData);
+    setError('');
+    setSuccess('');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -177,41 +217,65 @@ function PostJobPage() {
     setIsSubmitting(true);
 
     try {
-      const jobPostRequest: JobPostRequest = {
-        title: formData.title,
-        companyId: company.id,
-        description: formData.description,
-        location: {
-          city: formData.location.city,
-          address: formData.location.address
-        },
-        category: {
-          name: formData.category.name
-        },
-        employmentType: formData.employmentType as EmploymentType,
-        minExperience: formData.minExperience,
-        salaryMin: formData.salaryMin,
-        salaryMax: formData.salaryMax,
-        deadline: formData.deadline ? new Date(formData.deadline).toISOString() : new Date().toISOString(),
-        tags: formData.tags,
-        postedByUserId: userBasicInfo?.id || ''
-      };
+      if (editingJobId) {
+        // Update existing job
+        const jobUpdateRequest: JobUpdateRequest = {
+          title: formData.title,
+          description: formData.description,
+          location: {
+            city: formData.location.city,
+            address: formData.location.address
+          },
+          category: {
+            name: formData.category.name
+          },
+          employmentType: formData.employmentType as EmploymentType,
+          minExperience: formData.minExperience,
+          salaryMin: formData.salaryMin,
+          salaryMax: formData.salaryMax,
+          status: formData.status,
+          deadline: formData.deadline ? new Date(formData.deadline).toISOString() : new Date().toISOString(),
+          tags: formData.tags
+        };
 
-      console.log('Posting job:', jobPostRequest);
-      await PostJobAPI(jobPostRequest);
+        await UpdateJobAPI(editingJobId, jobUpdateRequest);
+        setEditingJobId(null);
+        setFormData(emptyFormData);
+        setSuccess('Cập nhật tin tuyển dụng thành công!');
+        await fetchJobs(currentPage);
+      } else {
+        // Create new job
+        const jobPostRequest: JobPostRequest = {
+          title: formData.title,
+          companyId: company.id,
+          description: formData.description,
+          location: {
+            city: formData.location.city,
+            address: formData.location.address
+          },
+          category: {
+            name: formData.category.name
+          },
+          employmentType: formData.employmentType as EmploymentType,
+          minExperience: formData.minExperience,
+          salaryMin: formData.salaryMin,
+          salaryMax: formData.salaryMax,
+          deadline: formData.deadline ? new Date(formData.deadline).toISOString() : new Date().toISOString(),
+          tags: formData.tags,
+          postedByUserId: userBasicInfo?.id || ''
+        };
 
-      // Reset form
-      setFormData(emptyFormData);
-      setSuccess('Đăng tin tuyển dụng thành công!');
-
-      // Refresh jobs list - go to first page to see the new job
-      setCurrentPage(0);
-      await fetchJobs(0);
+        await PostJobAPI(jobPostRequest);
+        setFormData(emptyFormData);
+        setSuccess('Đăng tin tuyển dụng thành công!');
+        setCurrentPage(0);
+        await fetchJobs(0);
+      }
 
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
-      setError('Đăng tin thất bại. Vui lòng thử lại.');
-      console.error('Post job error:', err);
+      setError(editingJobId ? 'Cập nhật tin thất bại. Vui lòng thử lại.' : 'Đăng tin thất bại. Vui lòng thử lại.');
+      console.error('Job operation error:', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -244,7 +308,20 @@ function PostJobPage() {
         <div className='post-job-page-content'>
           {/* Left Section - Job Posting Form */}
           <div className='post-job-form-section'>
-            <h2 className='post-job-form-title'>Đăng tin tuyển dụng mới</h2>
+            <div className='post-job-form-header'>
+              <h2 className='post-job-form-title'>
+                {editingJobId ? 'Chỉnh sửa tin tuyển dụng' : 'Đăng tin tuyển dụng mới'}
+              </h2>
+              {editingJobId && (
+                <button
+                  type='button'
+                  className='post-job-cancel-edit-button'
+                  onClick={handleCancelEdit}
+                >
+                  Hủy chỉnh sửa
+                </button>
+              )}
+            </div>
 
             {/* Company Info Display */}
             {company ? (
@@ -271,7 +348,7 @@ function PostJobPage() {
             {error && <div className='post-job-error'>{error}</div>}
             {success && <div className='post-job-success'>{success}</div>}
 
-            <form className='post-job-form' onSubmit={handleSubmit}>
+            <form className='post-job-form' onSubmit={handleSubmit} ref={formRef}>
               {/* Job Title */}
               <div className='post-job-form-field'>
                 <label className='post-job-form-label'>
@@ -433,6 +510,22 @@ function PostJobPage() {
                 />
               </div>
 
+              {/* Status - Only show when editing */}
+              {editingJobId && (
+                <div className='post-job-form-field'>
+                  <label className='post-job-form-label'>Trạng thái tin tuyển dụng</label>
+                  <select
+                    className='post-job-form-select'
+                    value={formData.status}
+                    onChange={(e) => handleInputChange('status', e.target.value)}
+                  >
+                    <option value='OPEN'>Đang mở</option>
+                    <option value='CLOSED'>Đã đóng</option>
+                    <option value='DRAFT'>Bản nháp</option>
+                  </select>
+                </div>
+              )}
+
               {/* Tags */}
               <div className='post-job-form-section-divider'>
                 <h3 className='post-job-form-section-title'>Tags / Kỹ năng yêu cầu</h3>
@@ -477,11 +570,13 @@ function PostJobPage() {
               {/* Submit Button */}
               <button
                 type='submit'
-                className='post-job-submit-button'
+                className={`post-job-submit-button ${editingJobId ? 'post-job-submit-button-edit' : ''}`}
                 disabled={!isFormValid || isSubmitting}
               >
-                <span className='post-job-submit-icon'>+</span>
-                {isSubmitting ? 'Đang đăng...' : 'Đăng tin tuyển dụng'}
+                <span className='post-job-submit-icon'>{editingJobId ? '✓' : '+'}</span>
+                {isSubmitting 
+                  ? (editingJobId ? 'Đang cập nhật...' : 'Đang đăng...') 
+                  : (editingJobId ? 'Cập nhật tin tuyển dụng' : 'Đăng tin tuyển dụng')}
               </button>
             </form>
           </div>
@@ -495,6 +590,8 @@ function PostJobPage() {
             totalElements={totalElements}
             onPageChange={handlePageChange}
             onJobDeleted={() => fetchJobs(currentPage)}
+            onJobEdit={handleEditJob}
+            editingJobId={editingJobId}
           />
         </div>
       </div>

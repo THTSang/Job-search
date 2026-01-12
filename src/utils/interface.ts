@@ -86,6 +86,21 @@ export interface JobPostRequest {
   postedByUserId: string;
 }
 
+// PUT request body for updating a job
+export interface JobUpdateRequest {
+  title: string;
+  description: string;
+  location: JobLocationRequest;
+  category: JobCategoryRequest;
+  employmentType: EmploymentType;
+  minExperience: number;
+  salaryMin: number;
+  salaryMax: number;
+  status: JobStatus;
+  deadline: string;           // ISO datetime format
+  tags: string[];
+}
+
 // Job interface (API response)
 export interface JobData {
   id: string | null;

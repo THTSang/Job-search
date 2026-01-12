@@ -1,5 +1,5 @@
 import { axiosInstance } from './config';
-import type { JobData, JobPostRequest, PageResponse, JobSearchRequest, JobSearchPageable } from '../utils/interface';
+import type { JobData, JobPostRequest, JobUpdateRequest, PageResponse, JobSearchRequest, JobSearchPageable } from '../utils/interface';
 
 
 // NOTE: POST JOB API
@@ -102,6 +102,18 @@ export const DeleteJobAPI = async (jobId: string): Promise<void> => {
     await axiosInstance.delete(`/jobs/${jobId}`);
   } catch (error) {
     console.error('Error: Deleting job', error);
+    throw error;
+  }
+};
+
+// NOTE: UPDATE JOB API
+// Endpoint: PUT /api/jobs/{id}
+export const UpdateJobAPI = async (jobId: string, jobData: JobUpdateRequest): Promise<JobData | null> => {
+  try {
+    const response = await axiosInstance.put(`/jobs/${jobId}`, jobData);
+    return response.data;
+  } catch (error) {
+    console.error('Error: Updating job', error);
     throw error;
   }
 };

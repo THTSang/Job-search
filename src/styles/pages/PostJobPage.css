@@ -54,6 +54,48 @@
   display: block;
 }
 
+/* Form Header with Edit Mode */
+.post-job-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.post-job-form-header .post-job-form-title {
+  margin: 0;
+}
+
+.post-job-cancel-edit-button {
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.post-job-cancel-edit-button:hover {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+/* Edit Mode Submit Button */
+.post-job-submit-button-edit {
+  background-color: #4a90a4;
+}
+
+.post-job-submit-button-edit:hover {
+  background-color: #3d7a8c;
+}
+
+.post-job-submit-button-edit:active {
+  background-color: #336b7a;
+}
+
 /* Company Info Display */
 .post-job-company-info {
   display: flex;

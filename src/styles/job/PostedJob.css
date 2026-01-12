@@ -224,6 +224,45 @@
   cursor: not-allowed;
 }
 
+/* Edit Button */
+.posted-job-edit-btn {
+  padding: 6px 12px;
+  border: none;
+  background: #f0f7fa;
+  color: #4a90a4;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.posted-job-edit-btn:hover {
+  background: #4a90a4;
+  color: #fff;
+}
+
+.posted-job-edit-btn-active {
+  background: #4a90a4;
+  color: #fff;
+}
+
+.posted-job-edit-btn-active:hover {
+  background: #3d7a8c;
+  color: #fff;
+}
+
+/* Editing State */
+.posted-job-card-editing {
+  border-color: #4a90a4;
+  background: #f0f7fa;
+  box-shadow: 0 0 0 2px rgba(74, 144, 164, 0.2);
+}
+
 /* Delete Confirmation */
 .posted-job-confirm-delete {
   margin-top: 12px;
