@@ -334,6 +334,85 @@
   flex-shrink: 0;
 }
 
+.applied-status-loading {
+  background: #f3f4f6;
+  color: #6b7280;
+  border-color: #e5e7eb;
+}
+
+/* Applied Status Card (detailed view) */
+.applied-status-card {
+  width: 100%;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.applied-status-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #15803d;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.applied-status-header svg {
+  color: #22c55e;
+  flex-shrink: 0;
+}
+
+.applied-status-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.applied-status-date {
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.applied-status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  width: fit-content;
+}
+
+/* Application status colors */
+.applied-status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.applied-status-reviewed {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.applied-status-shortlisted {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.applied-status-rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.applied-status-accepted {
+  background: #d1fae5;
+  color: #065f46;
+}
+
 /* Job Status Badge */
 .job-status {
   width: 100%;

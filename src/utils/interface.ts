@@ -273,3 +273,11 @@ export interface ApplicationStatsInterface {
   interviewing: number;
   offered: number;
 }
+
+// * CHECK APPLICATION STATUS RESPONSE *
+export interface ApplicationCheckResponse {
+  hasApplied: boolean;
+  applicationId: string | null;
+  status: ApplicationStatus | null;
+  appliedAt: string | null;  // ISO datetime format
+}

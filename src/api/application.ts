@@ -3,6 +3,7 @@ import type {
   ApplicationRequestInterface, 
   ApplicationResponseInterface,
   ApplicationStatsInterface,
+  ApplicationCheckResponse,
   JobApplicationInterface,
   PageResponse,
   JobSearchPageable
@@ -97,5 +98,23 @@ export const GetJobApplicationsAPI = async (
   } catch (error) {
     console.error('Error fetching job applications:', error);
     throw error;
+  }
+};
+
+/**
+ * Check if current user has applied for a specific job
+ * GET /api/applications/check/{jobId}
+ */
+export const CheckApplicationAPI = async (
+  jobId: string
+): Promise<ApplicationCheckResponse | null> => {
+  try {
+    const response = await axiosInstance.get<ApplicationCheckResponse>(
+      `/applications/check/${jobId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error checking application status:', error);
+    return null;
   }
 };

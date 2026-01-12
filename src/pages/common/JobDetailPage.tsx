@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { HeaderManager as JobSeekerHeader } from '../../components/header/jobseeker/HeaderManager';
 import { HeaderManager as EmployerHeader } from '../../components/header/employer/HeaderManager';
-import { GetJobByIdAPI, ApplyJobAPI } from '../../api';
-import type { JobData, EmploymentType, ApplicationRequestInterface } from '../../utils/interface';
+import { GetJobByIdAPI, ApplyJobAPI, CheckApplicationAPI } from '../../api';
+import type { JobData, EmploymentType, ApplicationRequestInterface, ApplicationCheckResponse, ApplicationStatus } from '../../utils/interface';
 import '../../styles/pages/JobDetailPage.css';
 
 type ApplyStatus = 'idle' | 'loading' | 'success' | 'error';
@@ -29,9 +29,9 @@ function JobDetailPage() {
   const isEmployer = location.pathname.startsWith('/employer');
   const HeaderManager = isEmployer ? EmployerHeader : JobSeekerHeader;
 
-  // Check if user has already applied (passed via navigation state)
-  const hasApplied = (location.state as { hasApplied?: boolean })?.hasApplied || false;
-  const [hasAppliedState, setHasAppliedState] = useState(hasApplied);
+  // Application status state
+  const [applicationInfo, setApplicationInfo] = useState<ApplicationCheckResponse | null>(null);
+  const [isCheckingApplication, setIsCheckingApplication] = useState(false);
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -57,8 +57,25 @@ function JobDetailPage() {
       }
     };
 
+    const checkApplicationStatus = async () => {
+      if (!jobId || isEmployer) return;
+      
+      try {
+        setIsCheckingApplication(true);
+        const response = await CheckApplicationAPI(jobId);
+        if (response) {
+          setApplicationInfo(response);
+        }
+      } catch (err) {
+        console.error('Error checking application status:', err);
+      } finally {
+        setIsCheckingApplication(false);
+      }
+    };
+
     fetchJob();
-  }, [jobId]);
+    checkApplicationStatus();
+  }, [jobId, isEmployer]);
 
   const handleBack = () => {
     navigate(-1);
@@ -105,6 +122,26 @@ function JobDetailPage() {
 
   const getCompanyInitial = () => {
     return job?.company.name ? job.company.name.charAt(0).toUpperCase() : 'C';
+  };
+
+  const getApplicationStatusLabel = (status: ApplicationStatus): string => {
+    const labels: Record<ApplicationStatus, string> = {
+      'PENDING': 'Chờ xem xét',
+      'REVIEWED': 'Đã xem',
+      'SHORTLISTED': 'Vào danh sách chờ',
+      'REJECTED': 'Không phù hợp',
+      'ACCEPTED': 'Đã chấp nhận'
+    };
+    return labels[status] || status;
+  };
+
+  const formatApplicationDate = (dateStr: string | null): string => {
+    if (!dateStr) return '';
+    return new Date(dateStr).toLocaleDateString('vi-VN', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   };
 
   const handleCompanyClick = () => {
@@ -162,7 +199,13 @@ function JobDetailPage() {
 
       await ApplyJobAPI(applicationData);
       setApplyStatus('success');
-      setHasAppliedState(true);
+      // Update applicationInfo to reflect successful application
+      setApplicationInfo({
+        hasApplied: true,
+        applicationId: null,
+        status: 'PENDING',
+        appliedAt: new Date().toISOString()
+      });
     } catch (err: unknown) {
       setApplyStatus('error');
       
@@ -397,13 +440,32 @@ function JobDetailPage() {
 
             {/* Apply Button or Applied Status */}
             {!isEmployer && job.status === 'OPEN' && (
-              hasAppliedState ? (
-                <div className="applied-status">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                    <polyline points="22 4 12 14.01 9 11.01"/>
-                  </svg>
-                  Đã ứng tuyển
+              isCheckingApplication ? (
+                <div className="applied-status applied-status-loading">
+                  <span className="apply-loading-spinner"></span>
+                  Đang kiểm tra...
+                </div>
+              ) : applicationInfo?.hasApplied ? (
+                <div className="applied-status-card">
+                  <div className="applied-status-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                      <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>Đã ứng tuyển</span>
+                  </div>
+                  <div className="applied-status-details">
+                    {applicationInfo.appliedAt && (
+                      <div className="applied-status-date">
+                        Ngày ứng tuyển: {formatApplicationDate(applicationInfo.appliedAt)}
+                      </div>
+                    )}
+                    {applicationInfo.status && (
+                      <div className={`applied-status-badge applied-status-${applicationInfo.status.toLowerCase()}`}>
+                        {getApplicationStatusLabel(applicationInfo.status)}
+                      </div>
+                    )}
+                  </div>
                 </div>
               ) : (
                 <button className="apply-button" onClick={openApplyModal}>
