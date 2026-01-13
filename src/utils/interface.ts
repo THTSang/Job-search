@@ -294,3 +294,24 @@ export interface GeneralStatsInterface {
   jobCount: number;
   companyCount: number;
 }
+
+// NOTE: ADMIN INTERFACES
+// * User Status for Admin *
+export type UserStatus = 'ACTIVE' | 'INACTIVE' | 'BANNED';
+
+// * User Role *
+export type UserRole = 'USER' | 'RECRUITER' | 'ADMIN';
+
+// * Admin User Interface (for user management) *
+export interface AdminUserInterface {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  status: UserStatus;
+}
+
+// * Update User Status Request *
+export interface UpdateUserStatusRequest {
+  status: UserStatus;
+}
