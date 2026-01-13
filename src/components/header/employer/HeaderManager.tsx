@@ -6,7 +6,8 @@ import logoImage from '../../../assets/logo.jpg';
 function HeaderManager() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { token } = useUserCredential()
+  const { token, userBasicInfo, setToken, setUserBasicInfo } = useUserCredential();
+
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = e.currentTarget.name;
     navigate('/employer/' + name);
@@ -14,6 +15,12 @@ function HeaderManager() {
 
   const handleLogoClick = () => {
     navigate('/employer/home');
+  }
+
+  const handleLogout = () => {
+    setToken('');
+    setUserBasicInfo(null);
+    navigate('/auth');
   }
 
   if (token === '') {
@@ -105,13 +112,13 @@ function HeaderManager() {
           >
             <span className="company-profile-text">Hồ sơ công ty</span>
           </button>
+        </div>
 
-          <button className="logout-button"
-            name='auth'
-            onClick={() => {
-              navigate('/auth');
-            }}
-          >
+        <div className="header-user-section">
+          <span className="header-greeting">
+            Xin chào, <strong>{userBasicInfo?.name || 'Bạn'}</strong>
+          </span>
+          <button className="logout-button" onClick={handleLogout}>
             <span className="logout-text">Đăng xuất</span>
           </button>
         </div>

@@ -56,6 +56,26 @@
   flex: 1;
 }
 
+/* User Section - Greeting and Logout */
+.header-user-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+  margin-right: 20px;
+}
+
+.header-greeting {
+  font-size: 14px;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.header-greeting strong {
+  color: #111827;
+  font-weight: 600;
+}
+
 /* Common Button Styles */
 .header-nav-buttons button {
   padding: 8px 16px;
@@ -94,6 +114,15 @@
   .header-logo img {
     height: 46px;
   }
+
+  .header-user-section {
+    gap: 12px;
+    margin-right: 16px;
+  }
+
+  .header-greeting {
+    font-size: 13px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -101,12 +130,16 @@
   .header-manger-container-user {
     gap: 8px;
     padding: 8px 16px;
+    flex-wrap: wrap;
   }
 
   .header-nav-buttons {
     gap: 2px;
     overflow-x: auto;
     flex-wrap: nowrap;
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .header-nav-buttons button {
@@ -121,5 +154,14 @@
 
   .header-logo img {
     height: 40px;
+  }
+
+  .header-user-section {
+    gap: 10px;
+    margin-right: 10px;
+  }
+
+  .header-greeting {
+    font-size: 12px;
   }
 }
