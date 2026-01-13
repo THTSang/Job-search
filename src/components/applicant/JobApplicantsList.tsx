@@ -20,10 +20,32 @@ const JOB_STATUS_LABELS: Record<string, string> = {
 function JobApplicantsList({ job, isExpanded, onToggle }: JobApplicantsListProps) {
   const [applications, setApplications] = useState<JobApplicationInterface[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingCount, setIsLoadingCount] = useState(true);
   const [totalApplicants, setTotalApplicants] = useState(0);
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasLoadedFull, setHasLoadedFull] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Fetch only the count on mount (small request with size=0 or size=1)
+  const fetchApplicantCount = useCallback(async () => {
+    if (!job.id) return;
+
+    setIsLoadingCount(true);
+    try {
+      // Fetch with size=1 just to get totalElements
+      const response = await GetJobApplicationsAPI(job.id, { page: 0, size: 1 });
+      if (response) {
+        setTotalApplicants(response.totalElements);
+      }
+    } catch (error) {
+      logError('Fetch applicant count', error);
+      // Don't show error for count, just set to 0
+      setTotalApplicants(0);
+    } finally {
+      setIsLoadingCount(false);
+    }
+  }, [job.id]);
+
+  // Fetch full applications list when expanded
   const fetchApplications = useCallback(async () => {
     if (!job.id) return;
 
@@ -34,7 +56,7 @@ function JobApplicantsList({ job, isExpanded, onToggle }: JobApplicantsListProps
       if (response) {
         setApplications(response.content);
         setTotalApplicants(response.totalElements);
-        setHasLoaded(true);
+        setHasLoadedFull(true);
       }
     } catch (error) {
       logError('Fetch job applications', error);
@@ -44,11 +66,17 @@ function JobApplicantsList({ job, isExpanded, onToggle }: JobApplicantsListProps
     }
   }, [job.id]);
 
+  // Fetch count on mount
   useEffect(() => {
-    if (isExpanded && !hasLoaded && job.id) {
+    fetchApplicantCount();
+  }, [fetchApplicantCount]);
+
+  // Fetch full list when expanded (if not already loaded)
+  useEffect(() => {
+    if (isExpanded && !hasLoadedFull && job.id) {
       fetchApplications();
     }
-  }, [isExpanded, hasLoaded, job.id, fetchApplications]);
+  }, [isExpanded, hasLoadedFull, job.id, fetchApplications]);
 
   const handleStatusUpdate = (applicationId: string, newStatus: ApplicationStatus) => {
     setApplications((prev) =>
@@ -85,7 +113,11 @@ function JobApplicantsList({ job, isExpanded, onToggle }: JobApplicantsListProps
 
         <div className="job-applicants-header-right">
           <span className="job-applicants-count">
-            {hasLoaded ? totalApplicants : '...'} ứng viên
+            {isLoadingCount ? (
+              <span className="count-loading">...</span>
+            ) : (
+              <>{totalApplicants} ứng viên</>
+            )}
           </span>
           <span
             className={`job-applicants-toggle ${isExpanded ? 'job-applicants-toggle-expanded' : ''}`}
@@ -104,7 +136,7 @@ function JobApplicantsList({ job, isExpanded, onToggle }: JobApplicantsListProps
             </div>
           ) : errorMessage ? (
             <div className="job-applicants-error">
-              <span>⚠️ {errorMessage}</span>
+              <span>{errorMessage}</span>
               <button onClick={fetchApplications} className="retry-button">
                 Thử lại
               </button>

@@ -580,6 +580,18 @@
   border-radius: 20px;
 }
 
+.job-applicants-count .count-loading {
+  display: inline-block;
+  min-width: 20px;
+  text-align: center;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 .job-applicants-toggle {
   font-size: 12px;
   color: #6b7280;
