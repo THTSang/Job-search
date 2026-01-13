@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { HeaderManager } from '../../components/header/admin/HeaderManager';
-import { GetAllCompaniesAPI, DeleteCompanyAPI } from '../../api';
+import { GetAllCompaniesAPI, DeleteCompanyAPI, VerifyCompanyAPI } from '../../api';
 import { getUserFriendlyMessage, logError } from '../../utils/errorHandler';
 import type { CompanyProfileInterface } from '../../utils/interface';
 import '../../styles/pages/admin/CompanyManagementPage.css';
@@ -23,6 +23,7 @@ function CompanyManagementPage() {
   const [totalElements, setTotalElements] = useState(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [deletingCompanyId, setDeletingCompanyId] = useState<string | null>(null);
+  const [verifyingCompanyId, setVerifyingCompanyId] = useState<string | null>(null);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
@@ -90,15 +91,39 @@ function CompanyManagementPage() {
     } catch (error: unknown) {
       logError('Delete company', error);
       
-      // Check if error is due to existing jobs
+      // Check if error is due to existing jobs or other constraints
       const errorObj = error as { response?: { status?: number; data?: { message?: string } } };
-      if (errorObj?.response?.status === 400 || errorObj?.response?.status === 409) {
-        setDeleteError(`Không thể xóa công ty "${companyName}". Vui lòng xóa tất cả tin tuyển dụng của công ty này trước.`);
+      const status = errorObj?.response?.status;
+      
+      // 400, 403, 409 - likely due to existing jobs or constraints
+      if (status === 400 || status === 403 || status === 409) {
+        setDeleteError(`Công ty "${companyName}" vẫn còn tin tuyển dụng. Vui lòng xóa tất cả tin tuyển dụng của công ty này trước.`);
       } else {
-        setDeleteError(getUserFriendlyMessage(error));
+        setDeleteError(`Công ty "${companyName}" vẫn còn tin tuyển dụng. Vui lòng xóa tất cả tin tuyển dụng của công ty này trước.`);
       }
     } finally {
       setDeletingCompanyId(null);
+    }
+  };
+
+  // Handle verify company
+  const handleVerifyCompany = async (companyId: string, currentStatus: boolean) => {
+    setVerifyingCompanyId(companyId);
+    
+    try {
+      const updatedCompany = await VerifyCompanyAPI(companyId, !currentStatus);
+      if (updatedCompany) {
+        setCompanies(prev => prev.map(company => 
+          company.id === companyId 
+            ? { ...company, isVerified: updatedCompany.isVerified }
+            : company
+        ));
+      }
+    } catch (error) {
+      logError('Verify company', error);
+      alert(getUserFriendlyMessage(error));
+    } finally {
+      setVerifyingCompanyId(null);
     }
   };
 
@@ -143,23 +168,26 @@ function CompanyManagementPage() {
           </div>
         </form>
 
-        {/* Delete Error Alert */}
+        {/* Delete Error Popup */}
         {deleteError && (
-          <div className="company-management-delete-error">
-            <div className="delete-error-content">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-              <span>{deleteError}</span>
+          <div className="delete-error-overlay" onClick={() => setDeleteError(null)}>
+            <div className="delete-error-popup" onClick={(e) => e.stopPropagation()}>
+              <div className="delete-error-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+              </div>
+              <h3 className="delete-error-title">Không thể xóa công ty</h3>
+              <p className="delete-error-message">{deleteError}</p>
+              <button 
+                className="delete-error-btn"
+                onClick={() => setDeleteError(null)}
+              >
+                Đã hiểu
+              </button>
             </div>
-            <button 
-              className="delete-error-close"
-              onClick={() => setDeleteError(null)}
-            >
-              Đóng
-            </button>
           </div>
         )}
 
@@ -203,9 +231,10 @@ function CompanyManagementPage() {
                   ) : (
                     filteredCompanies.map(company => {
                       const isDeleting = deletingCompanyId === company.id;
+                      const isVerifying = verifyingCompanyId === company.id;
 
                       return (
-                        <tr key={company.id} className={isDeleting ? 'row-updating' : ''}>
+                        <tr key={company.id} className={isDeleting || isVerifying ? 'row-updating' : ''}>
                           <td>
                             <div className="company-cell">
                               {company.logoUrl ? (
@@ -247,9 +276,13 @@ function CompanyManagementPage() {
                             </a>
                           </td>
                           <td>
-                            <span className={`verified-badge ${company.isVerified ? 'verified' : 'unverified'}`}>
-                              {company.isVerified ? 'Đã xác minh' : 'Chưa xác minh'}
-                            </span>
+                            <button
+                              className={`verify-btn ${company.isVerified ? 'verified' : 'unverified'}`}
+                              onClick={() => handleVerifyCompany(company.id!, company.isVerified || false)}
+                              disabled={isVerifying}
+                            >
+                              {isVerifying ? 'Đang xử lý...' : company.isVerified ? 'Đã xác minh' : 'Chưa xác minh'}
+                            </button>
                           </td>
                           <td>{formatDate(company.createdAt)}</td>
                           <td>

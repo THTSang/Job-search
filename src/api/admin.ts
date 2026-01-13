@@ -108,3 +108,23 @@ export const DeleteCompanyAPI = async (companyId: string): Promise<void> => {
     throw error;
   }
 };
+
+/**
+ * Verify company (Admin only)
+ * PATCH /api/companies/{id}/verify
+ */
+export const VerifyCompanyAPI = async (
+  companyId: string,
+  isVerified: boolean
+): Promise<CompanyProfileInterface | null> => {
+  try {
+    const response = await axiosInstance.patch<CompanyProfileInterface>(
+      `/companies/${companyId}/verify`,
+      { isVerified }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error verifying company:', error);
+    throw error;
+  }
+};
