@@ -17,3 +17,6 @@ export { PostJobPage } from './employer/PostJobPage';
 export { CreateCompanyPage } from './employer/CreateCompanyPage'
 export { CompanyProfilePage } from './employer/CompanyProfilePage'
 export { DashboardPage } from './employer/DashboardPage'
+
+export { AdminHomePage } from './admin/AdminHomePage'
+export { UserManagementPage } from './admin/UserManagementPage'

@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { HomePage, FindJobPage, JobDetailPage, JobAppliesPage, FollowedCompaniesPage, MessagePage, AIEvaluatePage, CompanyDetailPage } from './pages'
 import { PostJobPage, PersonalProfilePage, CreateCompanyPage, CompanyProfilePage } from './pages'
 import { ResetPasswordPage, AuthPage, ApplicantsPage, DashboardPage } from './pages'
+import { AdminHomePage, UserManagementPage } from './pages'
 import './index.css'
 import App from './App.tsx'
 
@@ -91,6 +92,27 @@ const router = createBrowserRouter([
   {
     path: 'employer/company/:companyId',
     element: <CompanyDetailPage />
+  },
+  // Admin routes
+  {
+    path: 'admin/home',
+    element: <AdminHomePage />
+  },
+  {
+    path: 'admin/users',
+    element: <UserManagementPage />
+  },
+  {
+    path: 'admin/jobs',
+    element: <FindJobPage />
+  },
+  {
+    path: 'admin/companies',
+    element: <AdminHomePage />
+  },
+  {
+    path: 'admin/stats',
+    element: <AdminHomePage />
   }
 
 ])
