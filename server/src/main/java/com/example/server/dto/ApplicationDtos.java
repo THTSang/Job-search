@@ -77,4 +77,10 @@ public class ApplicationDtos {
         ApplicationStatus status,
         Instant appliedAt
     ) {}
+
+    // --- 6. Count Response DTO ---
+    // Mentor Note: Dùng để hiển thị số lượng ứng viên đã nộp đơn (ví dụ: "Over 50 applicants")
+    public record ApplicationCountResponse(
+        long count
+    ) {}
 }

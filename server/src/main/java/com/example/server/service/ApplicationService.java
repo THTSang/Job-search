@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.example.server.dto.ApplicationDtos.ApplicationCheckResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationResponse;
+import com.example.server.dto.ApplicationDtos.ApplicationCountResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationStats;
 import com.example.server.dto.ApplicationDtos.ApplyRequest;
 import com.example.server.dto.ApplicationDtos.RecruiterApplicationDto;
@@ -57,4 +58,11 @@ public interface ApplicationService {
      * @return ApplicationCheckResponse (hasApplied, status, appliedAt).
      */
     ApplicationCheckResponse checkApplied(String jobSeekerId, String jobId);
+
+    /**
+     * Đếm số lượng ứng viên đã nộp đơn vào một Job.
+     * @param jobId ID của Job.
+     * @return ApplicationCountResponse chứa số lượng.
+     */
+    ApplicationCountResponse countApplicationsByJobId(String jobId);
 }

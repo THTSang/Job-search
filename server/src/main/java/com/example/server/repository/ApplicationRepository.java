@@ -34,4 +34,8 @@ public interface ApplicationRepository extends MongoRepository<Application, Stri
 
     // Đếm số đơn theo trạng thái (ví dụ: bao nhiêu đơn đang PENDING, bao nhiêu OFFERED)
     long countByJobSeekerIdAndStatus(String jobSeekerId, ApplicationStatus status);
+
+    // Mentor Note: Đếm tổng số lượng đơn ứng tuyển cho một Job cụ thể
+    // Dùng cho tính năng hiển thị mức độ cạnh tranh của công việc.
+    long countByJobId(String jobId);
 }

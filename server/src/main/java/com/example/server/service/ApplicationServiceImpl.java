@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.server.dto.ApplicationDtos.ApplicationCheckResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationResponse;
+import com.example.server.dto.ApplicationDtos.ApplicationCountResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationStats;
 import com.example.server.dto.ApplicationDtos.ApplyRequest;
 import com.example.server.dto.ApplicationDtos.ApplicantSummary;
@@ -206,6 +207,16 @@ public class ApplicationServiceImpl implements ApplicationService {
                         app.getStatus(), 
                         app.getAppliedAt()))
                 .orElse(new ApplicationCheckResponse(false, null, null, null));
+    }
+
+    @Override
+    public ApplicationCountResponse countApplicationsByJobId(String jobId) {
+        // 1. Check Job Existence (Optional but recommended for 404 consistency)
+        if (!jobRepository.existsById(jobId)) {
+            throw new NotFoundException("Job not found with id: " + jobId);
+        }
+        // 2. Count
+        return new ApplicationCountResponse(applicationRepository.countByJobId(jobId));
     }
 
     private ApplicationResponse toDto(Application app, Job job) {

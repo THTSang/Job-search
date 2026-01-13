@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import com.example.server.dto.ApplicationDtos.ApplicationResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationCheckResponse;
+import com.example.server.dto.ApplicationDtos.ApplicationCountResponse;
 import com.example.server.dto.ApplicationDtos.ApplicationStats;
 import com.example.server.dto.ApplicationDtos.ApplyRequest;
 import com.example.server.dto.ApplicationDtos.RecruiterApplicationDto;
@@ -119,5 +120,15 @@ public class ApplicationController {
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         // Lấy ID user từ token để đảm bảo bảo mật
         return ResponseEntity.ok(applicationService.checkApplied(userDetails.getId(), jobId));
+    }
+
+    /**
+     * Đếm số lượng ứng viên nộp vào một Job.
+     * GET /api/applications/job/{jobId}/count
+     */
+    @GetMapping("/job/{jobId}/count")
+    public ResponseEntity<ApplicationCountResponse> countApplicationsByJobId(
+            @PathVariable String jobId) {
+        return ResponseEntity.ok(applicationService.countApplicationsByJobId(jobId));
     }
 }
