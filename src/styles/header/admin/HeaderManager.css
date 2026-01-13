@@ -1,56 +1,44 @@
-/* Admin Header Container - Guest */
-.admin-header-container-guest {
+/* Header Container - Guest */
+.header-manger-container-quest {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   padding: 12px 24px;
-  background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
-  border-bottom: 2px solid #0d2137;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-/* Admin Header Container - Logged in User */
-.admin-header-container-user {
+/* Header Container - Logged in User */
+.header-manger-container-user {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   padding: 12px 24px;
-  background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
-  border-bottom: 2px solid #0d2137;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-/* Admin Header Logo */
-.admin-header-logo {
+/* Header Logo */
+.header-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
   cursor: pointer;
   flex-shrink: 0;
   margin-left: 20px;
 }
 
-.admin-header-logo img {
+.header-logo img {
   height: 52px;
   width: auto;
   object-fit: contain;
-  border-radius: 8px;
-}
-
-.admin-badge {
-  background-color: #ef4444;
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 4px;
-  letter-spacing: 0.5px;
 }
 
 /* Navigation Buttons Container */
-.admin-header-nav-buttons {
+.header-nav-buttons {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,33 +46,8 @@
   flex: 1;
 }
 
-/* Admin Nav Button */
-.admin-nav-button {
-  padding: 10px 18px;
-  background-color: transparent;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #e5e7eb;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-.admin-nav-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-}
-
-.admin-nav-button-active {
-  background-color: #ffffff !important;
-  color: #1e3a5f !important;
-  font-weight: 600;
-}
-
-/* Admin User Section */
-.admin-header-user-section {
+/* User Section - Greeting and Logout */
+.header-user-section {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -92,91 +55,125 @@
   margin-right: 20px;
 }
 
-.admin-header-greeting {
+.header-greeting {
   font-size: 14px;
-  color: #e5e7eb;
+  color: #374151;
   white-space: nowrap;
 }
 
-.admin-header-greeting strong {
-  color: #ffffff;
+.header-greeting strong {
+  color: #111827;
   font-weight: 600;
 }
 
-/* Admin Login Button */
-.admin-login-button {
-  background-color: #ffffff !important;
-  color: #1e3a5f !important;
-  padding: 10px 20px;
+/* Common Button Styles */
+.header-nav-buttons button {
+  padding: 8px 16px;
+  background-color: transparent;
   border: none;
   border-radius: 6px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
+  color: #333333;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.admin-login-button:hover {
-  background-color: #f3f4f6 !important;
+.header-nav-buttons button:hover {
+  background-color: #f3f4f6;
 }
 
-/* Admin Logout Button */
-.admin-logout-button {
+/* Home Button */
+.home-button-isactive {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+/* Users Button (Admin) */
+.users-button-isactive {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+/* Jobs Button (Admin) */
+.jobs-button-isactive {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+/* Companies Button (Admin) */
+.companies-button-isactive {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+/* Stats Button (Admin) */
+.stats-button-isactive {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+/* Login Button */
+.login-button {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
+.login-button:hover {
+  background-color: #2a2d39 !important;
+}
+
+/* Logout Button */
+.logout-button {
   background-color: #dc2626 !important;
   color: #ffffff !important;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.admin-logout-button:hover {
+.logout-button:hover {
   background-color: #b91c1c !important;
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .admin-header-container-guest,
-  .admin-header-container-user {
+  .header-manger-container-quest,
+  .header-manger-container-user {
     padding: 12px 16px;
     gap: 12px;
   }
 
-  .admin-header-nav-buttons {
+  .header-nav-buttons {
     gap: 2px;
   }
 
-  .admin-nav-button {
-    padding: 8px 14px;
+  .header-nav-buttons button {
+    padding: 8px 12px;
     font-size: 14px;
   }
 
-  .admin-header-logo img {
+  .header-logo img {
     height: 46px;
   }
 
-  .admin-header-user-section {
+  .header-user-section {
     gap: 12px;
     margin-right: 16px;
   }
 
-  .admin-header-greeting {
+  .header-greeting {
     font-size: 13px;
   }
 }
 
 @media (max-width: 768px) {
-  .admin-header-container-guest,
-  .admin-header-container-user {
+  .header-manger-container-quest,
+  .header-manger-container-user {
     gap: 8px;
     padding: 8px 16px;
     flex-wrap: wrap;
   }
 
-  .admin-header-nav-buttons {
+  .header-nav-buttons {
     gap: 2px;
     overflow-x: auto;
     flex-wrap: nowrap;
@@ -185,31 +182,26 @@
     justify-content: flex-start;
   }
 
-  .admin-nav-button {
+  .header-nav-buttons button {
     padding: 6px 10px;
     font-size: 13px;
     white-space: nowrap;
   }
 
-  .admin-header-logo {
+  .header-logo {
     margin-left: 10px;
   }
 
-  .admin-header-logo img {
+  .header-logo img {
     height: 40px;
   }
 
-  .admin-badge {
-    font-size: 9px;
-    padding: 3px 6px;
-  }
-
-  .admin-header-user-section {
+  .header-user-section {
     gap: 10px;
     margin-right: 10px;
   }
 
-  .admin-header-greeting {
+  .header-greeting {
     font-size: 12px;
   }
 }

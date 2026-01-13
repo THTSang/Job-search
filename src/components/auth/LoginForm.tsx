@@ -51,8 +51,6 @@ function LoginForm() {
         navigate('/');
       }
     } catch (error) {
-      console.log(email);
-      console.log(password);
       setError('Đăng nhập thất bại. Vui lòng kiểm tra lại Email và mật khẩu');
       console.error('Login error:', error);
     } finally {
@@ -84,7 +82,7 @@ function LoginForm() {
           disabled={isLoading}
         />
         {email && !validateEmail(email) && (
-          <span className='auth-form-field-error'>Email khong hop le</span>
+          <span className='auth-form-field-error'>Email không hợp lệ</span>
         )}
       </div>
 

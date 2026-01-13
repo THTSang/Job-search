@@ -20,3 +20,4 @@ export { DashboardPage } from './employer/DashboardPage'
 
 export { AdminHomePage } from './admin/AdminHomePage'
 export { UserManagementPage } from './admin/UserManagementPage'
+export { JobManagementPage } from './admin/JobManagementPage'

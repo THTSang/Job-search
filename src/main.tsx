@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { HomePage, FindJobPage, JobDetailPage, JobAppliesPage, FollowedCompaniesPage, MessagePage, AIEvaluatePage, CompanyDetailPage } from './pages'
 import { PostJobPage, PersonalProfilePage, CreateCompanyPage, CompanyProfilePage } from './pages'
 import { ResetPasswordPage, AuthPage, ApplicantsPage, DashboardPage } from './pages'
-import { AdminHomePage, UserManagementPage } from './pages'
+import { AdminHomePage, UserManagementPage, JobManagementPage } from './pages'
 import './index.css'
 import App from './App.tsx'
 
@@ -86,6 +86,10 @@ const router = createBrowserRouter([
     element: <DashboardPage />
   },
   {
+    path: 'employer/messages',
+    element: <MessagePage />
+  },
+  {
     path: 'employer/job/:jobId',
     element: <JobDetailPage />
   },
@@ -104,7 +108,7 @@ const router = createBrowserRouter([
   },
   {
     path: 'admin/jobs',
-    element: <FindJobPage />
+    element: <JobManagementPage />
   },
   {
     path: 'admin/companies',
