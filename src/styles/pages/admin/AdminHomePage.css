@@ -1,152 +1,289 @@
-/* Admin Home Container */
-.admin-home-container {
+/* Admin Hero Section - matches HomePage slogan-section */
+.admin-hero-section {
+  padding: 80px 24px 40px;
+  text-align: center;
+  background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+}
+
+.admin-hero-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.admin-hero-subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: #6b7280;
+  margin-bottom: 0;
+}
+
+/* Admin Stats Section - matches HomePage status-section */
+.admin-status-section {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 24px;
+  padding: 40px 24px;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 32px 24px;
-}
-
-/* Header Section */
-.admin-home-header {
-  margin-bottom: 32px;
-}
-
-.admin-home-header h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #1e3a5f;
-  margin-bottom: 8px;
-}
-
-.admin-home-header p {
-  font-size: 16px;
-  color: #6b7280;
-}
-
-/* Stats Grid */
-.admin-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  margin-bottom: 40px;
 }
 
 .admin-stat-card {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e5e7eb;
+  flex: 1;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-width: 200px;
+  position: relative;
 }
 
 .admin-stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
-.admin-stat-icon {
-  width: 60px;
-  height: 60px;
+/* Icon indicators for stat cards */
+.admin-stat-card:nth-child(1)::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
   border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
+  background-color: #dbeafe;
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%233b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>');
 }
 
-.admin-stat-icon.user-icon {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+.admin-stat-card:nth-child(2)::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  border-radius: 12px;
+  background-color: #d1fae5;
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%2310b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>');
 }
 
-.admin-stat-icon.job-icon {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-
-.admin-stat-icon.company-icon {
-  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-}
-
-.admin-stat-info h3 {
-  font-size: 14px;
-  font-weight: 500;
-  color: #6b7280;
-  margin-bottom: 4px;
+.admin-stat-card:nth-child(3)::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  border-radius: 12px;
+  background-color: #e9d5ff;
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>');
 }
 
 .admin-stat-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.admin-stat-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* Quick Actions Section */
+.admin-actions-section {
+  padding: 60px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-actions-title {
   font-size: 32px;
   font-weight: 700;
-  color: #1f2937;
-}
-
-/* Quick Actions */
-.admin-quick-actions {
-  margin-top: 40px;
-}
-
-.admin-quick-actions h2 {
-  font-size: 20px;
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 20px;
+  color: #111827;
+  margin-bottom: 32px;
 }
 
 .admin-actions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
 }
 
 .admin-action-card {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 16px 20px;
+  border-radius: 12px;
+  padding: 20px 24px;
   text-decoration: none;
   color: #374151;
-  font-weight: 500;
   transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .admin-action-card:hover {
   background: #f9fafb;
-  border-color: #1e3a5f;
-  color: #1e3a5f;
+  border-color: #6366f1;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+  transform: translateY(-2px);
 }
 
-.admin-action-card .action-icon {
-  font-size: 24px;
+/* Action Icons */
+.admin-action-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.admin-action-card .action-text {
-  font-size: 15px;
+.admin-action-icon svg {
+  width: 24px;
+  height: 24px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .admin-home-container {
-    padding: 20px 16px;
+.admin-action-icon-blue {
+  background-color: #dbeafe;
+  color: #3b82f6;
+}
+
+.admin-action-icon-green {
+  background-color: #d1fae5;
+  color: #10b981;
+}
+
+.admin-action-icon-purple {
+  background-color: #e9d5ff;
+  color: #a855f7;
+}
+
+.admin-action-icon-orange {
+  background-color: #ffedd5;
+  color: #f97316;
+}
+
+/* Action Content */
+.admin-action-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-action-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.admin-action-desc {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .admin-hero-title {
+    font-size: 40px;
   }
 
-  .admin-home-header h1 {
-    font-size: 24px;
-  }
-
-  .admin-stats-grid {
+  .admin-status-section {
     gap: 16px;
   }
 
+  .admin-actions-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-hero-section {
+    padding: 60px 16px 32px;
+  }
+
+  .admin-hero-title {
+    font-size: 32px;
+  }
+
+  .admin-hero-subtitle {
+    font-size: 16px;
+  }
+
+  .admin-status-section {
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px 16px;
+  }
+
   .admin-stat-card {
-    padding: 20px;
+    min-width: auto;
+  }
+
+  .admin-actions-section {
+    padding: 40px 16px;
+  }
+
+  .admin-actions-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .admin-actions-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-hero-title {
+    font-size: 28px;
+  }
+
+  .admin-hero-subtitle {
+    font-size: 14px;
   }
 
   .admin-stat-value {
     font-size: 28px;
+  }
+
+  .admin-action-card {
+    padding: 16px 20px;
+  }
+
+  .admin-action-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .admin-action-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .admin-action-text {
+    font-size: 15px;
+  }
+
+  .admin-action-desc {
+    font-size: 13px;
   }
 }
