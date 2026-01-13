@@ -146,6 +146,63 @@
   color: #6b7280;
 }
 
+/* Company Verification Badges */
+.post-job-company-verified {
+  margin-left: auto;
+  padding: 6px 12px;
+  background-color: #dcfce7;
+  color: #166534;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.post-job-company-unverified {
+  margin-left: auto;
+  padding: 6px 12px;
+  background-color: #fef3c7;
+  color: #92400e;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Unverified Company Warning */
+.post-job-unverified-warning {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background-color: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.post-job-unverified-warning svg {
+  flex-shrink: 0;
+  color: #f59e0b;
+  margin-top: 2px;
+}
+
+.post-job-unverified-warning-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.post-job-unverified-warning-content strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.post-job-unverified-warning-content p {
+  font-size: 13px;
+  color: #a16207;
+  margin: 0;
+  line-height: 1.5;
+}
+
 /* No Company State */
 .post-job-no-company {
   padding: 24px;

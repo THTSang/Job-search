@@ -256,6 +256,48 @@
   color: #fff;
 }
 
+/* Toggle Status Button */
+.posted-job-toggle-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.posted-job-toggle-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Close button (when job is OPEN) */
+.posted-job-toggle-close {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.posted-job-toggle-close:hover:not(:disabled) {
+  background: #ffc107;
+  color: #1a1a2e;
+}
+
+/* Open button (when job is CLOSED) */
+.posted-job-toggle-open {
+  background: #d4edda;
+  color: #155724;
+}
+
+.posted-job-toggle-open:hover:not(:disabled) {
+  background: #28a745;
+  color: #fff;
+}
+
 /* Editing State */
 .posted-job-card-editing {
   border-color: #4a90a4;

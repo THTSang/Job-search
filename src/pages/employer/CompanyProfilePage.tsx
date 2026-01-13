@@ -166,8 +166,10 @@ function CompanyProfilePage() {
                 </svg>
               )}
             </div>
-            {companyProfile.isVerified && (
+            {companyProfile.isVerified ? (
               <span className="profile-verified-badge">Đã xác minh</span>
+            ) : (
+              <span className="profile-unverified-badge">Chưa xác minh</span>
             )}
           </div>
         </div>

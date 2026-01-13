@@ -192,6 +192,47 @@ function PostJobPage() {
     setSuccess('');
   };
 
+  // Handle toggle job status (Open/Close) - Optimistic UI update
+  const handleJobStatusChange = async (job: JobData, newStatus: JobStatus) => {
+    if (!job.id) return;
+
+    // Optimistically update local state immediately (no loading flicker)
+    const previousStatus = job.status;
+    setPostedJobs(prev => prev.map(j => 
+      j.id === job.id ? { ...j, status: newStatus } : j
+    ));
+
+    const jobUpdateRequest: JobUpdateRequest = {
+      title: job.title,
+      description: job.description,
+      location: {
+        city: job.location.city,
+        address: job.location.address
+      },
+      category: {
+        name: job.category.name
+      },
+      employmentType: job.employmentType,
+      minExperience: job.minExperience,
+      salaryMin: job.salaryMin,
+      salaryMax: job.salaryMax,
+      status: newStatus,
+      deadline: job.deadline || new Date().toISOString(),
+      tags: job.tags || []
+    };
+
+    try {
+      await UpdateJobAPI(job.id, jobUpdateRequest);
+      // Success - state already updated optimistically
+    } catch (error) {
+      // Rollback on error
+      setPostedJobs(prev => prev.map(j => 
+        j.id === job.id ? { ...j, status: previousStatus } : j
+      ));
+      console.error('Error toggling job status:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -200,6 +241,11 @@ function PostJobPage() {
     // Validation
     if (!company?.id) {
       setError('Vui lòng tạo hồ sơ công ty trước khi đăng tin tuyển dụng');
+      return;
+    }
+
+    if (!company.isVerified) {
+      setError('Công ty của bạn chưa được xác minh. Vui lòng chờ quản trị viên xác minh trước khi đăng tin.');
       return;
     }
 
@@ -282,7 +328,7 @@ function PostJobPage() {
   };
 
   const isFormValid = formData.title && formData.description &&
-    formData.location.city && formData.employmentType && company?.id;
+    formData.location.city && formData.employmentType && company?.id && company?.isVerified;
 
 
   if (isLoadingCompany) {
@@ -337,11 +383,31 @@ function PostJobPage() {
                   <span className='post-job-company-name'>{company.name}</span>
                   <span className='post-job-company-industry'>{company.industry || 'Chưa cập nhật ngành nghề'}</span>
                 </div>
+                {company.isVerified ? (
+                  <span className='post-job-company-verified'>Đã xác minh</span>
+                ) : (
+                  <span className='post-job-company-unverified'>Chưa xác minh</span>
+                )}
               </div>
             ) : (
               <div className='post-job-no-company'>
                 <p>Bạn chưa có hồ sơ công ty.</p>
                 <a href='/employer/companyprofile'>Tạo hồ sơ công ty</a>
+              </div>
+            )}
+
+            {/* Unverified Company Warning */}
+            {company && !company.isVerified && (
+              <div className='post-job-unverified-warning'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <div className='post-job-unverified-warning-content'>
+                  <strong>Công ty chưa được xác minh</strong>
+                  <p>Bạn không thể đăng tin tuyển dụng cho đến khi công ty được quản trị viên xác minh. Vui lòng chờ hoặc liên hệ quản trị viên để được hỗ trợ.</p>
+                </div>
               </div>
             )}
 
@@ -592,6 +658,7 @@ function PostJobPage() {
             onJobDeleted={() => fetchJobs(currentPage)}
             onJobEdit={handleEditJob}
             editingJobId={editingJobId}
+            onJobStatusChange={handleJobStatusChange}
           />
         </div>
       </div>

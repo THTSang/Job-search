@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { JobData, EmploymentType } from '../../../utils/interface';
+import type { JobData, EmploymentType, JobStatus } from '../../../utils/interface';
 import { DeleteJobAPI } from '../../../api';
 import '../../../styles/job/PostedJob.css';
 
@@ -15,6 +15,8 @@ interface PostedJobProps {
   // Edit mode
   onJobEdit?: (job: JobData) => void;
   editingJobId?: string | null;
+  // Status toggle
+  onJobStatusChange?: (job: JobData, newStatus: JobStatus) => Promise<void>;
 }
 
 function PostedJob({
@@ -26,10 +28,12 @@ function PostedJob({
   onPageChange,
   onJobDeleted,
   onJobEdit,
-  editingJobId
+  editingJobId,
+  onJobStatusChange
 }: PostedJobProps) {
   const [deletingJobId, setDeletingJobId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [togglingJobId, setTogglingJobId] = useState<string | null>(null);
 
   const handleDeleteClick = (jobId: string) => {
     setConfirmDeleteId(jobId);
@@ -49,6 +53,20 @@ function PostedJob({
       console.error('Error deleting job:', error);
     } finally {
       setDeletingJobId(null);
+    }
+  };
+
+  const handleToggleStatus = async (job: JobData) => {
+    if (!onJobStatusChange || !job.id) return;
+    
+    const newStatus: JobStatus = job.status === 'OPEN' ? 'CLOSED' : 'OPEN';
+    setTogglingJobId(job.id);
+    try {
+      await onJobStatusChange(job, newStatus);
+    } catch (error) {
+      console.error('Error toggling job status:', error);
+    } finally {
+      setTogglingJobId(null);
     }
   };
 
@@ -221,6 +239,21 @@ function PostedJob({
                       <span className='posted-job-deadline'>
                         Hạn: {new Date(job.deadline).toLocaleDateString('vi-VN')}
                       </span>
+                    )}
+                    {/* Toggle Open/Close Button */}
+                    {job.id && onJobStatusChange && job.status !== 'DRAFT' && (
+                      <button
+                        className={`posted-job-toggle-btn ${job.status === 'OPEN' ? 'posted-job-toggle-close' : 'posted-job-toggle-open'}`}
+                        onClick={() => handleToggleStatus(job)}
+                        disabled={togglingJobId === job.id}
+                        title={job.status === 'OPEN' ? 'Đóng tin tuyển dụng' : 'Mở lại tin tuyển dụng'}
+                      >
+                        {togglingJobId === job.id 
+                          ? '...' 
+                          : job.status === 'OPEN' 
+                            ? 'Đóng tin' 
+                            : 'Mở tin'}
+                      </button>
                     )}
                     {job.id && onJobEdit && (
                       <button

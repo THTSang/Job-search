@@ -35,6 +35,39 @@
   color: #999;
 }
 
+/* Password Input Wrapper */
+.auth-form-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-form-password-wrapper .auth-form-input {
+  padding-right: 44px;
+}
+
+.auth-form-password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.auth-form-password-toggle:hover {
+  color: #333;
+}
+
+.auth-form-password-toggle:focus {
+  outline: none;
+}
+
 .auth-form-account-type {
   margin-bottom: 24px;
 }
@@ -124,6 +157,21 @@
 
 .auth-form-submit-button:disabled:hover {
   background-color: #d1d5db;
+}
+
+.auth-form-submit-button-loading {
+  position: relative;
+  color: #666;
+}
+
+.auth-form-input:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.auth-form-radio-option input[type="radio"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 /* Success notification */

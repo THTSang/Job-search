@@ -35,6 +35,39 @@
   color: #999;
 }
 
+/* Password Input Wrapper */
+.auth-form-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-form-password-wrapper .auth-form-input {
+  padding-right: 44px;
+}
+
+.auth-form-password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.auth-form-password-toggle:hover {
+  color: #333;
+}
+
+.auth-form-password-toggle:focus {
+  outline: none;
+}
+
 .auth-forgot-password-link {
   margin-top: 12px;
   margin-bottom: 24px;

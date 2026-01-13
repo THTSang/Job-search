@@ -91,11 +91,7 @@ function CompanyManagementPage() {
     } catch (error: unknown) {
       logError('Delete company', error);
       
-      // Check if error is due to existing jobs or other constraints
-      const errorObj = error as { response?: { status?: number; data?: { message?: string } } };
-      const status = errorObj?.response?.status;
-      
-      // 400, 403, 409 - likely due to existing jobs or constraints
+      // Show error message - likely due to existing jobs or constraints
       setDeleteError(`Công ty "${companyName}" vẫn còn tin tuyển dụng. Vui lòng xóa tất cả tin tuyển dụng của công ty này trước.`);
     } finally {
       setDeletingCompanyId(null);
