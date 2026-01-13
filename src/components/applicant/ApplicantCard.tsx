@@ -1,30 +1,44 @@
+import { useState } from 'react';
 import type { JobApplicationInterface, ApplicationStatus } from '../../utils/interface';
+import { UpdateApplicationStatusAPI } from '../../api';
+import { getUserFriendlyMessage, logError } from '../../utils/errorHandler';
 import '../../styles/pages/ApplicantsPage.css';
 
 interface ApplicantCardProps {
   application: JobApplicationInterface;
+  onStatusUpdate?: (applicationId: string, newStatus: ApplicationStatus) => void;
 }
 
-const STATUS_CONFIG: Record<ApplicationStatus, { label: string; className: string }> = {
-  'PENDING': { label: 'Chờ xử lý', className: 'status-pending' },
-  'REVIEWED': { label: 'Đã xem', className: 'status-reviewing' },
-  'SHORTLISTED': { label: 'Trong danh sách', className: 'status-shortlisted' },
-  'REJECTED': { label: 'Từ chối', className: 'status-rejected' },
-  'ACCEPTED': { label: 'Chấp nhận', className: 'status-accepted' }
+type StatusConfig = {
+  label: string;
+  className: string;
 };
 
-function ApplicantCard({ application }: ApplicantCardProps) {
-  const { applicant, status, appliedAt, resumeUrl } = application;
-  
-  const statusConfig = STATUS_CONFIG[status] || STATUS_CONFIG['PENDING'];
-  
-  const getAvatarInitial = (name: string) => {
-    return name ? name.charAt(0).toUpperCase() : '?';
-  };
+const STATUS_CONFIG: Record<ApplicationStatus, StatusConfig> = {
+  PENDING: { label: 'Chờ xử lý', className: 'status-pending' },
+  REVIEWED: { label: 'Đã xem', className: 'status-reviewing' },
+  SHORTLISTED: { label: 'Trong danh sách', className: 'status-shortlisted' },
+  REJECTED: { label: 'Từ chối', className: 'status-rejected' },
+  ACCEPTED: { label: 'Chấp nhận', className: 'status-accepted' },
+};
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('vi-VN');
-  };
+// Helper functions
+const getAvatarInitial = (name: string): string => {
+  return name ? name.charAt(0).toUpperCase() : '?';
+};
+
+const formatDate = (dateString: string): string => {
+  return new Date(dateString).toLocaleDateString('vi-VN');
+};
+
+function ApplicantCard({ application, onStatusUpdate }: ApplicantCardProps) {
+  const { id, applicant, status, appliedAt, resumeUrl } = application;
+
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState<ApplicationStatus>(status);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const statusConfig = STATUS_CONFIG[currentStatus] || STATUS_CONFIG.PENDING;
 
   const handleViewCV = () => {
     if (resumeUrl) {
@@ -32,9 +46,29 @@ function ApplicantCard({ application }: ApplicantCardProps) {
     }
   };
 
+  const handleStatusChange = async (newStatus: ApplicationStatus) => {
+    if (newStatus === currentStatus || isUpdating) return;
+
+    setIsUpdating(true);
+    setErrorMessage(null);
+    try {
+      await UpdateApplicationStatusAPI(id, { status: newStatus });
+      setCurrentStatus(newStatus);
+      onStatusUpdate?.(id, newStatus);
+    } catch (error) {
+      logError('Update application status', error);
+      setErrorMessage(getUserFriendlyMessage(error));
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const canChangeStatus = currentStatus !== 'ACCEPTED' && currentStatus !== 'REJECTED';
+
   return (
-    <div className='applicant-card'>
-      <div className='applicant-avatar'>
+    <div className={`applicant-card ${isUpdating ? 'applicant-card-updating' : ''}`}>
+      {/* Avatar */}
+      <div className="applicant-avatar">
         {applicant.avatarUrl ? (
           <img src={applicant.avatarUrl} alt={applicant.fullName} />
         ) : (
@@ -42,34 +76,76 @@ function ApplicantCard({ application }: ApplicantCardProps) {
         )}
       </div>
 
-      <div className='applicant-info'>
-        <h3 className='applicant-name'>{applicant.fullName}</h3>
+      {/* Info */}
+      <div className="applicant-info">
+        <h3 className="applicant-name">{applicant.fullName}</h3>
         {applicant.professionalTitle && (
-          <p className='applicant-title'>{applicant.professionalTitle}</p>
+          <p className="applicant-title">{applicant.professionalTitle}</p>
         )}
-        <p className='applicant-email'>{applicant.email}</p>
-        <p className='applicant-date'>Ngày nộp: {formatDate(appliedAt)}</p>
+        <p className="applicant-email">{applicant.email}</p>
+        <p className="applicant-date">Ngày nộp: {formatDate(appliedAt)}</p>
       </div>
 
-      <div className='applicant-status'>
+      {/* Status Badge */}
+      <div className="applicant-status">
         <span className={`applicant-status-badge ${statusConfig.className}`}>
           {statusConfig.label}
         </span>
       </div>
 
-      <div className='applicant-actions'>
-        <button 
-          className='applicant-action-button action-view'
+      {/* Actions */}
+      <div className="applicant-actions">
+        <button
+          className="applicant-action-button action-view"
           onClick={handleViewCV}
-          disabled={!resumeUrl}
+          disabled={!resumeUrl || isUpdating}
+          title={resumeUrl ? 'Xem CV' : 'Không có CV'}
         >
-          <span className='action-icon'>👁</span>
+          <span className="action-icon">📄</span>
           Xem CV
         </button>
-        <button className='applicant-action-button action-message'>
-          <span className='action-icon'>💬</span>
-          Nhắn tin
-        </button>
+
+        {canChangeStatus && (
+          <>
+            <button
+              className="applicant-action-button action-shortlist"
+              onClick={() => handleStatusChange('SHORTLISTED')}
+              disabled={isUpdating || currentStatus === 'SHORTLISTED'}
+              title="Thêm vào danh sách"
+            >
+              <span className="action-icon">⭐</span>
+              {currentStatus === 'SHORTLISTED' ? 'Đã chọn' : 'Chọn'}
+            </button>
+
+            <button
+              className="applicant-action-button action-accept"
+              onClick={() => handleStatusChange('ACCEPTED')}
+              disabled={isUpdating}
+              title="Chấp nhận ứng viên"
+            >
+              <span className="action-icon">✓</span>
+              Chấp nhận
+            </button>
+
+            <button
+              className="applicant-action-button action-reject"
+              onClick={() => handleStatusChange('REJECTED')}
+              disabled={isUpdating}
+              title="Từ chối ứng viên"
+            >
+              <span className="action-icon">✕</span>
+              Từ chối
+            </button>
+          </>
+        )}
+
+        {isUpdating && <span className="applicant-updating-text">Đang cập nhật...</span>}
+        
+        {errorMessage && (
+          <span className="applicant-error-text" title={errorMessage}>
+            ⚠️ Lỗi
+          </span>
+        )}
       </div>
     </div>
   );

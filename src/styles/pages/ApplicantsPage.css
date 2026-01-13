@@ -598,10 +598,35 @@
 }
 
 .job-applicants-loading,
-.job-applicants-empty {
+.job-applicants-empty,
+.job-applicants-error {
   text-align: center;
   padding: 40px 20px;
   color: #6b7280;
+}
+
+.job-applicants-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #dc2626;
+}
+
+.job-applicants-error .retry-button {
+  padding: 8px 16px;
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.job-applicants-error .retry-button:hover {
+  background-color: #2563eb;
 }
 
 .job-applicants-list {
@@ -680,6 +705,78 @@
 .status-shortlisted {
   background-color: #e0e7ff;
   color: #4338ca;
+}
+
+/* Applicant Card States */
+.applicant-card-updating {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.applicant-updating-text {
+  font-size: 13px;
+  color: #6b7280;
+  font-style: italic;
+  margin-left: 8px;
+}
+
+.applicant-error-text {
+  font-size: 13px;
+  color: #dc2626;
+  font-weight: 500;
+  margin-left: 8px;
+  cursor: help;
+}
+
+/* Action Button Styles */
+.action-shortlist {
+  border-color: #c7d2fe;
+  color: #4338ca;
+}
+
+.action-shortlist:hover:not(:disabled) {
+  background-color: #e0e7ff;
+  border-color: #a5b4fc;
+}
+
+.action-shortlist:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-accept {
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.action-accept:hover:not(:disabled) {
+  background-color: #dcfce7;
+  border-color: #86efac;
+}
+
+.action-accept:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-reject {
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.action-reject:hover:not(:disabled) {
+  background-color: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.action-reject:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-view:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Responsive for Job Applicants */

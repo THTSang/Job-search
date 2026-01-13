@@ -78,19 +78,16 @@ body {
   background-color: #e9d5ff;
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>');
 }
-.job-counting-title-section::before,
-.company-counting-title-section::before,
-.user-counting-title-section::before {
-  content: attr(data-count);
-  display: block;
+.job-counting-title-section,
+.company-counting-title-section,
+.user-counting-title-section {
   font-size: 36px;
   font-weight: 700;
   color: #111827;
   margin-bottom: 8px;
 }
-.job-counting-title-section,
-.company-counting-title-section,
-.user-counting-title-section {
+
+.counting-label {
   font-size: 16px;
   font-weight: 500;
   color: #6b7280;

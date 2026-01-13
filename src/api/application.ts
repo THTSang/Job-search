@@ -4,6 +4,7 @@ import type {
   ApplicationResponseInterface,
   ApplicationStatsInterface,
   ApplicationCheckResponse,
+  UpdateApplicationStatusRequest,
   JobApplicationInterface,
   PageResponse,
   JobSearchPageable
@@ -116,5 +117,25 @@ export const CheckApplicationAPI = async (
   } catch (error) {
     console.error('Error checking application status:', error);
     return null;
+  }
+};
+
+/**
+ * Update application status (employer)
+ * PUT /api/applications/{id}/status
+ */
+export const UpdateApplicationStatusAPI = async (
+  applicationId: string,
+  data: UpdateApplicationStatusRequest
+): Promise<ApplicationResponseInterface | null> => {
+  try {
+    const response = await axiosInstance.put<ApplicationResponseInterface>(
+      `/applications/${applicationId}/status`,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating application status:', error);
+    throw error;
   }
 };

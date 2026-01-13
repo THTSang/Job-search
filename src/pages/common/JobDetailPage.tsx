@@ -4,7 +4,15 @@ import { HeaderManager as JobSeekerHeader } from '../../components/header/jobsee
 import { HeaderManager as EmployerHeader } from '../../components/header/employer/HeaderManager';
 import { GetJobByIdAPI, ApplyJobAPI, CheckApplicationAPI } from '../../api';
 import type { JobData, EmploymentType, ApplicationRequestInterface, ApplicationCheckResponse, ApplicationStatus } from '../../utils/interface';
+import { createErrorHandler, logError } from '../../utils/errorHandler';
 import '../../styles/pages/JobDetailPage.css';
+
+// Custom error handler for apply job with specific messages
+const handleApplyError = createErrorHandler({
+  409: 'Bạn đã ứng tuyển công việc này rồi',
+  401: 'Vui lòng đăng nhập để ứng tuyển',
+  403: 'Bạn không có quyền ứng tuyển công việc này',
+});
 
 type ApplyStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -50,8 +58,8 @@ function JobDetailPage() {
           setError('Job not found');
         }
       } catch (err) {
-        console.error('Error fetching job:', err);
-        setError('Failed to load job details');
+        logError('Fetch job details', err);
+        setError('Không thể tải thông tin công việc. Vui lòng thử lại sau.');
       } finally {
         setIsLoading(false);
       }
@@ -67,7 +75,8 @@ function JobDetailPage() {
           setApplicationInfo(response);
         }
       } catch (err) {
-        console.error('Error checking application status:', err);
+        logError('Check application status', err);
+        // Silent fail - don't show error to user, just assume not applied
       } finally {
         setIsCheckingApplication(false);
       }
@@ -208,22 +217,10 @@ function JobDetailPage() {
       });
     } catch (err: unknown) {
       setApplyStatus('error');
+      logError('Apply job', err);
       
-      // Handle specific error messages
-      if (err && typeof err === 'object' && 'response' in err) {
-        const axiosError = err as { response?: { status?: number; data?: { message?: string } } };
-        if (axiosError.response?.status === 409) {
-          setApplyError('Bạn đã ứng tuyển công việc này rồi');
-        } else if (axiosError.response?.status === 401) {
-          setApplyError('Vui lòng đăng nhập để ứng tuyển');
-        } else if (axiosError.response?.data?.message) {
-          setApplyError(axiosError.response.data.message);
-        } else {
-          setApplyError('Có lỗi xảy ra. Vui lòng thử lại sau.');
-        }
-      } else {
-        setApplyError('Có lỗi xảy ra. Vui lòng thử lại sau.');
-      }
+      // Use custom error handler for user-friendly messages
+      setApplyError(handleApplyError(err));
     }
   };
 

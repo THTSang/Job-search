@@ -18,7 +18,7 @@ export const useUserCredential = create<UserCredential>()(
       setToken: (newToken: string) => set(() => ({
         token: newToken
       })),
-      setUserBasicInfo: (userInfo: AuthResponse) => set(() => ({
+      setUserBasicInfo: (userInfo: AuthResponse | null) => set(() => ({
         userBasicInfo: userInfo
       }))
     }),

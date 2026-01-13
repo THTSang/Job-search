@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import '../../styles/pages/ApplicantsPage.css';
 import { HeaderManager } from '../../components/header/employer/HeaderManager';
 import { JobApplicantsList } from '../../components/applicant/JobApplicantsList';
@@ -12,12 +12,10 @@ function ApplicantsPage() {
   const [expandedJobIds, setExpandedJobIds] = useState<Set<string>>(new Set());
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchCompanyAndJobs();
-  }, []);
-
-  const fetchCompanyAndJobs = async () => {
+  const fetchCompanyAndJobs = useCallback(async () => {
     setIsLoading(true);
+    setError('');
+
     try {
       const companyData = await GetCompanyAPI();
       setCompany(companyData);
@@ -34,11 +32,16 @@ function ApplicantsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchCompanyAndJobs();
+  }, [fetchCompanyAndJobs]);
 
   const handleToggleJob = (jobId: string | null) => {
     if (!jobId) return;
-    setExpandedJobIds(prev => {
+
+    setExpandedJobIds((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(jobId)) {
         newSet.delete(jobId);
@@ -49,14 +52,13 @@ function ApplicantsPage() {
     });
   };
 
-  const getTotalJobs = () => jobs.length;
-
+  // Render loading state
   if (isLoading) {
     return (
       <>
         <HeaderManager />
-        <div className='applicants-page-container'>
-          <div className='applicants-page-loading'>
+        <div className="applicants-page-container">
+          <div className="applicants-page-loading">
             <span>Đang tải...</span>
           </div>
         </div>
@@ -64,12 +66,13 @@ function ApplicantsPage() {
     );
   }
 
+  // Render error state
   if (error) {
     return (
       <>
         <HeaderManager />
-        <div className='applicants-page-container'>
-          <div className='applicants-page-error'>
+        <div className="applicants-page-container">
+          <div className="applicants-page-error">
             <span>{error}</span>
             <button onClick={fetchCompanyAndJobs}>Thử lại</button>
           </div>
@@ -78,43 +81,45 @@ function ApplicantsPage() {
     );
   }
 
+  // Render no company state
   if (!company) {
     return (
       <>
         <HeaderManager />
-        <div className='applicants-page-container'>
-          <div className='applicants-page-no-company'>
+        <div className="applicants-page-container">
+          <div className="applicants-page-no-company">
             <h2>Chưa có hồ sơ công ty</h2>
             <p>Vui lòng tạo hồ sơ công ty trước khi quản lý ứng viên.</p>
-            <a href='/employer/createcompany'>Tạo hồ sơ công ty</a>
+            <a href="/employer/createcompany">Tạo hồ sơ công ty</a>
           </div>
         </div>
       </>
     );
   }
 
+  // Render main content
   return (
     <>
       <HeaderManager />
-      <div className='applicants-page-container'>
-        <div className='applicants-page-header'>
-          <h1 className='applicants-page-title'>Quản lý ứng viên</h1>
-          <p className='applicants-page-subtitle'>
-            {getTotalJobs()} vị trí tuyển dụng • Nhấn vào từng vị trí để xem danh sách ứng viên
+      <div className="applicants-page-container">
+        <div className="applicants-page-header">
+          <h1 className="applicants-page-title">Quản lý ứng viên</h1>
+          <p className="applicants-page-subtitle">
+            {jobs.length} vị trí tuyển dụng • Nhấn vào từng vị trí để xem danh sách ứng viên
           </p>
         </div>
 
         {jobs.length === 0 ? (
-          <div className='applicants-page-empty'>
-            <div className='applicants-page-empty-icon'>📋</div>
+          <div className="applicants-page-empty">
+            <div className="applicants-page-empty-icon">📋</div>
             <h2>Chưa có tin tuyển dụng</h2>
             <p>Hãy đăng tin tuyển dụng để bắt đầu nhận đơn ứng tuyển.</p>
-            <a href='/employer/postjob' className='applicants-page-post-job-link'>
+            <a href="/employer/postjob" className="applicants-page-post-job-link">
               Đăng tin tuyển dụng
             </a>
           </div>
         ) : (
-          <div className='applicants-page-jobs-list'>
+          <div className="applicants-page-jobs-list">
             {jobs.map((job) => (
               <JobApplicantsList
                 key={job.id}

@@ -9,7 +9,7 @@ export interface UserCredential {
   token: string,
   userBasicInfo: AuthResponse | null,
   setToken: (newToken: string) => void
-  setUserBasicInfo: (userInfo: AuthResponse) => void
+  setUserBasicInfo: (userInfo: AuthResponse | null) => void
 }
 
 // NOTE: AUTH REPONSE 
@@ -280,4 +280,17 @@ export interface ApplicationCheckResponse {
   applicationId: string | null;
   status: ApplicationStatus | null;
   appliedAt: string | null;  // ISO datetime format
+}
+
+// * UPDATE APPLICATION STATUS REQUEST *
+export interface UpdateApplicationStatusRequest {
+  status: ApplicationStatus;
+  note?: string;
+}
+
+// * GENERAL STATS RESPONSE *
+export interface GeneralStatsInterface {
+  userCount: number;
+  jobCount: number;
+  companyCount: number;
 }
