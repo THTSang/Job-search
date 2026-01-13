@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.server.dto.CompanyDtos.CompanyResponse;
 import com.example.server.dto.CompanyDtos.CreateCompanyRequest;
 import com.example.server.dto.CompanyDtos.UpdateCompanyRequest;
+import com.example.server.dto.CompanyDtos.VerifyCompanyRequest;
 import com.example.server.dto.JobDtos.JobDto;
 import com.example.server.security.CustomUserDetails;
 import com.example.server.service.CompanyService;
@@ -77,6 +79,14 @@ public class CompanyController {
             @PathVariable String id,
             @Valid @RequestBody UpdateCompanyRequest request) {
         return ResponseEntity.ok(companyService.updateCompany(userDetails.getId(), id, request));
+    }
+
+    @PatchMapping("/{id}/verify")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CompanyResponse> verifyCompany(
+            @PathVariable String id,
+            @RequestBody VerifyCompanyRequest request) {
+        return ResponseEntity.ok(companyService.verifyCompany(id, request));
     }
 
     @DeleteMapping("/{id}")

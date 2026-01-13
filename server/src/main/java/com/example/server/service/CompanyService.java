@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.example.server.dto.CompanyDtos.CompanyResponse;
 import com.example.server.dto.CompanyDtos.CreateCompanyRequest;
+import com.example.server.dto.CompanyDtos.VerifyCompanyRequest;
 import com.example.server.dto.CompanyDtos.UpdateCompanyRequest;
 
 public interface CompanyService {
@@ -21,6 +22,9 @@ public interface CompanyService {
 
     // Cập nhật thông tin công ty (kiểm tra quyền sở hữu)
     CompanyResponse updateCompany(String recruiterId, String companyId, UpdateCompanyRequest request);
+
+    // Xác thực công ty (Admin only)
+    CompanyResponse verifyCompany(String id, VerifyCompanyRequest request);
 
     // Xóa công ty (Admin hoặc Owner, chặn nếu còn Job)
     void deleteCompany(String id, String requesterId, boolean isAdmin);

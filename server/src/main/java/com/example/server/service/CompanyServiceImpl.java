@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.server.dto.CompanyDtos.CompanyResponse;
 import com.example.server.dto.CompanyDtos.CreateCompanyRequest;
 import com.example.server.dto.CompanyDtos.UpdateCompanyRequest;
+import com.example.server.dto.CompanyDtos.VerifyCompanyRequest;
 import com.example.server.exception.NotFoundException;
 import com.example.server.model.Company;
 import com.example.server.repository.CompanyRepository;
@@ -109,6 +110,19 @@ public class CompanyServiceImpl implements CompanyService {
 
         Company updatedCompany = companyRepository.save(company);
         return toResponse(updatedCompany);
+    }
+
+    @Override
+    public CompanyResponse verifyCompany(String id, VerifyCompanyRequest request) {
+        Company company = companyRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Company not found"));
+
+        if (request.isVerified() != null) {
+            company.setIsVerified(request.isVerified());
+            company.setUpdatedAt(Instant.now());
+        }
+
+        return toResponse(companyRepository.save(company));
     }
 
     @Override

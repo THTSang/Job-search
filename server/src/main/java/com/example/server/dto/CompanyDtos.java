@@ -49,6 +49,10 @@ public class CompanyDtos {
             String description
     ) {}
 
+    public record VerifyCompanyRequest(
+            Boolean isVerified
+    ) {}
+
     public record CompanyResponse(
             String id,
             String name,
