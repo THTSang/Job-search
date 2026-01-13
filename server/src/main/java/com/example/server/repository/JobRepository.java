@@ -13,4 +13,5 @@ import com.example.server.model.Job;
 public interface JobRepository extends MongoRepository<Job, String>, JobRepositoryCustom {
     Page<Job> findByTitleContainingIgnoreCase(String title, Pageable pageable);
     Page<Job> findByCompanyId(String companyId, Pageable pageable);
+    boolean existsByCompanyId(String companyId);
 }

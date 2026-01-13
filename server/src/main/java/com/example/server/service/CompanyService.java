@@ -16,4 +16,7 @@ public interface CompanyService {
 
     // Cập nhật thông tin công ty (kiểm tra quyền sở hữu)
     CompanyResponse updateCompany(String recruiterId, String companyId, UpdateCompanyRequest request);
+
+    // Xóa công ty (Admin hoặc Owner, chặn nếu còn Job)
+    void deleteCompany(String id, String requesterId, boolean isAdmin);
 }

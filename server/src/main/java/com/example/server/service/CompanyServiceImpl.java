@@ -10,6 +10,7 @@ import com.example.server.dto.CompanyDtos.UpdateCompanyRequest;
 import com.example.server.exception.NotFoundException;
 import com.example.server.model.Company;
 import com.example.server.repository.CompanyRepository;
+import com.example.server.repository.JobRepository;
 import org.springframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final JobRepository jobRepository;
 
     @Override
     public CompanyResponse createCompany(String recruiterId, CreateCompanyRequest request) {
@@ -99,6 +101,25 @@ public class CompanyServiceImpl implements CompanyService {
 
         Company updatedCompany = companyRepository.save(company);
         return toResponse(updatedCompany);
+    }
+
+    @Override
+    public void deleteCompany(String id, String requesterId, boolean isAdmin) {
+        Company company = companyRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Company not found"));
+
+        // 1. Check Permission: Nếu không phải Admin thì phải là Owner
+        if (!isAdmin && !company.getRecruiterId().equals(requesterId)) {
+            throw new IllegalArgumentException("You are not authorized to delete this company.");
+        }
+
+        // 2. Check Data Integrity (Phương án A): Chặn nếu còn Job
+        if (jobRepository.existsByCompanyId(id)) {
+            throw new IllegalArgumentException("Cannot delete company. Please delete all associated jobs first.");
+        }
+
+        // 3. Delete
+        companyRepository.deleteById(id);
     }
 
     /**
