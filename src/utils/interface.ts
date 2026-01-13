@@ -202,7 +202,7 @@ export interface ApplicationRequestInterface {
 }
 
 // * APPLICATION RESPONSE *
-export type ApplicationStatus = 'PENDING' | 'REVIEWED' | 'SHORTLISTED' | 'REJECTED' | 'ACCEPTED';
+export type ApplicationStatus = 'PENDING' | 'INTERVIEWING' | 'OFFERED' | 'REJECTED' | 'CANCELLED';
 
 export interface ApplicationResponseInterface {
   id: string;

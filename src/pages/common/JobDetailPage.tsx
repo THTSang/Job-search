@@ -136,10 +136,10 @@ function JobDetailPage() {
   const getApplicationStatusLabel = (status: ApplicationStatus): string => {
     const labels: Record<ApplicationStatus, string> = {
       'PENDING': 'Chờ xem xét',
-      'REVIEWED': 'Đã xem',
-      'SHORTLISTED': 'Vào danh sách chờ',
+      'INTERVIEWING': 'Đang phỏng vấn',
+      'OFFERED': 'Đã chấp nhận',
       'REJECTED': 'Không phù hợp',
-      'ACCEPTED': 'Đã chấp nhận'
+      'CANCELLED': 'Đã hủy'
     };
     return labels[status] || status;
   };

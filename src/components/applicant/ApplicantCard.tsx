@@ -16,10 +16,10 @@ type StatusConfig = {
 
 const STATUS_CONFIG: Record<ApplicationStatus, StatusConfig> = {
   PENDING: { label: 'Chờ xử lý', className: 'status-pending' },
-  REVIEWED: { label: 'Đã xem', className: 'status-reviewing' },
-  SHORTLISTED: { label: 'Trong danh sách', className: 'status-shortlisted' },
+  INTERVIEWING: { label: 'Đang phỏng vấn', className: 'status-interviewing' },
+  OFFERED: { label: 'Đã chấp nhận', className: 'status-offered' },
   REJECTED: { label: 'Từ chối', className: 'status-rejected' },
-  ACCEPTED: { label: 'Chấp nhận', className: 'status-accepted' },
+  CANCELLED: { label: 'Đã hủy', className: 'status-cancelled' },
 };
 
 // Helper functions
@@ -46,13 +46,13 @@ function ApplicantCard({ application, onStatusUpdate }: ApplicantCardProps) {
     }
   };
 
-  const handleStatusChange = async (newStatus: ApplicationStatus) => {
+  const handleStatusChange = async (newStatus: ApplicationStatus, note: string = '') => {
     if (newStatus === currentStatus || isUpdating) return;
 
     setIsUpdating(true);
     setErrorMessage(null);
     try {
-      await UpdateApplicationStatusAPI(id, { status: newStatus });
+      await UpdateApplicationStatusAPI(id, { status: newStatus, note });
       setCurrentStatus(newStatus);
       onStatusUpdate?.(id, newStatus);
     } catch (error) {
@@ -63,7 +63,7 @@ function ApplicantCard({ application, onStatusUpdate }: ApplicantCardProps) {
     }
   };
 
-  const canChangeStatus = currentStatus !== 'ACCEPTED' && currentStatus !== 'REJECTED';
+  const canChangeStatus = currentStatus !== 'OFFERED' && currentStatus !== 'REJECTED' && currentStatus !== 'CANCELLED';
 
   return (
     <div className={`applicant-card ${isUpdating ? 'applicant-card-updating' : ''}`}>
@@ -108,18 +108,8 @@ function ApplicantCard({ application, onStatusUpdate }: ApplicantCardProps) {
         {canChangeStatus && (
           <>
             <button
-              className="applicant-action-button action-shortlist"
-              onClick={() => handleStatusChange('SHORTLISTED')}
-              disabled={isUpdating || currentStatus === 'SHORTLISTED'}
-              title="Thêm vào danh sách"
-            >
-              <span className="action-icon">⭐</span>
-              {currentStatus === 'SHORTLISTED' ? 'Đã chọn' : 'Chọn'}
-            </button>
-
-            <button
-              className="applicant-action-button action-accept"
-              onClick={() => handleStatusChange('ACCEPTED')}
+              className="applicant-action-button action-offer"
+              onClick={() => handleStatusChange('OFFERED')}
               disabled={isUpdating}
               title="Chấp nhận ứng viên"
             >

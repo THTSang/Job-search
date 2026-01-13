@@ -120,10 +120,10 @@ function JobAppliesPage() {
   const getStatusInfo = (status: ApplicationStatus): { label: string; className: string } => {
     const statusMap: Record<ApplicationStatus, { label: string; className: string }> = {
       'PENDING': { label: 'Đang chờ', className: 'waiting' },
-      'REVIEWED': { label: 'Đã xem', className: 'reviewed' },
-      'SHORTLISTED': { label: 'Phỏng vấn', className: 'interview' },
+      'INTERVIEWING': { label: 'Đang phỏng vấn', className: 'interview' },
+      'OFFERED': { label: 'Đã chấp nhận', className: 'offered' },
       'REJECTED': { label: 'Từ chối', className: 'rejected' },
-      'ACCEPTED': { label: 'Đã nhận', className: 'accepted' }
+      'CANCELLED': { label: 'Đã hủy', className: 'cancelled' }
     };
     return statusMap[status] || { label: status, className: 'waiting' };
   };
