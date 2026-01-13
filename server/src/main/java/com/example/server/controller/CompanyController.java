@@ -36,6 +36,12 @@ public class CompanyController {
     private final CompanyService companyService;
     private final JobService jobService;
 
+    @GetMapping
+    public ResponseEntity<Page<CompanyResponse>> getAll(
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(companyService.getAllCompanies(pageable));
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<CompanyResponse> create(

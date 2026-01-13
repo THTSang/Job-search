@@ -2,6 +2,8 @@ package com.example.server.service;
 
 import java.time.Instant;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.server.dto.CompanyDtos.CompanyResponse;
@@ -59,6 +61,12 @@ public class CompanyServiceImpl implements CompanyService {
 
         // 5. Map Entity đã lưu sang Response DTO để trả về
         return toResponse(savedCompany);
+    }
+
+    @Override
+    public Page<CompanyResponse> getAllCompanies(Pageable pageable) {
+        return companyRepository.findAll(pageable)
+                .map(this::toResponse);
     }
 
     @Override
