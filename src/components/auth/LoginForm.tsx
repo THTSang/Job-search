@@ -9,6 +9,7 @@ function LoginForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showBannedPopup, setShowBannedPopup] = useState(false);
   const { setToken, setUserBasicInfo } = useUserCredential();
   const navigate = useNavigate();
 
@@ -38,6 +39,16 @@ function LoginForm() {
       const response = await LoginAPI(email, password);
       setToken(response.token);
       const userBasicInfo = await BasicUserInfoAPI();
+      
+      // Check if user is banned
+      if (userBasicInfo.status === 'BANNED') {
+        // Clear token and show banned popup
+        setToken('');
+        setUserBasicInfo(null);
+        setShowBannedPopup(true);
+        return;
+      }
+      
       setUserBasicInfo(userBasicInfo);
       // Navigate based on role
       const roles = userBasicInfo.role;
@@ -68,6 +79,31 @@ function LoginForm() {
 
   return (
     <div className="auth-form-container">
+      {/* Banned User Popup */}
+      {showBannedPopup && (
+        <div className="banned-popup-overlay" onClick={() => setShowBannedPopup(false)}>
+          <div className="banned-popup" onClick={(e) => e.stopPropagation()}>
+            <div className="banned-popup-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+              </svg>
+            </div>
+            <h3 className="banned-popup-title">Tài khoản đã bị khóa</h3>
+            <p className="banned-popup-message">
+              Tài khoản của bạn đã bị khóa do vi phạm quy định của hệ thống. 
+              Vui lòng liên hệ quản trị viên để biết thêm chi tiết.
+            </p>
+            <button 
+              className="banned-popup-btn"
+              onClick={() => setShowBannedPopup(false)}
+            >
+              Đã hiểu
+            </button>
+          </div>
+        </div>
+      )}
+
       {error && <div className='auth-form-error'>{error}</div>}
 
       <div className='auth-form-field'>

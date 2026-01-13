@@ -96,11 +96,7 @@ function CompanyManagementPage() {
       const status = errorObj?.response?.status;
       
       // 400, 403, 409 - likely due to existing jobs or constraints
-      if (status === 400 || status === 403 || status === 409) {
-        setDeleteError(`Công ty "${companyName}" vẫn còn tin tuyển dụng. Vui lòng xóa tất cả tin tuyển dụng của công ty này trước.`);
-      } else {
-        setDeleteError(`Công ty "${companyName}" vẫn còn tin tuyển dụng. Vui lòng xóa tất cả tin tuyển dụng của công ty này trước.`);
-      }
+      setDeleteError(`Công ty "${companyName}" vẫn còn tin tuyển dụng. Vui lòng xóa tất cả tin tuyển dụng của công ty này trước.`);
     } finally {
       setDeletingCompanyId(null);
     }
