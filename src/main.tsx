@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { HomePage, FindJobPage, JobDetailPage, JobAppliesPage, FollowedCompaniesPage, MessagePage, AIEvaluatePage, CompanyDetailPage } from './pages'
+import { HomePage, FindJobPage, JobDetailPage, JobAppliesPage, MessagePage, AIEvaluatePage, CompanyDetailPage, CompaniesPage } from './pages'
 import { PostJobPage, PersonalProfilePage, CreateCompanyPage, CompanyProfilePage } from './pages'
 import { ResetPasswordPage, AuthPage, ApplicantsPage } from './pages'
 import { AdminHomePage, UserManagementPage, JobManagementPage, CompanyManagementPage } from './pages'
@@ -34,10 +34,6 @@ const router = createBrowserRouter([
     element: <JobAppliesPage />
   },
   {
-    path: 'jobseeker/followcompanies',
-    element: <FollowedCompaniesPage />
-  },
-  {
     path: 'jobseeker/messages',
     element: <MessagePage />
   },
@@ -56,6 +52,10 @@ const router = createBrowserRouter([
   {
     path: 'jobseeker/company/:companyId',
     element: <CompanyDetailPage />
+  },
+  {
+    path: 'jobseeker/companies',
+    element: <CompaniesPage />
   },
   {
     path: 'employer/home',

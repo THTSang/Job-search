@@ -2,8 +2,8 @@ export { HomePage } from './common/HomePage';
 export { FindJobPage } from './common/FindJobPage';
 export { JobDetailPage } from './common/JobDetailPage';
 export { CompanyDetailPage } from './common/CompanyDetailPage';
-export { FollowedCompaniesPage } from './common/FollowedCompaniesPage';
 export { MessagePage } from './common/MessagePage';
+export { CompaniesPage } from './common/CompaniesPage';
 
 export { PersonalProfilePage } from './jobseeker/PersonalProfilePage';
 export { JobAppliesPage } from './jobseeker/JobAppliesPage';

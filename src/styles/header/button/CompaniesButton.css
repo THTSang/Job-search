@@ -1,4 +1,4 @@
-.company-follow-button {
+.companies-button {
   background: none;
   border: none;
   color: #333333;
@@ -11,37 +11,37 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.company-follow-button:hover {
+.companies-button:hover {
   color: #000000;
 }
 
-.company-follow-button:focus {
+.companies-button:focus {
   outline: none;
   background-color: #1a1d29;
   color: #ffffff;
 }
 
-.company-follow-button:active {
+.companies-button:active {
   background-color: #1a1d29;
   color: #ffffff;
 }
 
-.company-follow-button-isactive {
+.companies-button-isactive {
   background-color: #1a1d29 !important;
   color: #ffffff !important;
 }
 
-.company-follow-button-isactive:hover {
+.companies-button-isactive:hover {
   background-color: #2a2d39;
   color: #ffffff;
 }
 
-.company-follow-button-isactive:focus {
+.companies-button-isactive:focus {
   outline: none;
   background-color: #1a1d29;
   color: #ffffff;
 }
 
-.company-follow-text {
+.companies-text {
   white-space: nowrap;
 }

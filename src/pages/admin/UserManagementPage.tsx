@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HeaderManager } from '../../components/header/admin/HeaderManager';
 import { GetUsersAPI, UpdateUserStatusAPI, DeleteUserAPI } from '../../api';
 import { getUserFriendlyMessage, logError } from '../../utils/errorHandler';
@@ -18,6 +19,7 @@ const ROLE_CONFIG: Record<UserRole, { label: string; className: string }> = {
 };
 
 function UserManagementPage() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<AdminUserInterface[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
@@ -89,6 +91,15 @@ function UserManagementPage() {
     return name ? name.charAt(0).toUpperCase() : '?';
   };
 
+  const handleMessageUser = (userId: string, userName: string) => {
+    navigate('/admin/messages', {
+      state: {
+        recipientId: userId,
+        recipientName: userName
+      }
+    });
+  };
+
   return (
     <>
       <HeaderManager />
@@ -149,6 +160,14 @@ function UserManagementPage() {
                         </td>
                         <td>
                           <div className="action-buttons">
+                            <button
+                              className="action-btn btn-message"
+                              onClick={() => handleMessageUser(user.id, user.name)}
+                              disabled={isUpdating}
+                              title="Nhắn tin"
+                            >
+                              Nhắn tin
+                            </button>
                             {user.status !== 'ACTIVE' && (
                               <button
                                 className="action-btn btn-activate"

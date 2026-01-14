@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import type { JobApplicationInterface, ApplicationStatus } from '../../utils/interface';
 import { UpdateApplicationStatusAPI } from '../../api';
 import { getUserFriendlyMessage, logError } from '../../utils/errorHandler';
@@ -33,6 +34,8 @@ const formatDate = (dateString: string): string => {
 
 function ApplicantCard({ application, onStatusUpdate }: ApplicantCardProps) {
   const { id, applicant, status, appliedAt, resumeUrl } = application;
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentStatus, setCurrentStatus] = useState<ApplicationStatus>(status);
@@ -44,6 +47,21 @@ function ApplicantCard({ application, onStatusUpdate }: ApplicantCardProps) {
     if (resumeUrl) {
       window.open(resumeUrl, '_blank');
     }
+  };
+
+  const handleMessageApplicant = () => {
+    // Determine the correct messages route based on current path
+    let messagesRoute = '/employer/messages';
+    if (location.pathname.startsWith('/admin')) {
+      messagesRoute = '/admin/messages';
+    }
+    
+    navigate(messagesRoute, {
+      state: {
+        recipientId: applicant.id,
+        recipientName: applicant.fullName
+      }
+    });
   };
 
   const handleStatusChange = async (newStatus: ApplicationStatus, note: string = '') => {
@@ -103,6 +121,16 @@ function ApplicantCard({ application, onStatusUpdate }: ApplicantCardProps) {
         >
           <span className="action-icon">📄</span>
           Xem CV
+        </button>
+
+        <button
+          className="applicant-action-button action-message"
+          onClick={handleMessageApplicant}
+          disabled={isUpdating}
+          title="Nhắn tin cho ứng viên"
+        >
+          <span className="action-icon">💬</span>
+          Nhắn tin
         </button>
 
         {canChangeStatus && (

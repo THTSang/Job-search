@@ -221,6 +221,15 @@
   background-color: #dc2626;
 }
 
+.btn-message {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+.btn-message:hover {
+  background-color: #2563eb;
+}
+
 .action-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;

@@ -424,3 +424,11 @@ export interface WsChatMessage {
   timestamp?: string;
 }
 
+// * Chat User Search Result (for finding users to chat with) *
+export interface ChatUserSearchResult {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+}
+

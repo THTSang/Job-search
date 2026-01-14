@@ -6,4 +6,4 @@ export { ApplyJobAPI, GetMyApplicationsAPI, GetApplicationStatsAPI, GetJobApplic
 export { GetGeneralStatsAPI } from './general'
 export { GetUsersAPI, UpdateUserStatusAPI, DeleteUserAPI, GetAllCompaniesAPI, DeleteCompanyAPI, VerifyCompanyAPI } from './admin'
 export { UploadCVAPI, ChatAPI, MatchJobAPI, GetChatHistoryAPI, ListSessionsAPI, ClearChatAPI, DeleteSessionAPI } from './ai'
-export { StartChatAPI, GetChatMessagesAPI, GetConversationsAPI } from './chat'
+export { StartChatAPI, GetChatMessagesAPI, GetConversationsAPI, SearchChatUsersAPI, SendMessageAPI } from './chat'

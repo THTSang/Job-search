@@ -76,19 +76,19 @@ function HeaderManager() {
           </button>
 
           <button
+            className={`companies-button ${location.pathname === '/jobseeker/companies' ? 'companies-button-isactive' : ''}`}
+            onClick={handleClick}
+            name='companies'
+          >
+            <span className="companies-text">Công ty</span>
+          </button>
+
+          <button
             className={`job-applies-button ${location.pathname === '/jobseeker/jobapplies' ? 'job-applies-button-isactive' : ''}`}
             name='jobapplies'
             onClick={handleClick}
           >
             <span className="job-applies-text">Đơn ứng tuyển</span>
-          </button>
-
-          <button
-            className={`company-follow-button ${location.pathname === '/jobseeker/followcompanies' ? 'company-follow-button-isactive' : ''}`}
-            name='followcompanies'
-            onClick={handleClick}
-          >
-            <span className="company-follow-text">Công ty theo dõi</span>
           </button>
 
           <button

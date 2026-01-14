@@ -4,7 +4,8 @@ import type {
   ChatStartResponse, 
   ChatMessage, 
   ChatConversation,
-  PageResponse 
+  PageResponse,
+  ChatUserSearchResult
 } from '../utils/interface';
 
 /**
@@ -58,5 +59,49 @@ export const GetConversationsAPI = async (
       params: { page, size }
     }
   );
+  return response.data;
+};
+
+/**
+ * Search for users to start a chat with
+ * GET /api/chat/users/search
+ * @param query - Search query (name or email)
+ * @param page - Page number (0-based)
+ * @param size - Number of results per page
+ * @returns Paginated list of users matching the query
+ */
+export const SearchChatUsersAPI = async (
+  query: string,
+  page: number = 0,
+  size: number = 20
+): Promise<PageResponse<ChatUserSearchResult>> => {
+  const response = await axiosInstance.get<PageResponse<ChatUserSearchResult>>(
+    '/chat/users/search',
+    {
+      params: { 
+        query,
+        'pageable.page': page,
+        'pageable.size': size
+      }
+    }
+  );
+  return response.data;
+};
+
+/**
+ * Send a chat message to a recipient
+ * POST /api/chat/send
+ * @param recipientId - The ID of the user to send message to
+ * @param content - The message content
+ * @returns The sent message
+ */
+export const SendMessageAPI = async (
+  recipientId: string,
+  content: string
+): Promise<ChatMessage> => {
+  const response = await axiosInstance.post<ChatMessage>('/chat/send', {
+    recipientId,
+    content
+  });
   return response.data;
 };
