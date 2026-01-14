@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.server.dto.ChatDtos.ChatMessageResponse;
+import com.example.server.dto.ChatDtos.ConversationResponse;
 import com.example.server.security.CustomUserDetails;
 import com.example.server.service.ChatService;
 
@@ -34,5 +35,15 @@ public class ChatController {
         String currentUserId = userDetails.getId();
 
         return ResponseEntity.ok(chatService.getChatHistory(currentUserId, recipientId, pageable));
+    }
+
+    // Lấy danh sách các cuộc trò chuyện (Inbox)
+    @GetMapping("/conversations")
+    public ResponseEntity<Page<ConversationResponse>> getConversations(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        
+        String currentUserId = userDetails.getId();
+        return ResponseEntity.ok(chatService.getConversations(currentUserId, pageable));
     }
 }

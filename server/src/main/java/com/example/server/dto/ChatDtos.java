@@ -14,4 +14,14 @@ public class ChatDtos {
     public record ChatMessageResponse(
         String id, String senderId, String recipientId, String content, Instant createdAt
     ) {}
+
+    // DTO cho danh sách cuộc trò chuyện (Inbox)
+    public record ConversationResponse(
+        String chatId,
+        String partnerId,   // ID của người chat cùng
+        String partnerName, // Tên hiển thị của người chat cùng
+        String lastMessage, // Nội dung tin nhắn cuối cùng
+        Instant lastMessageAt,
+        boolean isRead      // Trạng thái đã đọc (Optional - logic mở rộng sau)
+    ) {}
 }

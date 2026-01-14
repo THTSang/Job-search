@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.example.server.model.ChatMessage;
 
 @Repository
-public interface ChatMessageRepository extends MongoRepository<ChatMessage, String> {
+public interface ChatMessageRepository extends MongoRepository<ChatMessage, String>, ChatMessageRepositoryCustom {
     // Tìm tin nhắn trong một cuộc hội thoại (chatId)
     Page<ChatMessage> findByChatId(String chatId, Pageable pageable);
 }
