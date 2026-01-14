@@ -5,6 +5,7 @@ import { HeaderManager as EmployerHeader } from '../../components/header/employe
 import { HeaderManager as AdminHeader } from '../../components/header/admin/HeaderManager';
 import { useUserCredential } from '../../store';
 import { GetConversationsAPI, GetChatMessagesAPI, StartChatAPI, SearchChatUsersAPI, SendMessageAPI } from '../../api';
+import { chatWebSocket, type ConnectionStatus, type WsIncomingMessage } from '../../services/chatWebSocket';
 import type { ChatConversation, ChatMessage, ChatUserSearchResult } from '../../utils/interface';
 import '../../styles/pages/MessagePage.css';
 
@@ -41,6 +42,9 @@ function MessagePage() {
   const [sendingMessage, setSendingMessage] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // WebSocket connection status
+  const [wsStatus, setWsStatus] = useState<ConnectionStatus>('disconnected');
+
   // New conversation modal state
   const [showNewChatModal, setShowNewChatModal] = useState(false);
   const [userSearchQuery, setUserSearchQuery] = useState('');
@@ -51,13 +55,100 @@ function MessagePage() {
   // Refs
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messageInputRef = useRef<HTMLInputElement>(null);
-  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const selectedConversationRef = useRef<ChatConversation | null>(null);
+
+  // Keep ref in sync with state for use in callbacks
+  useEffect(() => {
+    selectedConversationRef.current = selectedConversation;
+  }, [selectedConversation]);
 
   // Scroll to bottom of messages
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // Connect to WebSocket when logged in
+  useEffect(() => {
+    if (token && userBasicInfo) {
+      // Connect to WebSocket
+      chatWebSocket.connect(token);
+
+      // Subscribe to status changes
+      const unsubscribeStatus = chatWebSocket.onStatusChange((status) => {
+        setWsStatus(status);
+      });
+
+      // Subscribe to incoming messages
+      const unsubscribeMessages = chatWebSocket.onMessage((wsMessage: WsIncomingMessage) => {
+        // Convert WebSocket message to ChatMessage format
+        const chatMessage: ChatMessage = {
+          id: wsMessage.id,
+          senderId: wsMessage.senderId,
+          recipientId: wsMessage.recipientId,
+          content: wsMessage.content,
+          createdAt: wsMessage.createdAt,
+        };
+
+        // If this message is from/to the currently selected conversation, add it to messages
+        const currentConv = selectedConversationRef.current;
+        if (currentConv) {
+          const isFromPartner = wsMessage.senderId === currentConv.partnerId;
+          const isToPartner = wsMessage.recipientId === currentConv.partnerId;
+          
+          if (isFromPartner || isToPartner) {
+            setMessages(prev => {
+              // Check if message already exists (avoid duplicates)
+              if (prev.some(m => m.id === chatMessage.id)) {
+                return prev;
+              }
+              return [...prev, chatMessage];
+            });
+          }
+        }
+
+        // Update conversation list with new message
+        setConversations(prev => {
+          const partnerId = wsMessage.senderId === userBasicInfo?.id 
+            ? wsMessage.recipientId 
+            : wsMessage.senderId;
+          
+          const index = prev.findIndex(c => c.partnerId === partnerId);
+          
+          if (index >= 0) {
+            const updated = [...prev];
+            updated[index] = {
+              ...updated[index],
+              lastMessage: wsMessage.content,
+              lastMessageAt: wsMessage.createdAt,
+              isRead: partnerId === currentConv?.partnerId, // Mark as read if currently viewing
+            };
+            // Move to top
+            const [conversation] = updated.splice(index, 1);
+            return [conversation, ...updated];
+          } else {
+            // New conversation - add to list
+            const newConv: ChatConversation = {
+              chatId: wsMessage.id,
+              partnerId: partnerId,
+              partnerName: wsMessage.senderName || 'Unknown',
+              lastMessage: wsMessage.content,
+              lastMessageAt: wsMessage.createdAt,
+              isRead: false,
+            };
+            return [newConv, ...prev];
+          }
+        });
+      });
+
+      // Cleanup on unmount
+      return () => {
+        unsubscribeStatus();
+        unsubscribeMessages();
+        chatWebSocket.disconnect();
+      };
+    }
+  }, [token, userBasicInfo]);
 
   // Start chat with a user (from search or navigation state)
   const startChatWithUser = useCallback(async (recipientId: string, recipientName: string) => {
@@ -162,30 +253,6 @@ function MessagePage() {
     loadMessages();
   }, [selectedConversation]);
 
-  // Poll for new messages every 3 seconds when a conversation is selected
-  useEffect(() => {
-    if (!selectedConversation || !token) return;
-
-    const pollMessages = async () => {
-      try {
-        const response = await GetChatMessagesAPI(selectedConversation.partnerId, 0, 50);
-        const sortedMessages = [...(response.content || [])].reverse();
-        setMessages(sortedMessages);
-      } catch (err) {
-        console.error('Polling error:', err);
-      }
-    };
-
-    // Poll every 3 seconds
-    pollingRef.current = setInterval(pollMessages, 3000);
-
-    return () => {
-      if (pollingRef.current) {
-        clearInterval(pollingRef.current);
-      }
-    };
-  }, [selectedConversation, token]);
-
   // Scroll to bottom when messages change
   useEffect(() => {
     scrollToBottom();
@@ -239,7 +306,7 @@ function MessagePage() {
     );
   }, [conversations, searchQuery]);
 
-  // Handle sending message via SendMessageAPI
+  // Handle sending message via WebSocket with REST API fallback
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedConversation || sendingMessage) {
       return;
@@ -260,13 +327,24 @@ function MessagePage() {
     setNewMessage('');
 
     try {
-      // Use SendMessageAPI to send the message
-      const sentMessage = await SendMessageAPI(selectedConversation.partnerId, content);
+      let sent = false;
       
-      // Replace optimistic message with actual message from server
-      setMessages(prev => prev.map(m => 
-        m.id === optimisticMessage.id ? sentMessage : m
-      ));
+      // Try WebSocket first if connected
+      if (chatWebSocket.isConnected()) {
+        sent = chatWebSocket.sendMessage(selectedConversation.partnerId, content);
+      }
+      
+      // Fallback to REST API if WebSocket failed or not connected
+      if (!sent) {
+        console.log('[Chat] WebSocket not available, using REST API fallback');
+        const response = await SendMessageAPI(selectedConversation.partnerId, content);
+        // Update optimistic message with real ID from server
+        if (response?.id) {
+          setMessages(prev => prev.map(m => 
+            m.id === optimisticMessage.id ? { ...m, id: response.id } : m
+          ));
+        }
+      }
 
       // Update conversation's last message
       setConversations(prev => {
@@ -289,6 +367,7 @@ function MessagePage() {
       // Remove optimistic message on error
       setMessages(prev => prev.filter(m => m.id !== optimisticMessage.id));
       setNewMessage(content); // Restore message so user can retry
+      setError('Không thể gửi tin nhắn. Vui lòng thử lại.');
     } finally {
       setSendingMessage(false);
       messageInputRef.current?.focus();
@@ -353,6 +432,21 @@ function MessagePage() {
     }
   };
 
+  // Get connection status display
+  const getConnectionStatusDisplay = () => {
+    switch (wsStatus) {
+      case 'connected':
+        return { text: 'Đã kết nối', className: 'status-connected' };
+      case 'connecting':
+        return { text: 'Đang kết nối...', className: 'status-connecting' };
+      case 'error':
+        return { text: 'Lỗi kết nối', className: 'status-error' };
+      case 'disconnected':
+      default:
+        return { text: 'Chưa kết nối', className: 'status-disconnected' };
+    }
+  };
+
   // Handle conversation click
   const handleConversationClick = (conversation: ChatConversation) => {
     setSelectedConversation(conversation);
@@ -382,6 +476,16 @@ function MessagePage() {
     startChatWithUser(user.id, user.name);
   };
 
+  // Clear error after 5 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  const connectionStatus = getConnectionStatusDisplay();
+
   return (
     <div className="message-page-container">
       <HeaderManager />
@@ -399,34 +503,27 @@ function MessagePage() {
             Đăng nhập
           </button>
         </div>
-      ) : error ? (
-        <div className="message-page-error">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 8v4" />
-            <path d="M12 16h.01" />
-          </svg>
-          <h3>Đã xảy ra lỗi</h3>
-          <p>{error}</p>
-          <button className="retry-button" onClick={() => window.location.reload()}>
-            Thử lại
-          </button>
-        </div>
       ) : (
         <div className="message-page-content">
           {/* Left Sidebar - Conversations */}
           <div className="message-page-sidebar">
             <div className="message-page-sidebar-header">
               <h2 className="message-page-title">Tin nhắn</h2>
-              <button 
-                className="new-chat-button"
-                onClick={handleOpenNewChatModal}
-                title="Cuộc trò chuyện mới"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 5v14M5 12h14" />
-                </svg>
-              </button>
+              <div className="header-actions">
+                <div className={`connection-status ${connectionStatus.className}`}>
+                  <span className="status-dot"></span>
+                  <span className="status-text">{connectionStatus.text}</span>
+                </div>
+                <button 
+                  className="new-chat-button"
+                  onClick={handleOpenNewChatModal}
+                  title="Cuộc trò chuyện mới"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             <div className="message-page-search-container">
@@ -509,6 +606,14 @@ function MessagePage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Error message */}
+                {error && (
+                  <div className="message-page-error-banner">
+                    <span>{error}</span>
+                    <button onClick={() => setError(null)}>x</button>
+                  </div>
+                )}
 
                 {/* Messages */}
                 <div className="message-page-messages">

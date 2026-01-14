@@ -138,6 +138,108 @@
   height: 18px;
 }
 
+/* Header Actions (contains status + new chat button) */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Connection Status Indicator */
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: #f3f4f6;
+}
+
+.connection-status .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.connection-status .status-text {
+  font-weight: 500;
+}
+
+.connection-status.status-connected {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.connection-status.status-connected .status-dot {
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+}
+
+.connection-status.status-connecting {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.connection-status.status-connecting .status-dot {
+  background: #f59e0b;
+  animation: pulse 1.5s infinite;
+}
+
+.connection-status.status-disconnected {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.connection-status.status-disconnected .status-dot {
+  background: #9ca3af;
+}
+
+.connection-status.status-error {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.connection-status.status-error .status-dot {
+  background: #ef4444;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* Error Banner */
+.message-page-error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: #fee2e2;
+  border-bottom: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 0.9rem;
+}
+
+.message-page-error-banner button {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.message-page-error-banner button:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
 /* Search */
 .message-page-search-container {
   position: relative;
