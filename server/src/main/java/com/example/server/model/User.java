@@ -30,6 +30,10 @@ public class User {
     private UserRole role;
     private UserStatus status;
 
+    private String verificationToken;
+    private String resetPasswordToken;
+    private Instant resetPasswordTokenExpiry;
+
     private Instant createdAt;
     private Instant updatedAt;
 }

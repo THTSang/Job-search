@@ -13,4 +13,7 @@ public interface UserService {
     String login(String email, String password);
     User update(String id, UserDtos.UpdateUserDto dto);
     void delete(String id);
+    void verifyEmail(String token);
+    void forgotPassword(String email);
+    void resetPassword(String token, String newPassword);
 }

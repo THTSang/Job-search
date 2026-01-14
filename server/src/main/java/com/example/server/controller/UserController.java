@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -99,6 +100,24 @@ public class UserController {
     public ResponseEntity<Void> delete(@PathVariable String id) {
         service.delete(id);
         return ResponseEntity.noContent().build(); // 204 No Content
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<UserDtos.MessageResponse> verifyEmail(@RequestParam("token") String token) {
+        service.verifyEmail(token);
+        return ResponseEntity.ok(new UserDtos.MessageResponse("Email verified successfully. You can now login."));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<UserDtos.MessageResponse> forgotPassword(@Valid @RequestBody UserDtos.ForgotPasswordRequest request) {
+        service.forgotPassword(request.email());
+        return ResponseEntity.ok(new UserDtos.MessageResponse("Password reset link sent to your email."));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<UserDtos.MessageResponse> resetPassword(@Valid @RequestBody UserDtos.ResetPasswordRequest request) {
+        service.resetPassword(request.token(), request.newPassword());
+        return ResponseEntity.ok(new UserDtos.MessageResponse("Password has been reset successfully."));
     }
 
     private UserDtos.UserDto toDto(User u) {

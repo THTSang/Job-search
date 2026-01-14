@@ -31,4 +31,14 @@ public class UserDtos {
     ) {}
 
     public record LoginResponse(String token) {}
+
+    public record ForgotPasswordRequest(@Email @NotBlank String email) {}
+
+    public record ResetPasswordRequest(
+        @NotBlank String token,
+        @NotBlank @Size(min = 8, max = 100) String newPassword
+    ) {}
+
+    // Dùng cho response đơn giản
+    public record MessageResponse(String message) {}
 }

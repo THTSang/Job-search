@@ -29,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Controller quản lý các tin tuyển dụng (Jobs).
- * Expose API theo api-spec.md.
  */
 @RestController
 @RequestMapping("/api/jobs")

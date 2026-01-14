@@ -1,6 +1,8 @@
 package com.example.server.service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private final EmailService emailService;
 
     @Override
     public Page<User> list(Pageable pageable) {
@@ -44,16 +47,21 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Email already exists: " + dto.email());
         }
 
+        String verificationToken = UUID.randomUUID().toString();
+
         User u = User.builder()
                 .email(dto.email())
                 .name(dto.name())
                 .passwordHash(passwordEncoder.encode(dto.password()))
                 .role(dto.role() != null ? dto.role() : UserRole.USER)
-                .status(UserStatus.ACTIVE)
+                .status(UserStatus.INACTIVE) // Mặc định chưa kích hoạt
+                .verificationToken(verificationToken)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
-        return repository.save(u);
+        User savedUser = repository.save(u);
+        emailService.sendVerificationEmail(savedUser.getEmail(), verificationToken);
+        return savedUser;
     }
 
     @Override
@@ -63,6 +71,10 @@ public class UserServiceImpl implements UserService {
         
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new BadCredentialsException("Invalid email or password");
+        }
+
+        if (user.getStatus() == UserStatus.INACTIVE) {
+            throw new BadCredentialsException("Account is not activated. Please check your email.");
         }
         
         return jwtUtils.generateToken(user);
@@ -90,5 +102,45 @@ public class UserServiceImpl implements UserService {
     public void delete(String id) {
         if (!repository.existsById(id)) throw new NotFoundException("User not found");
         repository.deleteById(id);
+    }
+
+    @Override
+    public void verifyEmail(String token) {
+        User user = repository.findByVerificationToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid verification token"));
+        
+        user.setStatus(UserStatus.ACTIVE);
+        user.setVerificationToken(null); // Xóa token sau khi dùng
+        user.setUpdatedAt(Instant.now());
+        repository.save(user);
+    }
+
+    @Override
+    public void forgotPassword(String email) {
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
+        
+        String token = UUID.randomUUID().toString();
+        user.setResetPasswordToken(token);
+        user.setResetPasswordTokenExpiry(Instant.now().plus(15, ChronoUnit.MINUTES)); // Token hết hạn sau 15p
+        repository.save(user);
+
+        emailService.sendPasswordResetEmail(user.getEmail(), token);
+    }
+
+    @Override
+    public void resetPassword(String token, String newPassword) {
+        User user = repository.findByResetPasswordToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid reset token"));
+
+        if (user.getResetPasswordTokenExpiry().isBefore(Instant.now())) {
+            throw new IllegalArgumentException("Reset token has expired");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setResetPasswordToken(null);
+        user.setResetPasswordTokenExpiry(null);
+        user.setUpdatedAt(Instant.now());
+        repository.save(user);
     }
 }

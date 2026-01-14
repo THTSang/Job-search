@@ -10,4 +10,6 @@ import com.example.server.model.User;
 @Repository
 public interface UserRepository extends MongoRepository<User, String>, UserRepositoryCustom {
     Optional<User> findByEmail(String email);
+    Optional<User> findByVerificationToken(String token);
+    Optional<User> findByResetPasswordToken(String token);
 }
