@@ -12,12 +12,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.server.dto.ChatDtos.ConversationResponse;
+import com.example.server.dto.ChatDtos.StartChatResponse;
 import com.example.server.dto.ChatDtos.ChatMessageResponse;
 import com.example.server.model.ChatMessage;
 import com.example.server.model.MessageStatus;
 import com.example.server.model.User;
 import com.example.server.repository.ChatMessageRepository;
 import com.example.server.repository.UserRepository;
+import com.example.server.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +44,18 @@ public class ChatServiceImpl implements ChatService {
                 .build();
 
         return chatMessageRepository.save(message);
+    }
+
+    @Override
+    public StartChatResponse startChat(String currentUserId, String recipientId) {
+        // 1. Kiểm tra người nhận có tồn tại không
+        User recipient = userRepository.findById(recipientId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        // 2. Tạo Chat ID (Logic sort ID giống hệt khi lưu tin nhắn)
+        String chatId = getChatId(currentUserId, recipientId);
+
+        return new StartChatResponse(chatId, recipient.getId(), recipient.getName());
     }
 
     @Override

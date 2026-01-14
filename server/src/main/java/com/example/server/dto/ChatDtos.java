@@ -11,6 +11,16 @@ public class ChatDtos {
         @NotBlank String content
     ) {}
 
+    // Request bắt đầu cuộc trò chuyện mới
+    public record StartChatRequest(
+        @NotBlank String recipientId
+    ) {}
+
+    // Response trả về thông tin init cho khung chat
+    public record StartChatResponse(
+        String chatId, String partnerId, String partnerName
+    ) {}
+
     public record ChatMessageResponse(
         String id, String senderId, String recipientId, String content, Instant createdAt
     ) {}

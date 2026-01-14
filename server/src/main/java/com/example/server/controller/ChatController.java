@@ -6,11 +6,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import com.example.server.dto.ChatDtos.StartChatRequest;
+import com.example.server.dto.ChatDtos.StartChatResponse;
 import com.example.server.dto.ChatDtos.ChatMessageResponse;
 import com.example.server.dto.ChatDtos.ConversationResponse;
 import com.example.server.security.CustomUserDetails;
@@ -24,6 +29,15 @@ import lombok.RequiredArgsConstructor;
 public class ChatController {
 
     private final ChatService chatService;
+
+    // Endpoint: POST /api/chat/start
+    // Bắt đầu cuộc trò chuyện mới (Init)
+    @PostMapping("/start")
+    public ResponseEntity<StartChatResponse> startChat(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @Valid @RequestBody StartChatRequest request) {
+        return ResponseEntity.ok(chatService.startChat(userDetails.getId(), request.recipientId()));
+    }
 
     // Endpoint: GET /api/chat/{recipientId}
     @GetMapping("/{recipientId}")
