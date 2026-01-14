@@ -315,3 +315,71 @@ export interface AdminUserInterface {
 export interface UpdateUserStatusRequest {
   status: UserStatus;
 }
+
+// NOTE: AI EVALUATION INTERFACES
+// * Prompt Info (usage tracking) *
+export interface AIPromptInfo {
+  used: number;
+  remaining: number;
+  max: number;
+}
+
+// * AI Evaluate Response (for chat and job match) *
+export interface AIEvaluateResponse {
+  success: boolean;
+  data?: {
+    response: string;  // Markdown format
+    promptInfo: AIPromptInfo;
+    sessionId?: string;
+  };
+  code?: string;  // Error code like 'PROMPT_LIMIT_REACHED'
+  message?: string;
+  promptInfo?: AIPromptInfo;  // Also at top level for error responses
+}
+
+// * AI Upload Response (after CV upload) *
+export interface AIUploadResponse {
+  success: boolean;
+  data?: {
+    sessionId: string;
+    response: string;  // Initial AI response
+    promptInfo: AIPromptInfo;
+  };
+  code?: string;
+  message?: string;
+}
+
+// * Chat Message (for history) *
+export interface AIChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp?: string;
+}
+
+// * AI Chat History Response *
+export interface AIChatHistoryResponse {
+  success: boolean;
+  data?: {
+    messages: AIChatMessage[];
+    promptInfo: AIPromptInfo;
+  };
+  code?: string;
+  message?: string;
+}
+
+// * AI Session *
+export interface AISession {
+  sessionId: string;
+  createdAt: string;
+  lastMessageAt?: string;
+}
+
+// * AI Session List Response *
+export interface AISessionListResponse {
+  success: boolean;
+  data?: {
+    sessions: AISession[];
+  };
+  code?: string;
+  message?: string;
+}
