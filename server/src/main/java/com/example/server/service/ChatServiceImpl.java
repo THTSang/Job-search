@@ -46,7 +46,11 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Page<ChatMessageResponse> getChatHistory(String userId1, String userId2, Pageable pageable) {
+        // 1. Xác định Chat ID (Data Model 2.7):
+        // Luôn sort 2 ID để đảm bảo (A chat với B) và (B chat với A) đều dùng chung 1 chatId.
         String chatId = getChatId(userId1, userId2);
+        
+        // 2. Query DB & Map to DTO (Coding Vibe):
         return chatMessageRepository.findByChatId(chatId, pageable)
                 .map(this::toDto);
     }
@@ -82,7 +86,7 @@ public class ChatServiceImpl implements ChatService {
         });
     }
 
-    // Tạo ID hội thoại duy nhất bằng cách sắp xếp ID của 2 người
+    // Helper: Tạo ID hội thoại duy nhất (Composite Key Logic)
     private String getChatId(String senderId, String recipientId) {
         String[] ids = {senderId, recipientId};
         Arrays.sort(ids);

@@ -44,7 +44,6 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Email already exists: " + dto.email());
         }
 
-        // Mentor Note: Sử dụng Builder Pattern theo chuẩn dev-workflow.md
         User u = User.builder()
                 .email(dto.email())
                 .name(dto.name())

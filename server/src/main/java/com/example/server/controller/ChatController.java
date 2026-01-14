@@ -25,15 +25,18 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    // Lấy lịch sử chat với một user cụ thể
+    // Endpoint: GET /api/chat/{recipientId}
     @GetMapping("/{recipientId}")
     public ResponseEntity<Page<ChatMessageResponse>> getChatHistory(
             @PathVariable String recipientId,
+            // Security: Lấy ID user đang đăng nhập để đảm bảo quyền truy cập
             @AuthenticationPrincipal CustomUserDetails userDetails,
+            // Pagination: Mặc định lấy 20 tin nhắn mới nhất (createdAt DESC) theo quy chuẩn API
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         
         String currentUserId = userDetails.getId();
 
+        // Logic: Chỉ trả về tin nhắn giữa user hiện tại và recipientId
         return ResponseEntity.ok(chatService.getChatHistory(currentUserId, recipientId, pageable));
     }
 
