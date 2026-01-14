@@ -114,6 +114,12 @@
   color: #ffffff !important;
 }
 
+/* Message Button (Admin) */
+.message-button-isactive {
+  background-color: #1a1d29 !important;
+  color: #ffffff !important;
+}
+
 /* Login Button */
 .login-button {
   background-color: #1a1d29 !important;

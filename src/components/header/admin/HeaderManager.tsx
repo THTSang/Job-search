@@ -96,6 +96,14 @@ function HeaderManager() {
           >
             <span className="stats-text">Thống kê</span>
           </button>
+
+          <button
+            className={`message-button ${location.pathname === '/admin/messages' ? 'message-button-isactive' : ''}`}
+            onClick={handleClick}
+            name='messages'
+          >
+            <span className="message-text-button">Tin nhắn</span>
+          </button>
         </div>
 
         <div className="header-user-section">

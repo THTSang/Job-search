@@ -383,3 +383,44 @@ export interface AISessionListResponse {
   code?: string;
   message?: string;
 }
+
+// NOTE: REAL-TIME CHAT INTERFACES
+// * Start Chat Request *
+export interface ChatStartRequest {
+  recipientId: string;
+}
+
+// * Start Chat Response *
+export interface ChatStartResponse {
+  chatId: string;
+  partnerId: string;
+  partnerName: string;
+}
+
+// * Chat Message (from API) *
+export interface ChatMessage {
+  id: string;
+  senderId: string;
+  recipientId: string;
+  content: string;
+  createdAt: string;  // ISO datetime format
+}
+
+// * Chat Conversation (for conversation list) *
+export interface ChatConversation {
+  chatId: string;
+  partnerId: string;
+  partnerName: string;
+  lastMessage: string;
+  lastMessageAt: string;  // ISO datetime format
+  isRead: boolean;
+}
+
+// * WebSocket Chat Message (for real-time) *
+export interface WsChatMessage {
+  senderId: string;
+  recipientId: string;
+  content: string;
+  timestamp?: string;
+}
+
