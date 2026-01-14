@@ -143,4 +143,10 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(Instant.now());
         repository.save(user);
     }
+
+    @Override
+    public Page<User> searchUsers(String query, Pageable pageable) {
+        // Tìm kiếm trong cả Email và Name để tăng trải nghiệm người dùng
+        return repository.findByEmailContainingIgnoreCaseOrNameContainingIgnoreCase(query, query, pageable);
+    }
 }

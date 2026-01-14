@@ -39,6 +39,9 @@ public class UserDtos {
         @NotBlank @Size(min = 8, max = 100) String newPassword
     ) {}
 
+    // DTO rút gọn cho việc tìm kiếm user trong Chat (chỉ trả về thông tin public)
+    public record UserSummaryDto(String id, String name, String email, UserRole role) {}
+
     // Dùng cho response đơn giản
     public record MessageResponse(String message) {}
 }

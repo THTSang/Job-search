@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,12 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import com.example.server.dto.UserDtos.UserSummaryDto;
 import com.example.server.dto.ChatDtos.StartChatRequest;
 import com.example.server.dto.ChatDtos.StartChatResponse;
 import com.example.server.dto.ChatDtos.ChatMessageResponse;
 import com.example.server.dto.ChatDtos.ConversationResponse;
 import com.example.server.security.CustomUserDetails;
 import com.example.server.service.ChatService;
+import com.example.server.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class ChatController {
 
     private final ChatService chatService;
+    private final UserService userService;
 
     // Endpoint: POST /api/chat/start
     // Bắt đầu cuộc trò chuyện mới (Init)
@@ -62,5 +66,18 @@ public class ChatController {
         
         String currentUserId = userDetails.getId();
         return ResponseEntity.ok(chatService.getConversations(currentUserId, pageable));
+    }
+
+    // Endpoint: GET /api/chat/users/search?query=<string>&page=0&size=20
+    // Tìm kiếm user để bắt đầu chat (theo email hoặc tên)
+    @GetMapping("/users/search")
+    public ResponseEntity<Page<UserSummaryDto>> searchUsers(
+            @RequestParam String query,
+            @PageableDefault(size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+        
+        return ResponseEntity.ok(
+            userService.searchUsers(query, pageable)
+                .map(u -> new UserSummaryDto(u.getId(), u.getName(), u.getEmail(), u.getRole()))
+        );
     }
 }

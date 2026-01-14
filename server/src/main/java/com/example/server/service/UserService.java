@@ -16,4 +16,5 @@ public interface UserService {
     void verifyEmail(String token);
     void forgotPassword(String email);
     void resetPassword(String token, String newPassword);
+    Page<User> searchUsers(String query, Pageable pageable);
 }
