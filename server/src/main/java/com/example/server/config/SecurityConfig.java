@@ -35,6 +35,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/users/login").permitAll() // Public Login
                 // Mentor Note: Chỉ cho phép POST (Đăng ký) public, còn GET (List users) sẽ yêu cầu Auth
                 .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                // Fix: Cho phép xác thực email (Public) vì user click link từ mail chưa có token
+                .requestMatchers(HttpMethod.GET, "/api/users/verify/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/jobs/search").permitAll() // Search Job (Public)
                 .requestMatchers(HttpMethod.GET, "/api/jobs/{id}").permitAll()    // Job Detail (Public)
                 .requestMatchers(HttpMethod.GET, "/api/companies/{id}").permitAll() // Company Detail (Public)

@@ -21,6 +21,7 @@ import com.example.server.repository.EducationRepository;
 import com.example.server.repository.ExperienceRepository;
 import com.example.server.repository.JobSeekerProfileRepository;
 import com.example.server.repository.ProjectRepository;
+import com.example.server.repository.UserRepository;
 import com.example.server.repository.SkillRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class JobSeekerProfileServiceImpl implements JobSeekerProfileService {
     private final ExperienceRepository experienceRepository;
     private final EducationRepository educationRepository;
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Page<JobSeekerProfileDtos.JobSeekerProfileDto> getAllProfiles(Pageable pageable) {
@@ -69,6 +71,12 @@ public class JobSeekerProfileServiceImpl implements JobSeekerProfileService {
                 .build();
 
         var savedProfile = profileRepository.save(profile);
+
+        // Business Rule: Đồng bộ fullName từ Profile sang User.name ngay khi tạo mới
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found: " + userId));
+        user.setName(dto.fullName());
+        userRepository.save(user);
 
         // 2. Tạo các Sub-entities (Composite Create)
         // Mentor Note: Chúng ta lưu các entity con ngay sau khi có ID của profile cha.
@@ -109,7 +117,14 @@ public class JobSeekerProfileServiceImpl implements JobSeekerProfileService {
                 .orElseThrow(() -> new NotFoundException("Profile not found for user: " + userId));
 
         // 1. Partial Update cho thông tin chung
-        if (StringUtils.hasText(dto.fullName())) profile.setFullName(dto.fullName());
+        if (StringUtils.hasText(dto.fullName())) {
+            profile.setFullName(dto.fullName());
+            // Business Rule: Đồng bộ fullName từ Profile sang User.name khi cập nhật
+            var user = userRepository.findById(userId)
+                    .orElseThrow(() -> new NotFoundException("User not found: " + userId));
+            user.setName(dto.fullName());
+            userRepository.save(user);
+        }
         if (StringUtils.hasText(dto.professionalTitle())) profile.setProfessionalTitle(dto.professionalTitle());
         if (StringUtils.hasText(dto.phoneNumber())) profile.setPhoneNumber(dto.phoneNumber());
         if (StringUtils.hasText(dto.address())) profile.setAddress(dto.address());
