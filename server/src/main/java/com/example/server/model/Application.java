@@ -39,7 +39,6 @@ public class Application {
     @Builder.Default
     private ApplicationStatus status = ApplicationStatus.PENDING;
 
-    // Mentor Note: Timestamps bắt buộc theo quy chuẩn data-model.md
     private Instant appliedAt;
     
     private Instant updatedAt;

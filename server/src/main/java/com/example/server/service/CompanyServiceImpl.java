@@ -28,7 +28,6 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyResponse createCompany(String recruiterId, CreateCompanyRequest request) {
         // 1. Kiểm tra xem Recruiter này đã tạo công ty chưa (Rule: Single Company per Recruiter)
-        // Tham khảo business-rules.md: Mỗi Recruiter chỉ được phép tạo và quản lý tối đa một hồ sơ công ty.
         if (companyRepository.findByRecruiterId(recruiterId).isPresent()) {
             throw new IllegalArgumentException("Recruiter already has a company profile.");
         }

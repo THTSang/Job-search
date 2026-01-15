@@ -31,7 +31,6 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Controller quản lý quy trình Ứng tuyển (Recruitment).
- * Expose API theo api-spec.md.
  */
 @RestController
 @RequestMapping("/api/applications")

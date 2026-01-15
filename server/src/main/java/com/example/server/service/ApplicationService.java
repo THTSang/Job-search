@@ -13,7 +13,6 @@ import com.example.server.dto.ApplicationDtos.UpdateApplicationStatusDto;
 
 /**
  * Service Interface cho nghiệp vụ Ứng tuyển (Recruitment).
- * Định nghĩa các use-case theo Architecture.md.
  */
 public interface ApplicationService {
 

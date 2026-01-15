@@ -58,14 +58,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
                 // Chỉ kiểm tra khi client cố gắng CONNECT
                 if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                    // Lấy token từ header 'Authorization' (nếu client gửi được) hoặc query param (dễ hơn cho JS client)
-                    // Ở đây giả định client gửi dạng: ws://localhost:8080/ws?token=xyz
-                    String token = accessor.getFirstNativeHeader("Authorization");
+                    // Lấy token từ header Authorization
+                    String authHeader = accessor.getFirstNativeHeader("Authorization");
+                    String token = null;
                     
-                    // Nếu không có header, thử lấy từ query param (cần logic parse custom nếu dùng SockJS thuần, 
-                    // nhưng để đơn giản ta ưu tiên check header 'Authorization' hoặc 'token' trong nativeHeaders)
-                    if (token == null && accessor.getNativeHeader("token") != null) {
-                         token = accessor.getFirstNativeHeader("token");
+                    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                        token = authHeader.substring(7); // Cắt bỏ "Bearer "
+                    } else if (accessor.getFirstNativeHeader("token") != null) {
+                        // Fallback: Lấy từ header 'token' (nếu client gửi custom header này)
+                        token = accessor.getFirstNativeHeader("token");
                     }
 
                     if (token != null && jwtUtils.validateToken(token)) {
