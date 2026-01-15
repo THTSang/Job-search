@@ -90,6 +90,9 @@ function MessagePage() {
           createdAt: wsMessage.createdAt,
         };
 
+        // Check if this is a message we sent (echo from server)
+        const isOwnMessage = wsMessage.senderId === userBasicInfo?.id;
+
         // If this message is from/to the currently selected conversation, add it to messages
         const currentConv = selectedConversationRef.current;
         if (currentConv) {
@@ -98,10 +101,29 @@ function MessagePage() {
           
           if (isFromPartner || isToPartner) {
             setMessages(prev => {
-              // Check if message already exists (avoid duplicates)
+              // Check if message already exists by real ID (avoid duplicates)
               if (prev.some(m => m.id === chatMessage.id)) {
                 return prev;
               }
+              
+              // If this is our own message (echo from server), replace the optimistic message
+              if (isOwnMessage) {
+                // Find and replace the optimistic message with same content
+                const optimisticIndex = prev.findIndex(m => 
+                  m.id.startsWith('temp-') && 
+                  m.content === chatMessage.content &&
+                  m.recipientId === chatMessage.recipientId
+                );
+                
+                if (optimisticIndex >= 0) {
+                  // Replace optimistic message with real one
+                  const updated = [...prev];
+                  updated[optimisticIndex] = chatMessage;
+                  return updated;
+                }
+              }
+              
+              // Add new message (from partner)
               return [...prev, chatMessage];
             });
           }

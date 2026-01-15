@@ -3,6 +3,7 @@ import { HeaderManager } from '../../components/header/jobseeker/HeaderManager.t
 import '../../styles/pages/PersonalProfilePage.css';
 import type { UserProfileInterface, Skill, Experience, Education, Project } from '../../utils/interface';
 import { PutProfileAPI, PostProfileAPI, GetProfileAPI } from '../../api'
+import { useUserCredential } from '../../store';
 
 // TODO: ADD USER PROFILE IMAGE
 // Helper function to format date period
@@ -23,6 +24,10 @@ type ModalTab = 'basic' | 'experience' | 'education' | 'skills' | 'projects';
 function PersonalProfilePage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<ModalTab>('basic');
+  
+  // Get user info from store
+  const { userBasicInfo, setUserBasicInfo } = useUserCredential();
+  const userEmail = userBasicInfo?.email || '';
   
   // Loading states
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -63,9 +68,9 @@ function PersonalProfilePage() {
   const [newSkillCategory, setNewSkillCategory] = useState('TECHNICAL');
 
   // API handlers
-  const handlePostProfile = async () => {
+  const handlePostProfile = async (profile: UserProfileInterface) => {
     try {
-      await PostProfileAPI(profileData);
+      await PostProfileAPI(profile);
     } catch (error) {
       console.error('Error: Post profile failed', error);
       throw error;
@@ -78,6 +83,17 @@ function PersonalProfilePage() {
         setIsPageLoading(true);
         const response = await GetProfileAPI()
         setProfileData(response);
+        
+        // Sync profile fullName to store for header greeting
+        if (response.fullName && response.fullName.trim() && userBasicInfo) {
+          const trimmedName = response.fullName.trim();
+          if (trimmedName !== userBasicInfo.name) {
+            setUserBasicInfo({
+              ...userBasicInfo,
+              name: trimmedName
+            });
+          }
+        }
       } catch (error) {
         console.error('Error: Fetching user profile failed', error);
       } finally {
@@ -91,8 +107,8 @@ function PersonalProfilePage() {
     try {
       await PutProfileAPI(updatedProfile);
     } catch (error) {
-      console.error('Error: Change profile failed', error);
-      handlePostProfile();
+      console.error('Error: Change profile failed, trying POST', error);
+      await handlePostProfile(updatedProfile);
     }
   }
 
@@ -133,6 +149,15 @@ function PersonalProfilePage() {
       };
       await handleChangeProfile(updatedProfile);
       setProfileData(updatedProfile);
+      
+      // Update the user's display name in the store (for header greeting)
+      if (userBasicInfo && editBasicInfo.fullName.trim()) {
+        setUserBasicInfo({
+          ...userBasicInfo,
+          name: editBasicInfo.fullName.trim()
+        });
+      }
+      
       setIsEditModalOpen(false);
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -664,6 +689,15 @@ function PersonalProfilePage() {
               {profileData.professionalTitle.trim() || <span className='placeholder-text'>Chưa cập nhật chức danh</span>}
             </div>
             <div className='personal-profile-contact'>
+              {userEmail && (
+                <span className='personal-profile-contact-item'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                  {userEmail}
+                </span>
+              )}
               <span className='personal-profile-contact-item'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
