@@ -37,6 +37,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                 // Fix: Cho phép xác thực email (Public) vì user click link từ mail chưa có token
                 .requestMatchers(HttpMethod.GET, "/api/users/verify/**").permitAll()
+                // Fix: Cho phép quên mật khẩu và đặt lại mật khẩu (Public)
+                .requestMatchers(HttpMethod.POST, "/api/users/forgot-password", "/api/users/reset-password").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/jobs/search").permitAll() // Search Job (Public)
                 .requestMatchers(HttpMethod.GET, "/api/jobs/{id}").permitAll()    // Job Detail (Public)
                 .requestMatchers(HttpMethod.GET, "/api/companies/{id}").permitAll() // Company Detail (Public)
