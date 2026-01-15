@@ -157,7 +157,7 @@ function LoginForm() {
       </div>
 
       <div className="auth-forgot-password-link">
-        <Link to="/reset">Quên mật khẩu?</Link>
+        <Link to="/reset-password">Quên mật khẩu?</Link>
       </div>
 
       <button

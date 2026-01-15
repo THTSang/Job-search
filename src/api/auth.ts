@@ -74,7 +74,7 @@ export const ResetPasswordAPI = async (token: string, newPassword: string): Prom
 // NOTE: VerifyEmailAPI
 export const VerifyEmailAPI = async (token: string): Promise<{ message: string }> => {
   try {
-    const response = await axiosInstance.get('/users/verify-email', {
+    const response = await axiosInstance.get('/users/verify', {
       params: { token }
     });
     return response.data;

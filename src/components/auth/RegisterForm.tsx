@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import '../../styles/form/RegisterForm.css';
-import { useNavigate } from "react-router-dom";
 import { SignUpAPI } from '../../api';
 
 function RegisterForm() {
@@ -14,7 +13,6 @@ function RegisterForm() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,11 +53,6 @@ function RegisterForm() {
 
       // Show success notification
       setSuccess(true);
-
-      // Redirect to login page after 3 seconds
-      setTimeout(() => {
-        navigate('/auth');
-      }, 3000);
     } catch (err: unknown) {
       // Handle specific error cases
       const errorObj = err as { response?: { status?: number; data?: { message?: string } } };
@@ -94,7 +87,8 @@ function RegisterForm() {
           <div className='auth-form-success-icon'>✓</div>
           <div className='auth-form-success-title'>Đăng ký thành công!</div>
           <div className='auth-form-success-message'>
-            Tài khoản của bạn đã được tạo. Hãy đăng nhập lại.
+            Chúng tôi đã gửi một liên kết xác thực đến email <strong>{email}</strong>. 
+            Vui lòng kiểm tra hộp thư (bao gồm cả thư mục Spam) và nhấn vào liên kết để kích hoạt tài khoản.
           </div>
         </div>
       )}

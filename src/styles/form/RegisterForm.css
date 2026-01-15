@@ -219,5 +219,29 @@
 .auth-form-success-message {
   font-size: 14px;
   color: #666;
-  line-height: 1.5;
+  line-height: 1.6;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.auth-form-success-message strong {
+  color: #1a1a1a;
+  word-break: break-all;
+}
+
+.auth-form-back-to-login-button {
+  margin-top: 24px;
+  padding: 12px 32px;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.auth-form-back-to-login-button:hover {
+  background-color: #333;
 }

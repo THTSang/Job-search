@@ -160,6 +160,7 @@ export interface Project {
 export interface UserProfileInterface {
   id: string | null;
   userId: string | null;
+  email?: string;  // Optional: may be included when viewing other users' profiles
   fullName: string;
   professionalTitle: string;
   phoneNumber: string;
