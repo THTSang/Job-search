@@ -73,8 +73,15 @@ public class UserServiceImpl implements UserService {
             throw new BadCredentialsException("Invalid email or password");
         }
 
+        // Kiểm tra trạng thái tài khoản (Business Rule: Block INACTIVE & BANNED users)
+        // Case 1: User chưa xác thực email (INACTIVE)
         if (user.getStatus() == UserStatus.INACTIVE) {
             throw new BadCredentialsException("Account is not activated. Please check your email.");
+        }
+        
+        // Case 2: User bị Admin khóa (BANNED)
+        if (user.getStatus() == UserStatus.BANNED) {
+            throw new BadCredentialsException("Account is banned. Please contact administrator.");
         }
         
         return jwtUtils.generateToken(user);

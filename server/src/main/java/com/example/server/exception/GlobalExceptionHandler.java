@@ -9,6 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.security.authentication.BadCredentialsException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -32,5 +33,14 @@ public class GlobalExceptionHandler {
         body.put("error", "validation_failed");
         body.put("details", errors);
         return ResponseEntity.badRequest().body(body);
+    }
+
+    // Xử lý lỗi đăng nhập (Sai pass, Account locked/banned/inactive)
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentials(BadCredentialsException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("error", "authentication_failed");
+        body.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
     }
 }
