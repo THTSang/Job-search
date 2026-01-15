@@ -44,4 +44,44 @@ export const BasicUserInfoAPI = async (): Promise<AuthResponse> => {
   }
 }
 
+// NOTE: ForgotPasswordAPI
+export const ForgotPasswordAPI = async (email: string): Promise<{ message: string }> => {
+  try {
+    const response = await axiosInstance.post('/users/forgot-password', {
+      email: email
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Forgot password API failed:', error);
+    throw error;
+  }
+};
+
+// NOTE: ResetPasswordAPI
+export const ResetPasswordAPI = async (token: string, newPassword: string): Promise<{ message: string }> => {
+  try {
+    const response = await axiosInstance.post('/users/reset-password', {
+      token: token,
+      newPassword: newPassword
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Reset password API failed:', error);
+    throw error;
+  }
+};
+
+// NOTE: VerifyEmailAPI
+export const VerifyEmailAPI = async (token: string): Promise<{ message: string }> => {
+  try {
+    const response = await axiosInstance.get('/users/verify-email', {
+      params: { token }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Verify email API failed:', error);
+    throw error;
+  }
+};
+
 

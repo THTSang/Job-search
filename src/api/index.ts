@@ -1,4 +1,4 @@
-export { SignUpAPI, LoginAPI, BasicUserInfoAPI } from './auth';
+export { SignUpAPI, LoginAPI, BasicUserInfoAPI, ForgotPasswordAPI, ResetPasswordAPI, VerifyEmailAPI } from './auth';
 export { SearchJobsAPI, PostJobAPI, GetCompanyJobsAPI, GetJobByIdAPI, DeleteJobAPI, UpdateJobAPI } from './job';
 export { PutProfileAPI, PostProfileAPI, GetProfileAPI } from './profile'
 export { GetCompanyAPI, GetCompanyByIdAPI } from './company'

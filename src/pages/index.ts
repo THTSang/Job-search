@@ -11,6 +11,7 @@ export { AIEvaluatePage } from './jobseeker/AIEvaluatePage';
 
 export { AuthPage } from './auth/AuthPage';
 export { ResetPasswordPage } from './auth/ResetPasswordPage';
+export { VerifyEmailPage } from './auth/VerifyEmailPage';
 
 export { ApplicantsPage } from './employer/ApplicantsPage';
 export { PostJobPage } from './employer/PostJobPage';

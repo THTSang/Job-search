@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { HomePage, FindJobPage, JobDetailPage, JobAppliesPage, MessagePage, AIEvaluatePage, CompanyDetailPage, CompaniesPage } from './pages'
 import { PostJobPage, PersonalProfilePage, CreateCompanyPage, CompanyProfilePage } from './pages'
-import { ResetPasswordPage, AuthPage, ApplicantsPage } from './pages'
+import { ResetPasswordPage, AuthPage, ApplicantsPage, VerifyEmailPage } from './pages'
 import { AdminHomePage, UserManagementPage, JobManagementPage, CompanyManagementPage } from './pages'
 import './index.css'
 import App from './App.tsx'
@@ -20,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: 'reset',
     element: <ResetPasswordPage />
+  },
+  {
+    path: 'verify-email',
+    element: <VerifyEmailPage />
   },
   {
     path: 'jobseeker/home',
