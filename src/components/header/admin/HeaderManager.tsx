@@ -90,19 +90,19 @@ function HeaderManager() {
           </button>
 
           <button
-            className={`stats-button ${location.pathname === '/admin/stats' ? 'stats-button-isactive' : ''}`}
-            onClick={handleClick}
-            name='stats'
-          >
-            <span className="stats-text">Thống kê</span>
-          </button>
-
-          <button
             className={`message-button ${location.pathname === '/admin/messages' ? 'message-button-isactive' : ''}`}
             onClick={handleClick}
             name='messages'
           >
             <span className="message-text-button">Tin nhắn</span>
+          </button>
+
+          <button
+            className={`profile-button ${location.pathname === '/admin/profile' ? 'profile-button-isactive' : ''}`}
+            onClick={handleClick}
+            name='profile'
+          >
+            <span className="profile-text">Hồ sơ</span>
           </button>
         </div>
 
