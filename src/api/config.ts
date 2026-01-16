@@ -1,8 +1,15 @@
 import axios from 'axios'
 import { useUserCredential } from '../store'
 
+// API base URL
+// Production: Direct call to duckdns domain
+// Development: Uses Vite proxy
+const API_BASE_URL = import.meta.env.PROD
+  ? 'https://job-search.duckdns.org/api'
+  : '/api';
+
 const axiosInstance = axios.create({
-  baseURL: '/api',
+  baseURL: API_BASE_URL,
   // timeout: 5000,
 });
 
