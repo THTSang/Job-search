@@ -1,5 +1,6 @@
 package com.example.server.config;
 
+import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
@@ -37,7 +38,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        String[] origins = allowedOrigins.split(",");
+        // Fix: Trim spaces to ensure patterns match correctly (e.g. "a, b" -> ["a", "b"])
+        String[] origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toArray(String[]::new);
+        
+        log.info("WebSocket Allowed Origins: {}", Arrays.toString(origins));
         
         // 1. Native WebSocket Endpoint
         // Nếu bạn muốn hỗ trợ cả Native và SockJS, hãy dùng path khác nhau để tránh xung đột

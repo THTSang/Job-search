@@ -73,7 +73,11 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         // Sử dụng setAllowedOriginPatterns thay vì setAllowedOrigins để hỗ trợ wildcard "*"
         // khi allowCredentials = true
-        configuration.setAllowedOriginPatterns(Arrays.asList(allowedOrigins.split(",")));
+        List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
+        configuration.setAllowedOriginPatterns(origins);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
