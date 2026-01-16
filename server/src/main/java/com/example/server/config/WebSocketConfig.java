@@ -39,10 +39,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         String[] origins = allowedOrigins.split(",");
         
-        // 1. Native WebSocket Endpoint (Quan trọng cho WSS trực tiếp)
-        // Giúp client kết nối qua wss://api.domain.com/ws mà không cần SockJS handshake
-        registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns(origins);
+        // 1. Native WebSocket Endpoint
+        // Nếu bạn muốn hỗ trợ cả Native và SockJS, hãy dùng path khác nhau để tránh xung đột
+        // Hoặc chỉ dùng SockJS (nó cũng hỗ trợ raw websocket tại /ws/websocket)
+        // registry.addEndpoint("/ws-native")
+        //         .setAllowedOriginPatterns(origins);
 
         // 2. SockJS Endpoint (Fallback)
         // Hỗ trợ các browser cũ hoặc client sử dụng thư viện SockJS
