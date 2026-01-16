@@ -1,5 +1,6 @@
 package com.example.server.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -31,12 +32,23 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private final JwtUtils jwtUtils;
     private final CustomUserDetailsService userDetailsService;
 
+    @Value("${app.cors.allowed-origins}")
+    private String allowedOrigins;
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // Endpoint để client kết nối: ws://localhost:8080/ws
+        String[] origins = allowedOrigins.split(",");
+        
+        // 1. Native WebSocket Endpoint (Quan trọng cho WSS trực tiếp)
+        // Giúp client kết nối qua wss://api.domain.com/ws mà không cần SockJS handshake
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*") // Cấu hình CORS cho WebSocket
-                .withSockJS(); // Fallback nếu browser không hỗ trợ WS
+                .setAllowedOriginPatterns(origins);
+
+        // 2. SockJS Endpoint (Fallback)
+        // Hỗ trợ các browser cũ hoặc client sử dụng thư viện SockJS
+        registry.addEndpoint("/ws")
+                .setAllowedOriginPatterns(origins)
+                .withSockJS();
     }
 
     @Override
