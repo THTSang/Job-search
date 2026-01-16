@@ -1,12 +1,15 @@
+import React, { useState, useCallback } from 'react';
 import '../../../styles/header/employer/HeaderManager.css';
 import { useUserCredential } from '../../../store';
 import { useNavigate, useLocation } from 'react-router-dom';
 import logoImage from '../../../assets/logo.jpg';
+import { LogoutProgressModal } from '../../common/LogoutProgressModal';
 
 function HeaderManager() {
   const navigate = useNavigate();
   const location = useLocation();
   const { token, userBasicInfo, setToken, setUserBasicInfo } = useUserCredential();
+  const [showLogoutProgress, setShowLogoutProgress] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = e.currentTarget.name;
@@ -17,11 +20,16 @@ function HeaderManager() {
     navigate('/employer/home');
   }
 
-  const handleLogout = () => {
+  const handleLogoutClick = () => {
+    setShowLogoutProgress(true);
+  };
+
+  const handleLogoutComplete = useCallback(() => {
     setToken('');
     setUserBasicInfo(null);
+    setShowLogoutProgress(false);
     navigate('/auth');
-  }
+  }, [setToken, setUserBasicInfo, navigate]);
 
   if (token === '') {
     return (
@@ -110,10 +118,14 @@ function HeaderManager() {
           <span className="header-greeting">
             Xin chào, <strong>{userBasicInfo?.name || 'Bạn'}</strong>
           </span>
-          <button className="logout-button" onClick={handleLogout}>
+          <button className="logout-button" onClick={handleLogoutClick}>
             <span className="logout-text">Đăng xuất</span>
           </button>
         </div>
+        <LogoutProgressModal 
+          open={showLogoutProgress} 
+          onComplete={handleLogoutComplete} 
+        />
       </div>
     )
   }

@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { HeaderManager } from '../../components/header/admin/HeaderManager';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import PaginationControl from '../../components/common/PaginationControl';
+import LetterAvatar from '../../components/common/LetterAvatar';
 import { GetAllCompaniesAPI, DeleteCompanyAPI, VerifyCompanyAPI } from '../../api';
 import { getUserFriendlyMessage, logError } from '../../utils/errorHandler';
 import type { CompanyProfileInterface } from '../../utils/interface';
@@ -125,16 +128,6 @@ function CompanyManagementPage() {
     return new Date(dateString).toLocaleDateString('vi-VN');
   };
 
-  // Get initials from company name
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
   return (
     <>
       <HeaderManager />
@@ -193,9 +186,7 @@ function CompanyManagementPage() {
 
         {/* Loading State */}
         {isLoading ? (
-          <div className="company-management-loading">
-            <span>Đang tải danh sách công ty...</span>
-          </div>
+          <LoadingSpinner fullPage message="Đang tải danh sách công ty..." />
         ) : (
           <>
             {/* Company Table */}
@@ -229,17 +220,12 @@ function CompanyManagementPage() {
                         <tr key={company.id} className={isDeleting || isVerifying ? 'row-updating' : ''}>
                           <td>
                             <div className="company-cell">
-                              {company.logoUrl ? (
-                                <img
-                                  src={company.logoUrl}
-                                  alt={company.name}
-                                  className="company-logo"
-                                />
-                              ) : (
-                                <div className="company-logo-placeholder">
-                                  {getInitials(company.name || '?')}
-                                </div>
-                              )}
+                              <LetterAvatar 
+                                name={company.name || '?'} 
+                                src={company.logoUrl} 
+                                size={40} 
+                                variant="rounded" 
+                              />
                               <div className="company-info">
                                 <span className="company-name">{company.name}</span>
                                 {company.website && (
@@ -305,27 +291,13 @@ function CompanyManagementPage() {
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="pagination">
-                <button
-                  className="pagination-btn"
-                  onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
-                  disabled={currentPage === 0}
-                >
-                  Trước
-                </button>
-                <span className="pagination-info">
-                  Trang {currentPage + 1} / {totalPages}
-                </span>
-                <button
-                  className="pagination-btn"
-                  onClick={() => setCurrentPage(prev => Math.min(totalPages - 1, prev + 1))}
-                  disabled={currentPage === totalPages - 1}
-                >
-                  Sau
-                </button>
-              </div>
-            )}
+            <PaginationControl
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalElements={totalElements}
+              onPageChange={setCurrentPage}
+              pageSize={pageSize}
+            />
           </>
         )}
       </div>

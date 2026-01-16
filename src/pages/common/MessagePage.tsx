@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { HeaderManager as JobSeekerHeader } from '../../components/header/jobseeker/HeaderManager';
 import { HeaderManager as EmployerHeader } from '../../components/header/employer/HeaderManager';
 import { HeaderManager as AdminHeader } from '../../components/header/admin/HeaderManager';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import LetterAvatar from '../../components/common/LetterAvatar';
 import { useUserCredential } from '../../store';
 import { GetConversationsAPI, GetChatMessagesAPI, StartChatAPI, SearchChatUsersAPI, SendMessageAPI } from '../../api';
 import { chatWebSocket, type ConnectionStatus, type WsIncomingMessage } from '../../services/chatWebSocket';
@@ -431,16 +433,6 @@ function MessagePage() {
     return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
   };
 
-  // Get initials for avatar
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .slice(0, 2)
-      .toUpperCase();
-  };
-
   // Get role display text
   const getRoleDisplayText = (role: string) => {
     switch (role) {
@@ -564,10 +556,7 @@ function MessagePage() {
 
             <div className="message-page-conversation-list">
               {loadingConversations ? (
-                <div className="message-page-loading">
-                  <div className="loading-spinner"></div>
-                  <span>Đang tải...</span>
-                </div>
+                <LoadingSpinner size={32} message="Đang tải..." />
               ) : filteredConversations.length === 0 ? (
                 <div className="message-page-empty">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -586,7 +575,7 @@ function MessagePage() {
                     onClick={() => handleConversationClick(conversation)}
                   >
                     <div className="conversation-avatar">
-                      {getInitials(conversation.partnerName)}
+                      <LetterAvatar name={conversation.partnerName} size={40} />
                     </div>
                     <div className="conversation-info">
                       <div className="conversation-header">
@@ -621,7 +610,7 @@ function MessagePage() {
                 <div className="message-page-chat-header">
                   <div className="chat-header-info">
                     <div className="chat-header-avatar">
-                      {getInitials(selectedConversation.partnerName)}
+                      <LetterAvatar name={selectedConversation.partnerName} size={40} />
                     </div>
                     <div className="chat-header-details">
                       <span className="chat-header-name">{selectedConversation.partnerName}</span>
@@ -640,10 +629,7 @@ function MessagePage() {
                 {/* Messages */}
                 <div className="message-page-messages">
                   {loadingMessages ? (
-                    <div className="message-page-loading">
-                      <div className="loading-spinner"></div>
-                      <span>Đang tải tin nhắn...</span>
-                    </div>
+                    <LoadingSpinner size={32} message="Đang tải tin nhắn..." />
                   ) : messages.length === 0 ? (
                     <div className="message-page-no-messages">
                       <p>Chưa có tin nhắn nào. Hãy bắt đầu cuộc trò chuyện!</p>
@@ -767,7 +753,7 @@ function MessagePage() {
                       onClick={() => handleSelectUser(user)}
                     >
                       <div className="user-search-avatar">
-                        {getInitials(user.name)}
+                        <LetterAvatar name={user.name} size={40} />
                       </div>
                       <div className="user-search-info">
                         <span className="user-search-name">{user.name}</span>

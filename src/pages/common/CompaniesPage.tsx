@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { HeaderManager as JobSeekerHeader } from '../../components/header/jobseeker/HeaderManager';
 import { HeaderManager as EmployerHeader } from '../../components/header/employer/HeaderManager';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import PaginationControl from '../../components/common/PaginationControl';
+import LetterAvatar from '../../components/common/LetterAvatar';
 import { GetAllCompaniesAPI, GetCompanyJobsAPI } from '../../api';
 import { getUserFriendlyMessage, logError } from '../../utils/errorHandler';
 import type { CompanyProfileInterface, JobData } from '../../utils/interface';
@@ -134,11 +137,6 @@ function CompaniesPage() {
     navigate(`${basePath}/job/${jobId}`);
   };
 
-  // Get company initial for avatar
-  const getInitial = (name: string) => {
-    return name ? name.charAt(0).toUpperCase() : 'C';
-  };
-
   // Format salary
   const formatSalary = (min: number, max: number) => {
     const formatAmount = (amount: number) => {
@@ -211,10 +209,7 @@ function CompaniesPage() {
             <button onClick={fetchCompanies}>Thử lại</button>
           </div>
         ) : isLoading ? (
-          <div className="companies-loading">
-            <div className="loading-spinner"></div>
-            <span>Đang tải danh sách công ty...</span>
-          </div>
+          <LoadingSpinner fullPage message="Đang tải danh sách công ty..." />
         ) : filteredCompanies.length === 0 ? (
           <div className="companies-empty">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -233,11 +228,12 @@ function CompaniesPage() {
                   {/* Company Header */}
                   <div className="company-card-header" onClick={() => handleCompanyClick(company.id)}>
                     <div className="company-logo">
-                      {company.logoUrl ? (
-                        <img src={company.logoUrl} alt={company.name} />
-                      ) : (
-                        <span>{getInitial(company.name)}</span>
-                      )}
+                      <LetterAvatar 
+                        name={company.name} 
+                        src={company.logoUrl} 
+                        size={48} 
+                        variant="rounded" 
+                      />
                     </div>
                     <div className="company-info">
                       <h3 className="company-name">{company.name}</h3>
@@ -301,8 +297,7 @@ function CompaniesPage() {
                     <div className="company-jobs-section">
                       {isLoadingJobs ? (
                         <div className="company-jobs-loading">
-                          <div className="loading-spinner-small"></div>
-                          <span>Đang tải...</span>
+                          <LoadingSpinner size={24} message="Đang tải..." />
                         </div>
                       ) : jobs.length === 0 ? (
                         <div className="company-jobs-empty">
@@ -354,53 +349,13 @@ function CompaniesPage() {
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="companies-pagination">
-                <button
-                  className="pagination-btn"
-                  onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
-                  disabled={currentPage === 0}
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="15 18 9 12 15 6"/>
-                  </svg>
-                  Trước
-                </button>
-                <div className="pagination-pages">
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    let pageNum;
-                    if (totalPages <= 5) {
-                      pageNum = i;
-                    } else if (currentPage < 3) {
-                      pageNum = i;
-                    } else if (currentPage > totalPages - 4) {
-                      pageNum = totalPages - 5 + i;
-                    } else {
-                      pageNum = currentPage - 2 + i;
-                    }
-                    return (
-                      <button
-                        key={pageNum}
-                        className={`pagination-page ${currentPage === pageNum ? 'active' : ''}`}
-                        onClick={() => setCurrentPage(pageNum)}
-                      >
-                        {pageNum + 1}
-                      </button>
-                    );
-                  })}
-                </div>
-                <button
-                  className="pagination-btn"
-                  onClick={() => setCurrentPage(prev => Math.min(totalPages - 1, prev + 1))}
-                  disabled={currentPage === totalPages - 1}
-                >
-                  Sau
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="9 18 15 12 9 6"/>
-                  </svg>
-                </button>
-              </div>
-            )}
+            <PaginationControl
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalElements={totalElements}
+              onPageChange={setCurrentPage}
+              pageSize={pageSize}
+            />
           </>
         )}
       </div>

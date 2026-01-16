@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import '../../../styles/header/jobseeker/HeaderManager.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUserCredential } from '../../../store'
 import logoImage from '../../../assets/logo.jpg';
+import { LogoutProgressModal } from '../../common/LogoutProgressModal';
 
 function HeaderManager() {
   const navigate = useNavigate();
   const location = useLocation();
   const { token, userBasicInfo, setToken, setUserBasicInfo } = useUserCredential();
+  const [showLogoutProgress, setShowLogoutProgress] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = e.currentTarget.name;
@@ -18,11 +20,16 @@ function HeaderManager() {
     navigate('/jobseeker/home');
   }
 
-  const handleLogout = () => {
+  const handleLogoutClick = () => {
+    setShowLogoutProgress(true);
+  };
+
+  const handleLogoutComplete = useCallback(() => {
     setToken('');
     setUserBasicInfo(null);
+    setShowLogoutProgress(false);
     navigate('/auth');
-  }
+  }, [setToken, setUserBasicInfo, navigate]);
 
   if (token === '') {
     return (
@@ -33,7 +40,7 @@ function HeaderManager() {
         </div>
         <div className="header-nav-buttons">
           <button
-            className={`home-button ${location.pathname === '/jobseeker/home' ? 'home-button-isactive' : ''}`}
+            className={`home-button ${location.pathname === '/' || location.pathname === '/jobseeker/home' ? 'home-button-isactive' : ''}`}
             name='home'
             onClick={handleClick}
           >
@@ -120,10 +127,14 @@ function HeaderManager() {
           <span className="header-greeting">
             Xin chào, <strong>{userBasicInfo?.name || 'Bạn'}</strong>
           </span>
-          <button className="logout-button" onClick={handleLogout}>
+          <button className="logout-button" onClick={handleLogoutClick}>
             <span className="logout-text">Đăng xuất</span>
           </button>
         </div>
+        <LogoutProgressModal 
+          open={showLogoutProgress} 
+          onComplete={handleLogoutComplete} 
+        />
       </div>
     )
   }

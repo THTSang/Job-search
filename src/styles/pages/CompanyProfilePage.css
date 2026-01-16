@@ -146,16 +146,7 @@
 }
 
 .profile-company-logo {
-  width: 140px;
-  height: 140px;
-  background-color: #ffffff;
-  border: 4px solid #ffffff;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  color: #667eea;
+  flex-shrink: 0;
 }
 
 .profile-change-logo-button {
@@ -203,13 +194,7 @@
   margin-bottom: 8px;
 }
 
-/* Logo Image */
-.profile-company-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 12px;
-}
+
 
 /* Loading State */
 .profile-loading {
@@ -947,10 +932,7 @@
     margin-bottom: -50px;
   }
 
-  .profile-company-logo {
-    width: 100px;
-    height: 100px;
-  }
+
 
   .profile-company-logo-wrapper {
     padding: 0 16px;
@@ -1050,10 +1032,7 @@
     border-radius: 12px;
   }
 
-  .profile-company-logo {
-    width: 80px;
-    height: 80px;
-  }
+
 
   .profile-change-logo-button {
     font-size: 13px;

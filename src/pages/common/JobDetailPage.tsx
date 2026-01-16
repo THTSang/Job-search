@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { HeaderManager as JobSeekerHeader } from '../../components/header/jobseeker/HeaderManager';
 import { HeaderManager as EmployerHeader } from '../../components/header/employer/HeaderManager';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import LetterAvatar from '../../components/common/LetterAvatar';
 import { GetJobByIdAPI, ApplyJobAPI, CheckApplicationAPI } from '../../api';
 import type { JobData, EmploymentType, ApplicationRequestInterface, ApplicationCheckResponse, ApplicationStatus } from '../../utils/interface';
 import { createErrorHandler, logError } from '../../utils/errorHandler';
@@ -129,10 +131,6 @@ function JobDetailPage() {
     });
   };
 
-  const getCompanyInitial = () => {
-    return job?.company.name ? job.company.name.charAt(0).toUpperCase() : 'C';
-  };
-
   const getApplicationStatusLabel = (status: ApplicationStatus): string => {
     const labels: Record<ApplicationStatus, string> = {
       'PENDING': 'Chờ xem xét',
@@ -236,10 +234,7 @@ function JobDetailPage() {
       <div className="job-detail-page">
         <HeaderManager />
         <div className="job-detail-container">
-          <div className="job-detail-loading">
-            <div className="loading-spinner"></div>
-            <p>Đang tải thông tin công việc...</p>
-          </div>
+          <LoadingSpinner fullPage message="Đang tải thông tin công việc..." />
         </div>
       </div>
     );
@@ -293,11 +288,12 @@ function JobDetailPage() {
                 </div>
               </div>
               <div className="job-header-logo">
-                {job.company.logoUrl ? (
-                  <img src={job.company.logoUrl} alt={job.company.name} />
-                ) : (
-                  <span>{getCompanyInitial()}</span>
-                )}
+                <LetterAvatar 
+                  name={job.company.name} 
+                  src={job.company.logoUrl} 
+                  size={56} 
+                  variant="rounded" 
+                />
               </div>
             </div>
 
@@ -413,11 +409,12 @@ function JobDetailPage() {
             <div className="company-card">
               <div className="company-card-header">
                 <div className="company-logo">
-                  {job.company.logoUrl ? (
-                    <img src={job.company.logoUrl} alt={job.company.name} />
-                  ) : (
-                    <span>{getCompanyInitial()}</span>
-                  )}
+                  <LetterAvatar 
+                    name={job.company.name} 
+                    src={job.company.logoUrl} 
+                    size={48} 
+                    variant="rounded" 
+                  />
                 </div>
                 <h3>{job.company.name}</h3>
               </div>
@@ -499,11 +496,12 @@ function JobDetailPage() {
 
             <div className="apply-modal-job-info">
               <div className="apply-job-logo">
-                {job.company.logoUrl ? (
-                  <img src={job.company.logoUrl} alt={job.company.name} />
-                ) : (
-                  <span>{getCompanyInitial()}</span>
-                )}
+                <LetterAvatar 
+                  name={job.company.name} 
+                  src={job.company.logoUrl} 
+                  size={48} 
+                  variant="rounded" 
+                />
               </div>
               <div className="apply-job-details">
                 <h3>{job.title}</h3>

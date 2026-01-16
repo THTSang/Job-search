@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { HeaderManager as JobSeekerHeader } from '../../components/header/jobseeker/HeaderManager';
 import { HeaderManager as EmployerHeader } from '../../components/header/employer/HeaderManager';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import LetterAvatar from '../../components/common/LetterAvatar';
 import { GetCompanyByIdAPI } from '../../api';
 import type { CompanyProfileInterface } from '../../utils/interface';
 import '../../styles/pages/CompanyProfilePage.css';
@@ -49,19 +51,12 @@ function CompanyDetailPage() {
     navigate(-1);
   };
 
-  const getCompanyInitial = () => {
-    return company?.name ? company.name.charAt(0).toUpperCase() : 'C';
-  };
-
   if (isLoading) {
     return (
       <div className="profile-page-container">
         <HeaderManager />
         <div className="profile-page-content">
-          <div className="profile-loading">
-            <div className="loading-spinner"></div>
-            <p>Đang tải thông tin công ty...</p>
-          </div>
+          <LoadingSpinner fullPage message="Đang tải thông tin công ty..." />
         </div>
       </div>
     );
@@ -105,11 +100,12 @@ function CompanyDetailPage() {
           </div>
           <div className="profile-company-logo-wrapper">
             <div className="profile-company-logo">
-              {company.logoUrl ? (
-                <img src={company.logoUrl} alt={company.name} />
-              ) : (
-                <span className="company-logo-initial">{getCompanyInitial()}</span>
-              )}
+              <LetterAvatar 
+                name={company.name} 
+                src={company.logoUrl} 
+                size={100} 
+                variant="rounded" 
+              />
             </div>
             <div className="company-profile-info-header">
               <h1 className="company-profile-name">{company.name}</h1>

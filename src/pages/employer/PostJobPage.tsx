@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import '../../styles/pages/PostJobPage.css'
 import { HeaderManager } from '../../components/header/employer/HeaderManager';
 import { PostedJob } from '../../components/job/employer/PostedJob';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import LetterAvatar from '../../components/common/LetterAvatar';
 import { useUserCredential } from '../../store';
 import type { JobData, JobPostRequest, JobUpdateRequest, EmploymentType, JobStatus, JobLocationRequest, JobCategoryRequest, CompanyProfileInterface } from '../../utils/interface';
 import { PostJobAPI, GetCompanyJobsAPI, GetCompanyAPI, UpdateJobAPI } from '../../api';
@@ -336,7 +338,7 @@ function PostJobPage() {
       <>
         <HeaderManager />
         <div className='post-job-page-container'>
-          <div className='post-job-loading'>Đang tải...</div>
+          <LoadingSpinner fullPage message="Đang tải..." />
         </div>
       </>
     );
@@ -373,11 +375,12 @@ function PostJobPage() {
             {company ? (
               <div className='post-job-company-info'>
                 <div className='post-job-company-logo'>
-                  {company.logoUrl ? (
-                    <img src={company.logoUrl} alt={company.name} />
-                  ) : (
-                    <span>{company.name.charAt(0).toUpperCase()}</span>
-                  )}
+                  <LetterAvatar 
+                    name={company.name} 
+                    src={company.logoUrl} 
+                    size={48} 
+                    variant="rounded" 
+                  />
                 </div>
                 <div className='post-job-company-details'>
                   <span className='post-job-company-name'>{company.name}</span>

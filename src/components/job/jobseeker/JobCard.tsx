@@ -1,4 +1,5 @@
 import type { JobCompany, JobLocation, EmploymentType } from '../../../utils/interface';
+import LetterAvatar from '../../common/LetterAvatar';
 import '../../../styles/job/jobCard.css';
 
 interface JobCardProps {
@@ -71,10 +72,6 @@ function JobCard({
     return date.toLocaleDateString('vi-VN');
   };
 
-  const getCompanyInitial = () => {
-    return company.name ? company.name.charAt(0).toUpperCase() : 'C';
-  };
-
   const handleClick = () => {
     if (onClick && id) {
       onClick(id);
@@ -95,15 +92,12 @@ function JobCard({
           </div>
         </div>
         <div className='job-card-logo'>
-          {company.logoUrl ? (
-            <img 
-              src={company.logoUrl} 
-              alt={company.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }}
-            />
-          ) : (
-            getCompanyInitial()
-          )}
+          <LetterAvatar 
+            name={company.name} 
+            src={company.logoUrl} 
+            size={48} 
+            variant="rounded" 
+          />
         </div>
       </div>
 

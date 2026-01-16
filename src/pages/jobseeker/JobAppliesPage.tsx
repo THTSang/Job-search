@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HeaderManager } from '../../components/header/jobseeker/HeaderManager';
+import PaginationControl from '../../components/common/PaginationControl';
+import LetterAvatar from '../../components/common/LetterAvatar';
 import { GetMyApplicationsAPI, GetApplicationStatsAPI } from '../../api';
 import type { 
   ApplicationResponseInterface, 
@@ -128,45 +130,6 @@ function JobAppliesPage() {
     return statusMap[status] || { label: status, className: 'waiting' };
   };
 
-  // Get company initial
-  const getCompanyInitial = (name: string) => {
-    return name ? name.charAt(0).toUpperCase() : 'C';
-  };
-
-  // Generate page numbers
-  const getPageNumbers = (): (number | string)[] => {
-    const pages: (number | string)[] = [];
-    const maxVisiblePages = 5;
-
-    if (totalPages <= maxVisiblePages) {
-      for (let i = 0; i < totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      pages.push(0);
-      if (currentPage > 2) {
-        pages.push('...');
-      }
-      const start = Math.max(1, currentPage - 1);
-      const end = Math.min(totalPages - 2, currentPage + 1);
-      for (let i = start; i <= end; i++) {
-        if (!pages.includes(i)) {
-          pages.push(i);
-        }
-      }
-      if (currentPage < totalPages - 3) {
-        pages.push('...');
-      }
-      if (!pages.includes(totalPages - 1)) {
-        pages.push(totalPages - 1);
-      }
-    }
-    return pages;
-  };
-
-  const startItem = totalElements === 0 ? 0 : currentPage * PAGE_SIZE + 1;
-  const endItem = Math.min((currentPage + 1) * PAGE_SIZE, totalElements);
-
   return (
     <div className="job-applies-page-container">
       <HeaderManager />
@@ -237,14 +200,12 @@ function JobAppliesPage() {
               return (
                 <div key={application.id} className='job-application-card'>
                   <div className='job-application-logo'>
-                    {application.company.logoUrl ? (
-                      <img 
-                        src={application.company.logoUrl} 
-                        alt={application.company.name} 
-                      />
-                    ) : (
-                      <span>{getCompanyInitial(application.company.name)}</span>
-                    )}
+                    <LetterAvatar 
+                      name={application.company.name} 
+                      src={application.company.logoUrl} 
+                      size={48} 
+                      variant="rounded" 
+                    />
                   </div>
                   
                   <div className='job-application-content'>
@@ -278,47 +239,13 @@ function JobAppliesPage() {
             })}
 
             {/* Pagination */}
-            {totalPages > 1 && (
-              <div className='job-applies-pagination'>
-                <div className='pagination-controls'>
-                  <button
-                    className='pagination-button pagination-nav'
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 0}
-                  >
-                    ◀ Trước
-                  </button>
-
-                  <div className='pagination-pages'>
-                    {getPageNumbers().map((page, index) => (
-                      typeof page === 'number' ? (
-                        <button
-                          key={index}
-                          className={`pagination-button pagination-number ${currentPage === page ? 'active' : ''}`}
-                          onClick={() => handlePageChange(page)}
-                        >
-                          {page + 1}
-                        </button>
-                      ) : (
-                        <span key={index} className='pagination-ellipsis'>{page}</span>
-                      )
-                    ))}
-                  </div>
-
-                  <button
-                    className='pagination-button pagination-nav'
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages - 1}
-                  >
-                    Sau ▶
-                  </button>
-                </div>
-
-                <div className='pagination-info'>
-                  Hiển thị {startItem}-{endItem} / {totalElements} đơn ứng tuyển
-                </div>
-              </div>
-            )}
+            <PaginationControl
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalElements={totalElements}
+              onPageChange={handlePageChange}
+              pageSize={PAGE_SIZE}
+            />
           </>
         ) : (
           <div className='job-applies-empty'>

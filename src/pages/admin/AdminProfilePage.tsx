@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HeaderManager } from '../../components/header/admin/HeaderManager';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import LetterAvatar from '../../components/common/LetterAvatar';
 import '../../styles/pages/admin/AdminProfilePage.css';
 import type { UserProfileInterface } from '../../utils/interface';
 import { PutProfileAPI, PostProfileAPI, GetProfileAPI } from '../../api';
@@ -137,10 +139,7 @@ function AdminProfilePage() {
     return (
       <div className='admin-profile-page'>
         <HeaderManager />
-        <div className='admin-profile-loading'>
-          <div className='admin-profile-loading-spinner'></div>
-          <p>Đang tải hồ sơ...</p>
-        </div>
+        <LoadingSpinner fullPage message="Đang tải hồ sơ..." />
       </div>
     );
   }
@@ -165,7 +164,7 @@ function AdminProfilePage() {
         {/* Profile Card */}
         <div className='admin-profile-card'>
           <div className='admin-profile-avatar'>
-            {profileData.fullName ? profileData.fullName.charAt(0).toUpperCase() : 'A'}
+            <LetterAvatar name={profileData.fullName || 'A'} size={80} />
           </div>
           <div className='admin-profile-info'>
             <h2 className='admin-profile-name'>

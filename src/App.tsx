@@ -1,30 +1,9 @@
-
-import { HeaderManager } from "./components/header/jobseeker/HeaderManager";
-import { useCurrentPage } from './store';
-import { useNavigate } from 'react-router-dom';
+import { HomePage } from './pages';
 
 function App() {
-  const navigate = useNavigate();
-  const currentPage = useCurrentPage((state) => state.currentPage);
-  if (currentPage === 'Home') {
-    navigate('/homepage');
-  }
-  else if (currentPage === 'findJob') {
-    navigate('/jobpage');
-  }
-  else if (currentPage === 'jobApplies') {
-    navigate('/jobapplies');
-  }
-  else if (currentPage === 'followCompanies') {
-    navigate('/followcompanies');
-  }
-  else if (currentPage === 'messages') {
-    navigate('/messages');
-  }
-  return (
-    <HeaderManager />
-  );
-
+  // Render HomePage for the root "/" route
+  // This provides a professional landing page for all visitors
+  return <HomePage />;
 }
 
 export default App;

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import '../../styles/pages/ApplicantsPage.css';
 import { HeaderManager } from '../../components/header/employer/HeaderManager';
 import { JobApplicantsList } from '../../components/applicant/JobApplicantsList';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { GetCompanyAPI, GetCompanyJobsAPI } from '../../api';
 import type { JobData, CompanyProfileInterface } from '../../utils/interface';
 
@@ -58,9 +59,7 @@ function ApplicantsPage() {
       <>
         <HeaderManager />
         <div className="applicants-page-container">
-          <div className="applicants-page-loading">
-            <span>Đang tải...</span>
-          </div>
+          <LoadingSpinner fullPage message="Đang tải..." />
         </div>
       </>
     );

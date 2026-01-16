@@ -3,7 +3,7 @@
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background-color: #1a1d29;
+  background-color: #3b82f6;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -15,16 +15,19 @@
 }
 
 .login-button:hover {
-  background-color: #2a2d39;
+  background-color: #2563eb;
+  color: #ffffff;
 }
 
 .login-button:focus {
   outline: none;
-  background-color: #1a1d29;
+  background-color: #2563eb;
+  color: #ffffff;
 }
 
 .login-button:active {
-  background-color: #0f1015;
+  background-color: #1d4ed8;
+  color: #ffffff;
 }
 
 .login-icon {

@@ -128,12 +128,12 @@
 
 /* Login Button */
 .login-button {
-  background-color: #1a1d29 !important;
+  background-color: #3b82f6 !important;
   color: #ffffff !important;
 }
 
 .login-button:hover {
-  background-color: #2a2d39 !important;
+  background-color: #2563eb !important;
 }
 
 /* Logout Button */

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HeaderManager } from '../../components/header/jobseeker/HeaderManager.tsx';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import LetterAvatar from '../../components/common/LetterAvatar';
 import '../../styles/pages/PersonalProfilePage.css';
 import type { UserProfileInterface, Skill, Experience, Education, Project } from '../../utils/interface';
 import { PutProfileAPI, PostProfileAPI, GetProfileAPI } from '../../api'
@@ -647,10 +649,7 @@ function PersonalProfilePage() {
     return (
       <div className='personal-profile-page'>
         <HeaderManager />
-        <div className='personal-profile-loading'>
-          <div className='personal-profile-loading-spinner'></div>
-          <p>Đang tải hồ sơ...</p>
-        </div>
+        <LoadingSpinner fullPage message="Đang tải hồ sơ..." />
       </div>
     );
   }
@@ -675,11 +674,11 @@ function PersonalProfilePage() {
         {/* Profile Card */}
         <div className='personal-profile-card'>
           <div className='personal-profile-avatar'>
-            {profileData.avatarUrl ? (
-              <img src={profileData.avatarUrl} alt={profileData.fullName} />
-            ) : (
-              profileData.fullName ? profileData.fullName.charAt(0).toUpperCase() : '?'
-            )}
+            <LetterAvatar 
+              name={profileData.fullName || '?'} 
+              src={profileData.avatarUrl} 
+              size={80} 
+            />
           </div>
           <div className='personal-profile-info'>
             <h2 className='personal-profile-name'>

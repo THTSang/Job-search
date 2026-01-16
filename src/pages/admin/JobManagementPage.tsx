@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { HeaderManager } from '../../components/header/admin/HeaderManager';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import PaginationControl from '../../components/common/PaginationControl';
+import LetterAvatar from '../../components/common/LetterAvatar';
 import { SearchJobsAPI, DeleteJobAPI, UpdateJobAPI } from '../../api';
 import { getUserFriendlyMessage, logError } from '../../utils/errorHandler';
 import type { JobData, JobStatus } from '../../utils/interface';
@@ -184,9 +187,7 @@ function JobManagementPage() {
         )}
 
         {isLoading ? (
-          <div className="job-management-loading">
-            <span>Đang tải danh sách tin tuyển dụng...</span>
-          </div>
+          <LoadingSpinner fullPage message="Đang tải danh sách tin tuyển dụng..." />
         ) : (
           <>
             <div className="job-table-container">
@@ -224,17 +225,12 @@ function JobManagementPage() {
                           </td>
                           <td>
                             <div className="company-cell">
-                              {job.company?.logoUrl ? (
-                                <img 
-                                  src={job.company.logoUrl} 
-                                  alt={job.company.name}
-                                  className="company-logo"
-                                />
-                              ) : (
-                                <div className="company-logo-placeholder">
-                                  {job.company?.name?.charAt(0) || '?'}
-                                </div>
-                              )}
+                              <LetterAvatar 
+                                name={job.company?.name || '?'} 
+                                src={job.company?.logoUrl} 
+                                size={32} 
+                                variant="rounded" 
+                              />
                               <span className="company-name">{job.company?.name || 'N/A'}</span>
                             </div>
                           </td>
@@ -289,27 +285,13 @@ function JobManagementPage() {
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="pagination">
-                <button
-                  className="pagination-btn"
-                  onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
-                  disabled={currentPage === 0}
-                >
-                  Trước
-                </button>
-                <span className="pagination-info">
-                  Trang {currentPage + 1} / {totalPages}
-                </span>
-                <button
-                  className="pagination-btn"
-                  onClick={() => setCurrentPage(prev => Math.min(totalPages - 1, prev + 1))}
-                  disabled={currentPage === totalPages - 1}
-                >
-                  Sau
-                </button>
-              </div>
-            )}
+            <PaginationControl
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalElements={totalElements}
+              onPageChange={setCurrentPage}
+              pageSize={pageSize}
+            />
           </>
         )}
       </div>

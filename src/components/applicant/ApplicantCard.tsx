@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import type { JobApplicationInterface, ApplicationStatus } from '../../utils/interface';
 import { UpdateApplicationStatusAPI } from '../../api';
 import { getUserFriendlyMessage, logError } from '../../utils/errorHandler';
+import LetterAvatar from '../common/LetterAvatar';
 import '../../styles/pages/ApplicantsPage.css';
 
 interface ApplicantCardProps {
@@ -21,11 +22,6 @@ const STATUS_CONFIG: Record<ApplicationStatus, StatusConfig> = {
   OFFERED: { label: 'Đã chấp nhận', className: 'status-offered' },
   REJECTED: { label: 'Từ chối', className: 'status-rejected' },
   CANCELLED: { label: 'Đã hủy', className: 'status-cancelled' },
-};
-
-// Helper functions
-const getAvatarInitial = (name: string): string => {
-  return name ? name.charAt(0).toUpperCase() : '?';
 };
 
 const formatDate = (dateString: string): string => {
@@ -87,11 +83,11 @@ function ApplicantCard({ application, onStatusUpdate }: ApplicantCardProps) {
     <div className={`applicant-card ${isUpdating ? 'applicant-card-updating' : ''}`}>
       {/* Avatar */}
       <div className="applicant-avatar">
-        {applicant.avatarUrl ? (
-          <img src={applicant.avatarUrl} alt={applicant.fullName} />
-        ) : (
-          getAvatarInitial(applicant.fullName)
-        )}
+        <LetterAvatar 
+          name={applicant.fullName} 
+          src={applicant.avatarUrl} 
+          size={48} 
+        />
       </div>
 
       {/* Info */}

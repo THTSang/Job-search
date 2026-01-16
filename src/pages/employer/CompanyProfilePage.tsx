@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { HeaderManager } from '../../components/header/employer/HeaderManager';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { useUserCredential } from '../../store';
 import type { CompanyProfileInterface } from '../../utils/interface';
 import '../../styles/pages/CompanyProfilePage.css';
@@ -132,7 +133,7 @@ function CompanyProfilePage() {
       <div className="profile-page-container">
         <HeaderManager />
         <div className="profile-page-content">
-          <div className="profile-loading">Đang tải...</div>
+          <LoadingSpinner fullPage message="Đang tải..." />
         </div>
       </div>
     );

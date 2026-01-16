@@ -4,6 +4,7 @@ import { HeaderManager as JobSeekerHeader } from '../../components/header/jobsee
 import { HeaderManager as EmployerHeader } from '../../components/header/employer/HeaderManager.tsx';
 import { ExtractFinder } from '../../components/finder/ExtractFinder.tsx';
 import { JobCard } from '../../components/job/jobseeker/JobCard.tsx';
+import PaginationControl from '../../components/common/PaginationControl.tsx';
 import { SearchJobsAPI } from '../../api';
 import type { JobData, JobSearchRequest } from '../../utils/interface';
 import '../../styles/pages/FindJobPage.css';
@@ -81,41 +82,6 @@ function FindJobPage() {
     navigate(`${basePath}/job/${jobId}`);
   };
 
-  // Generate page numbers for pagination
-  const getPageNumbers = (): (number | string)[] => {
-    const pages: (number | string)[] = [];
-    const maxVisiblePages = 5;
-
-    if (totalPages <= maxVisiblePages) {
-      for (let i = 0; i < totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      pages.push(0);
-      if (currentPage > 2) {
-        pages.push('...');
-      }
-      const start = Math.max(1, currentPage - 1);
-      const end = Math.min(totalPages - 2, currentPage + 1);
-      for (let i = start; i <= end; i++) {
-        if (!pages.includes(i)) {
-          pages.push(i);
-        }
-      }
-      if (currentPage < totalPages - 3) {
-        pages.push('...');
-      }
-      if (!pages.includes(totalPages - 1)) {
-        pages.push(totalPages - 1);
-      }
-    }
-    return pages;
-  };
-
-  // Calculate display range
-  const startItem = totalElements === 0 ? 0 : currentPage * PAGE_SIZE + 1;
-  const endItem = Math.min((currentPage + 1) * PAGE_SIZE, totalElements);
-
   // Check if any filters are active
   const hasActiveFilters = Object.keys(searchFilters).length > 0;
 
@@ -190,46 +156,14 @@ function FindJobPage() {
         </div>
 
         {/* Pagination */}
-        {!isLoading && totalPages > 1 && (
-          <div className='jobs-pagination'>
-            <div className='pagination-controls'>
-              <button
-                className='pagination-button pagination-nav'
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 0}
-              >
-                ◀ Trước
-              </button>
-
-              <div className='pagination-pages'>
-                {getPageNumbers().map((page, index) => (
-                  typeof page === 'number' ? (
-                    <button
-                      key={index}
-                      className={`pagination-button pagination-number ${currentPage === page ? 'active' : ''}`}
-                      onClick={() => handlePageChange(page)}
-                    >
-                      {page + 1}
-                    </button>
-                  ) : (
-                    <span key={index} className='pagination-ellipsis'>{page}</span>
-                  )
-                ))}
-              </div>
-
-              <button
-                className='pagination-button pagination-nav'
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages - 1}
-              >
-                Sau ▶
-              </button>
-            </div>
-
-            <div className='pagination-info'>
-              Hiển thị {startItem}-{endItem} / {totalElements} công việc
-            </div>
-          </div>
+        {!isLoading && (
+          <PaginationControl
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalElements={totalElements}
+            onPageChange={handlePageChange}
+            pageSize={PAGE_SIZE}
+          />
         )}
       </div>
     </div>

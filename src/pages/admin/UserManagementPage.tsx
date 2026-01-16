@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HeaderManager } from '../../components/header/admin/HeaderManager';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import PaginationControl from '../../components/common/PaginationControl';
+import LetterAvatar from '../../components/common/LetterAvatar';
 import { GetUsersAPI, UpdateUserStatusAPI, DeleteUserAPI } from '../../api';
 import { getUserFriendlyMessage, logError } from '../../utils/errorHandler';
 import type { AdminUserInterface, UserStatus, UserRole } from '../../utils/interface';
@@ -87,10 +90,6 @@ function UserManagementPage() {
     }
   };
 
-  const getInitial = (name: string) => {
-    return name ? name.charAt(0).toUpperCase() : '?';
-  };
-
   const handleMessageUser = (userId: string, userName: string) => {
     navigate('/admin/messages', {
       state: {
@@ -117,9 +116,7 @@ function UserManagementPage() {
         )}
 
         {isLoading ? (
-          <div className="user-management-loading">
-            <span>Đang tải danh sách người dùng...</span>
-          </div>
+          <LoadingSpinner fullPage message="Đang tải danh sách người dùng..." />
         ) : (
           <>
             <div className="user-table-container">
@@ -143,7 +140,9 @@ function UserManagementPage() {
                       <tr key={user.id} className={isUpdating ? 'row-updating' : ''}>
                         <td>
                           <div className="user-info">
-                            <div className="user-avatar">{getInitial(user.name)}</div>
+                            <div className="user-avatar">
+                              <LetterAvatar name={user.name} size={36} />
+                            </div>
                             <span className="user-name">{user.name}</span>
                           </div>
                         </td>
@@ -209,27 +208,13 @@ function UserManagementPage() {
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="pagination">
-                <button
-                  className="pagination-btn"
-                  onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
-                  disabled={currentPage === 0}
-                >
-                  Trước
-                </button>
-                <span className="pagination-info">
-                  Trang {currentPage + 1} / {totalPages}
-                </span>
-                <button
-                  className="pagination-btn"
-                  onClick={() => setCurrentPage(prev => Math.min(totalPages - 1, prev + 1))}
-                  disabled={currentPage === totalPages - 1}
-                >
-                  Sau
-                </button>
-              </div>
-            )}
+            <PaginationControl
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalElements={totalElements}
+              onPageChange={setCurrentPage}
+              pageSize={pageSize}
+            />
           </>
         )}
       </div>
