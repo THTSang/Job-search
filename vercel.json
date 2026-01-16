@@ -2,11 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:match*",
-      "destination": "http://44.201.41.10:8080/api/:match*"
-    },
-    {
-      "source": "/ws/:match*",
-      "destination": "http://44.201.41.10:8080/ws/:match*"
+      "destination": "https://job-search.duckdns.org/api/:match*"
     },
     {
       "source": "/(.*)",

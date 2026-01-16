@@ -1,8 +1,12 @@
 import { Client } from '@stomp/stompjs';
 import type { IMessage, StompSubscription } from '@stomp/stompjs';
 
-// Server URL for WebSocket connection - try native WebSocket first
-const WS_BASE_URL = 'ws://44.201.41.10:8080/ws/websocket';
+// Server URL for WebSocket connection
+// Production: wss:// (secure) via duckdns domain
+// Development: ws:// (local)
+const WS_BASE_URL = import.meta.env.PROD
+  ? 'wss://job-search.duckdns.org/ws/websocket'
+  : 'ws://44.201.41.10:8080/ws/websocket';
 
 // Message received from WebSocket
 export interface WsIncomingMessage {
