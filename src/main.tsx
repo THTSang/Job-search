@@ -121,6 +121,10 @@ const router = createBrowserRouter([
   {
     path: 'admin/profile',
     element: <AdminProfilePage />
+  },
+  {
+    path: 'admin/company/:companyId',
+    element: <CompanyDetailPage />
   }
 
 ])

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { HeaderManager as JobSeekerHeader } from '../../components/header/jobseeker/HeaderManager';
 import { HeaderManager as EmployerHeader } from '../../components/header/employer/HeaderManager';
+import { HeaderManager as AdminHeader } from '../../components/header/admin/HeaderManager';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import LetterAvatar from '../../components/common/LetterAvatar';
 import { GetCompanyByIdAPI } from '../../api';
@@ -18,7 +19,8 @@ function CompanyDetailPage() {
   const [error, setError] = useState<string | null>(null);
 
   const isEmployer = location.pathname.startsWith('/employer');
-  const HeaderManager = isEmployer ? EmployerHeader : JobSeekerHeader;
+  const isAdmin = location.pathname.startsWith('/admin');
+  const HeaderManager = isAdmin ? AdminHeader : isEmployer ? EmployerHeader : JobSeekerHeader;
 
   useEffect(() => {
     const fetchCompany = async () => {
