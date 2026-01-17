@@ -9,7 +9,7 @@ import type {
 // Create separate axios instance for AI service (different base URL)
 // Production: Vercel deployment, Development: localhost
 const AI_BASE_URL = import.meta.env.PROD
-  ? 'https://cv-evaluation-43wa1i1ph-infinitevoidloops-projects.vercel.app'
+  ? 'https://cv-evaluation.vercel.app'
   : 'http://localhost:3000';
 
 const aiAxiosInstance = axios.create({
