@@ -38,4 +38,7 @@ public interface ApplicationRepository extends MongoRepository<Application, Stri
     // Mentor Note: Đếm tổng số lượng đơn ứng tuyển cho một Job cụ thể
     // Dùng cho tính năng hiển thị mức độ cạnh tranh của công việc.
     long countByJobId(String jobId);
+
+    // Xóa tất cả đơn ứng tuyển thuộc về một Job (Dùng cho Cascading Delete khi xóa Job)
+    void deleteByJobId(String jobId);
 }

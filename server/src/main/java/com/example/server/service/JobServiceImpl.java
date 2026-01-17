@@ -23,6 +23,7 @@ import com.example.server.model.JobStatus;
 import com.example.server.model.JobType;
 import com.example.server.model.Location;
 import com.example.server.repository.CategoryRepository;
+import com.example.server.repository.ApplicationRepository;
 import com.example.server.repository.CompanyRepository;
 import com.example.server.repository.JobRepository;
 import com.example.server.repository.LocationRepository;
@@ -37,6 +38,7 @@ public class JobServiceImpl implements JobService {
     private final CompanyRepository companyRepository;
     private final LocationRepository locationRepository;
     private final CategoryRepository categoryRepository;
+    private final ApplicationRepository applicationRepository;
 
     @Override
     public Page<JobDto> searchJobs(JobSearchRequest request, Pageable pageable) {
@@ -171,6 +173,9 @@ public class JobServiceImpl implements JobService {
 
         Category category = categoryRepository.findOne(Example.of(Category.builder().jobId(id).build())).orElse(null);
         if (category != null) categoryRepository.delete(category);
+
+        // Cleanup Applications (Cascading Delete)
+        applicationRepository.deleteByJobId(id);
 
         jobRepository.deleteById(id);
     }
