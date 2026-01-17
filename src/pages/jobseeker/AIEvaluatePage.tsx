@@ -8,28 +8,28 @@ import '../../styles/pages/AIEvaluatePage.css';
 
 function AIEvaluatePage() {
   const { userBasicInfo } = useUserCredential();
-  
+
   // Session state
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [promptInfo, setPromptInfo] = useState<AIPromptInfo | null>(null);
-  
+
   // Upload state
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [isDragOver, setIsDragOver] = useState(false);
-  
+
   // Chat state
   const [messages, setMessages] = useState<AIChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [chatError, setChatError] = useState('');
   const [limitReached, setLimitReached] = useState(false);
-  
+
   // Refs
   const fileInputRef = useRef<HTMLInputElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  
+
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -44,17 +44,17 @@ function AIEvaluatePage() {
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'application/msword'
     ];
-    
+
     if (!allowedTypes.includes(file.type)) {
       setUploadError('Vui lòng chọn file PDF hoặc DOCX');
       return;
     }
-    
+
     if (file.size > 10 * 1024 * 1024) { // 10MB limit
       setUploadError('File không được vượt quá 10MB');
       return;
     }
-    
+
     setSelectedFile(file);
     setUploadError('');
   };
@@ -73,7 +73,7 @@ function AIEvaluatePage() {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const file = e.dataTransfer.files[0];
     if (file) {
       handleFileSelect(file);
@@ -91,17 +91,17 @@ function AIEvaluatePage() {
   // Upload CV
   const handleUpload = async () => {
     if (!selectedFile || !userBasicInfo?.id) return;
-    
+
     setIsUploading(true);
     setUploadError('');
-    
+
     try {
       const response = await UploadCVAPI(selectedFile, userBasicInfo.id);
-      
+
       if (response.success && response.data) {
         setSessionId(response.data.sessionId);
         setPromptInfo(response.data.promptInfo);
-        
+
         // Add initial AI response to messages
         setMessages([{
           role: 'assistant',
@@ -122,7 +122,7 @@ function AIEvaluatePage() {
   const handleSendMessage = async (message?: string) => {
     const messageToSend = message || inputMessage.trim();
     if (!messageToSend || !sessionId || !userBasicInfo?.id || limitReached) return;
-    
+
     // Add user message to chat
     const userMessage: AIChatMessage = {
       role: 'user',
@@ -132,10 +132,10 @@ function AIEvaluatePage() {
     setInputMessage('');
     setIsSending(true);
     setChatError('');
-    
+
     try {
       const response = await ChatAPI(userBasicInfo.id, sessionId, messageToSend);
-      
+
       if (response.success && response.data) {
         // Add AI response to chat
         const aiMessage: AIChatMessage = {
@@ -144,7 +144,7 @@ function AIEvaluatePage() {
         };
         setMessages(prev => [...prev, aiMessage]);
         setPromptInfo(response.data.promptInfo);
-        
+
         // Check if limit reached
         if (response.data.promptInfo.remaining === 0) {
           setLimitReached(true);
@@ -193,10 +193,9 @@ function AIEvaluatePage() {
 
   // Quick action buttons
   const quickActions = [
-    { label: 'Đánh giá CV', message: 'Evaluate my CV with score and suggestions' },
-    { label: 'Kiểm tra ATS', message: 'Check my CV for ATS compatibility and suggest improvements' },
-    { label: 'Điểm mạnh & yếu', message: 'Analyze the strengths and weaknesses of my CV' },
-    { label: 'Gợi ý cải thiện', message: 'Give me specific suggestions to improve my CV' }
+    { label: 'Đánh giá CV', message: 'Đánh giá CV, cho điểm số và gợi ý' },
+    { label: 'Điểm mạnh & yếu', message: 'Đánh giá điểm mạnh và điểm yếu của CV' },
+    { label: 'Gợi ý cải thiện', message: 'Gợi ý cải thiện cụ thể cho CV' }
   ];
 
   // Reset session (start new)
@@ -213,7 +212,7 @@ function AIEvaluatePage() {
   return (
     <div className="ai-evaluate-page-container">
       <HeaderManager />
-      
+
       <div className="ai-evaluate-page-content">
         <div className="ai-evaluate-page-header">
           <h1 className="ai-evaluate-page-title">AI Đánh Giá CV</h1>
@@ -239,7 +238,7 @@ function AIEvaluatePage() {
                 accept=".pdf,.doc,.docx"
                 hidden
               />
-              
+
               {selectedFile ? (
                 <div className="ai-evaluate-file-selected">
                   <div className="ai-evaluate-file-icon">
@@ -366,7 +365,7 @@ function AIEvaluatePage() {
                   </div>
                 </div>
               ))}
-              
+
               {isSending && (
                 <div className="ai-evaluate-message ai-message">
                   <div className="ai-evaluate-message-avatar">
