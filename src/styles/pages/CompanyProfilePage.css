@@ -126,23 +126,27 @@
 /* Company Banner Section */
 .profile-company-banner-section {
   position: relative;
-  margin-bottom: 80px;
+  margin-bottom: 24px;
 }
 
 .profile-company-banner {
   height: 240px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 16px;
-  margin-bottom: -60px;
+  margin-bottom: 0;
 }
 
 .profile-company-logo-wrapper {
   display: flex;
-  align-items: flex-end;
-  gap: 16px;
-  padding: 0 32px;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 32px;
+  background: #fff;
+  border-radius: 12px;
+  margin: -60px 24px 0 24px;
   position: relative;
   z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .profile-company-logo {
@@ -929,13 +933,11 @@
 
   .profile-company-banner {
     height: 160px;
-    margin-bottom: -50px;
   }
 
-
-
   .profile-company-logo-wrapper {
-    padding: 0 16px;
+    padding: 20px 16px;
+    margin: -40px 16px 0 16px;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
@@ -1032,7 +1034,10 @@
     border-radius: 12px;
   }
 
-
+  .profile-company-logo-wrapper {
+    margin: -30px 12px 0 12px;
+    padding: 16px;
+  }
 
   .profile-change-logo-button {
     font-size: 13px;
