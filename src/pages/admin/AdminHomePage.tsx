@@ -108,19 +108,6 @@ function AdminHomePage() {
               <span className="admin-action-desc">Xác minh, xem hồ sơ</span>
             </div>
           </a>
-          <a href="/admin/stats" className="admin-action-card">
-            <div className="admin-action-icon admin-action-icon-orange">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="20" x2="18" y2="10" />
-                <line x1="12" y1="20" x2="12" y2="4" />
-                <line x1="6" y1="20" x2="6" y2="14" />
-              </svg>
-            </div>
-            <div className="admin-action-content">
-              <span className="admin-action-text">Xem thống kê</span>
-              <span className="admin-action-desc">Báo cáo chi tiết</span>
-            </div>
-          </a>
         </div>
       </div>
     </>
