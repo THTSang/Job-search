@@ -210,11 +210,11 @@ export interface ApplicationResponseInterface {
   job: {
     id: string;
     title: string;
-  };
+  } | null;
   company: {
     name: string;
     logoUrl: string;
-  };
+  } | null;
   status: ApplicationStatus;
   appliedAt: string;  // ISO datetime format
 }

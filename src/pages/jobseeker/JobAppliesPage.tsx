@@ -201,16 +201,16 @@ function JobAppliesPage() {
                 <div key={application.id} className='job-application-card'>
                   <div className='job-application-logo'>
                     <LetterAvatar 
-                      name={application.company.name} 
-                      src={application.company.logoUrl} 
+                      name={application.company?.name || 'Unknown'} 
+                      src={application.company?.logoUrl} 
                       size={48} 
                       variant="rounded" 
                     />
                   </div>
                   
                   <div className='job-application-content'>
-                    <h3 className='job-application-title'>{application.job.title}</h3>
-                    <p className='job-application-company'>{application.company.name}</p>
+                    <h3 className='job-application-title'>{application.job?.title || 'Không xác định'}</h3>
+                    <p className='job-application-company'>{application.company?.name || 'Công ty không xác định'}</p>
                     <div className='job-application-meta'>
                       <span className='job-application-date' title={formatDate(application.appliedAt)}>
                         {getRelativeTime(application.appliedAt)}
@@ -225,7 +225,8 @@ function JobAppliesPage() {
                   <div className='job-application-actions'>
                     <button 
                       className='job-application-view-button'
-                      onClick={() => handleViewJob(application.job.id)}
+                      onClick={() => application.job?.id && handleViewJob(application.job.id)}
+                      disabled={!application.job?.id}
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
