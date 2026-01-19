@@ -43,7 +43,9 @@ function ResetPasswordForm() {
       setSuccess(null);
       
       const response = await ForgotPasswordAPI(email);
-      setSuccess(response.message || 'Link đặt lại mật khẩu đã được gửi đến email của bạn');
+      // Luôn hiển thị message tiếng Việt, bỏ qua message từ API
+      void response;
+      setSuccess('Link đặt lại mật khẩu đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư.');
       setEmail('');
     } catch (err: unknown) {
       console.error('Forgot password error:', err);
@@ -79,7 +81,9 @@ function ResetPasswordForm() {
       setSuccess(null);
       
       const response = await ResetPasswordAPI(tokenFromUrl!, newPassword);
-      setSuccess(response.message || 'Đặt lại mật khẩu thành công!');
+      // Luôn hiển thị message tiếng Việt, bỏ qua message từ API
+      void response;
+      setSuccess('Đặt lại mật khẩu thành công! Đang chuyển đến trang đăng nhập...');
       
       // Redirect to login after 2 seconds
       setTimeout(() => {
