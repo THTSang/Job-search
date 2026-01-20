@@ -67,7 +67,7 @@ function PersonalProfilePage() {
   const [editSkills, setEditSkills] = useState<Skill[]>([]);
   const [editProjects, setEditProjects] = useState<Project[]>([]);
   const [newSkillName, setNewSkillName] = useState('');
-  const [newSkillCategory, setNewSkillCategory] = useState('TECHNICAL');
+  const [newSkillCategory, setNewSkillCategory] = useState('TECHNICAL_SKILL');
 
   // API handlers
   const handlePostProfile = async (profile: UserProfileInterface) => {
@@ -135,7 +135,7 @@ function PersonalProfilePage() {
     if (isSaving) return; // Prevent closing while saving
     setIsEditModalOpen(false);
     setNewSkillName('');
-    setNewSkillCategory('TECHNICAL');
+    setNewSkillCategory('TECHNICAL_SKILL');
   };
 
   const handleSaveProfile = async () => {
@@ -518,10 +518,9 @@ function PersonalProfilePage() {
                 value={newSkillCategory}
                 onChange={(e) => setNewSkillCategory(e.target.value)}
               >
-                <option value="TECHNICAL">Kỹ năng kỹ thuật</option>
-                <option value="SOFT">Kỹ năng mềm</option>
+                <option value="TECHNICAL_SKILL">Kỹ năng kỹ thuật</option>
+                <option value="SOFT_SKILL">Kỹ năng mềm</option>
                 <option value="LANGUAGE">Ngôn ngữ</option>
-                <option value="OTHER">Khác</option>
               </select>
               <button className='personal-profile-modal-add-skill-btn' onClick={handleAddSkill}>
                 Thêm
@@ -532,9 +531,9 @@ function PersonalProfilePage() {
                 <div key={skill.id || index} className='personal-profile-modal-skill-item'>
                   <span className='personal-profile-modal-skill-name'>{skill.name}</span>
                   <span className='personal-profile-modal-skill-category'>
-                    {skill.category === 'TECHNICAL' ? 'Kỹ thuật' :
-                      skill.category === 'SOFT' ? 'Mềm' :
-                        skill.category === 'LANGUAGE' ? 'Ngôn ngữ' : 'Khác'}
+                    {skill.category === 'TECHNICAL_SKILL' ? 'Kỹ thuật' :
+                      skill.category === 'SOFT_SKILL' ? 'Mềm' :
+                        skill.category === 'LANGUAGE' ? 'Ngôn ngữ' : skill.category}
                   </span>
                   <button
                     className='personal-profile-modal-skill-delete'

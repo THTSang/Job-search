@@ -1,10 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { HeaderManager } from '../../components/header/jobseeker/HeaderManager.tsx';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { useUserCredential } from '../../store';
-import { UploadCVAPI, ChatAPI } from '../../api';
+import { UploadCVAPI, ChatAPI, GetChatHistoryAPI } from '../../api';
 import type { AIChatMessage, AIPromptInfo } from '../../utils/interface';
 import '../../styles/pages/AIEvaluatePage.css';
+
+// localStorage key for session persistence
+const SESSION_STORAGE_KEY = 'ai_evaluate_session';
 
 function AIEvaluatePage() {
   const { userBasicInfo } = useUserCredential();
@@ -12,6 +16,8 @@ function AIEvaluatePage() {
   // Session state
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [promptInfo, setPromptInfo] = useState<AIPromptInfo | null>(null);
+  const [sessionFilename, setSessionFilename] = useState<string>('');
+  const [isRestoring, setIsRestoring] = useState(true);
 
   // Upload state
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -36,6 +42,46 @@ function AIEvaluatePage() {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Restore session from localStorage on mount
+  useEffect(() => {
+    const restoreSession = async () => {
+      const savedSessionId = localStorage.getItem(SESSION_STORAGE_KEY);
+      
+      if (!savedSessionId || !userBasicInfo?.id) {
+        setIsRestoring(false);
+        return;
+      }
+
+      try {
+        const response = await GetChatHistoryAPI(savedSessionId, userBasicInfo.id);
+        
+        if (response.success && response.data) {
+          // Session restored successfully
+          setSessionId(savedSessionId);
+          setMessages(response.data.messages);
+          setPromptInfo(response.data.promptInfo);
+          setSessionFilename(response.data.filename || 'CV');
+          
+          // Check if limit reached
+          if (response.data.promptInfo.remaining === 0) {
+            setLimitReached(true);
+          }
+        } else {
+          // Session no longer exists (expired/deleted)
+          localStorage.removeItem(SESSION_STORAGE_KEY);
+        }
+      } catch (error) {
+        // Session expired or error occurred
+        console.error('Failed to restore session:', error);
+        localStorage.removeItem(SESSION_STORAGE_KEY);
+      } finally {
+        setIsRestoring(false);
+      }
+    };
+
+    restoreSession();
+  }, [userBasicInfo?.id]);
 
   // Handle file selection
   const handleFileSelect = (file: File) => {
@@ -101,6 +147,10 @@ function AIEvaluatePage() {
       if (response.success && response.data) {
         setSessionId(response.data.sessionId);
         setPromptInfo(response.data.promptInfo);
+        setSessionFilename(selectedFile.name);
+        
+        // Save session to localStorage for persistence
+        localStorage.setItem(SESSION_STORAGE_KEY, response.data.sessionId);
 
         // Add initial AI response to messages
         setMessages([{
@@ -200,7 +250,11 @@ function AIEvaluatePage() {
 
   // Reset session (start new)
   const handleNewSession = () => {
+    // Clear session from localStorage
+    localStorage.removeItem(SESSION_STORAGE_KEY);
+    
     setSessionId(null);
+    setSessionFilename('');
     setSelectedFile(null);
     setMessages([]);
     setPromptInfo(null);
@@ -208,6 +262,16 @@ function AIEvaluatePage() {
     setChatError('');
     setUploadError('');
   };
+
+  // Show loading while restoring session
+  if (isRestoring) {
+    return (
+      <div className="ai-evaluate-page-container">
+        <HeaderManager />
+        <LoadingSpinner fullPage message="Đang khôi phục phiên..." />
+      </div>
+    );
+  }
 
   return (
     <div className="ai-evaluate-page-container">
@@ -312,12 +376,23 @@ function AIEvaluatePage() {
         ) : (
           // Chat Section
           <div className="ai-evaluate-chat-section">
-            {/* Prompt Counter */}
+            {/* Session Info Header */}
             <div className="ai-evaluate-prompt-counter">
-              <div className="ai-evaluate-prompt-info">
-                <span className="ai-evaluate-prompt-label">Số lượt hỏi:</span>
-                <span className={`ai-evaluate-prompt-count ${limitReached ? 'limit-reached' : ''}`}>
-                  {promptInfo ? `${promptInfo.used}/${promptInfo.max}` : '0/10'}
+              <div className="ai-evaluate-session-info">
+                {sessionFilename && (
+                  <span className="ai-evaluate-filename" title={sessionFilename}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    {sessionFilename.length > 25 ? sessionFilename.substring(0, 22) + '...' : sessionFilename}
+                  </span>
+                )}
+                <span className="ai-evaluate-prompt-info">
+                  <span className="ai-evaluate-prompt-label">Lượt hỏi:</span>
+                  <span className={`ai-evaluate-prompt-count ${limitReached ? 'limit-reached' : ''}`}>
+                    {promptInfo ? `${promptInfo.used}/${promptInfo.max}` : '0/10'}
+                  </span>
                 </span>
               </div>
               <button
@@ -329,7 +404,7 @@ function AIEvaluatePage() {
                   <polyline points="17 8 12 3 7 8" />
                   <line x1="12" y1="3" x2="12" y2="15" />
                 </svg>
-                Tải CV mới
+                Phiên mới
               </button>
             </div>
 

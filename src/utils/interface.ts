@@ -361,8 +361,12 @@ export interface AIChatMessage {
 export interface AIChatHistoryResponse {
   success: boolean;
   data?: {
-    messages: AIChatMessage[];
+    sessionId: string;
+    filename: string;
+    numPages: number;
     promptInfo: AIPromptInfo;
+    messages: AIChatMessage[];
+    messageCount: number;
   };
   code?: string;
   message?: string;

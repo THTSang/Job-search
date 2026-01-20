@@ -193,6 +193,34 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
+.ai-evaluate-session-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ai-evaluate-filename {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  padding: 6px 12px;
+  background-color: #e8f4f8;
+  border-radius: 6px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ai-evaluate-filename svg {
+  flex-shrink: 0;
+  color: #4a90a4;
+}
+
 .ai-evaluate-prompt-info {
   display: flex;
   align-items: center;
