@@ -24,7 +24,6 @@ npm start
 |--------|----------|-------|
 | POST | `/ai/evaluate/upload` | Upload CV (PDF) |
 | POST | `/ai/evaluate/chat` | Chat với AI |
-| POST | `/ai/evaluate/job` | So sánh với Job Description |
 | GET | `/ai/evaluate/:sessionId` | Lấy session |
 | DELETE | `/ai/evaluate/:sessionId` | Xóa session |
 

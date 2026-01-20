@@ -58,7 +58,6 @@ app.get("/", (req, res) => {
       health: "GET /health",
       uploadCv: "POST /ai/evaluate/upload",
       chat: "POST /ai/evaluate/chat",
-      evaluateJob: "POST /ai/evaluate/job",
       getSession: "GET /ai/evaluate/:sessionId",
       listSessions: "GET /ai/evaluate",
       deleteSession: "DELETE /ai/evaluate/:sessionId",

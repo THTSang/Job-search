@@ -100,7 +100,6 @@ Request → Logger → CORS → JSON Parser → Routes → Response
 |----------|-----------|
 | POST /upload | Upload CV (PDF) |
 | POST /chat | Chat với AI |
-| POST /job | So sánh với Job Description |
 | GET /:sessionId | Lấy session + history |
 | GET / | List sessions của user |
 | DELETE /:sessionId | Xóa session |

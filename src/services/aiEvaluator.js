@@ -261,26 +261,8 @@ export async function getInitialEvaluation(sessionId, jobDescription = null) {
   return chat(sessionId, prompt);
 }
 
-/**
- * Evaluate CV match against a job description
- */
-export async function evaluateJobMatch(sessionId, jobDescription) {
-  const prompt = `Vui lòng đánh giá mức độ phù hợp của CV với mô tả công việc sau.
-Cung cấp:
-1. Điểm phù hợp (0-100)
-2. Các yêu cầu đã đáp ứng
-3. Các yêu cầu còn thiếu
-4. Đề xuất để điều chỉnh CV cho vị trí này
-
-Mô tả công việc:
-${jobDescription}`;
-
-  return chat(sessionId, prompt);
-}
-
 export default {
   chat,
   getInitialEvaluation,
-  evaluateJobMatch,
   CONFIG,
 };

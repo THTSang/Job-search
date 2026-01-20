@@ -28,23 +28,6 @@ export const schemas = {
       .trim(),
   }),
 
-  // Job evaluation request
-  job: z.object({
-    userId: z
-      .string({ required_error: "userId is required" })
-      .min(1, "userId cannot be empty")
-      .max(100, "userId cannot exceed 100 characters")
-      .trim(),
-    sessionId: z
-      .string({ required_error: "sessionId is required" })
-      .uuid("sessionId must be a valid UUID"),
-    jobDescription: z
-      .string({ required_error: "jobDescription is required" })
-      .min(10, "jobDescription must be at least 10 characters")
-      .max(10000, "jobDescription cannot exceed 10000 characters")
-      .trim(),
-  }),
-
   // Clear session request (userId in body)
   clearSession: z.object({
     userId: z
