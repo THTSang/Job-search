@@ -1,9 +1,9 @@
-export { HomePage } from './common/HomePage';
-export { FindJobPage } from './common/FindJobPage';
-export { JobDetailPage } from './common/JobDetailPage';
-export { CompanyDetailPage } from './common/CompanyDetailPage';
-export { MessagePage } from './common/MessagePage';
-export { CompaniesPage } from './common/CompaniesPage';
+export { HomePage } from './shared/HomePage';
+export { FindJobPage } from './shared/FindJobPage';
+export { JobDetailPage } from './shared/JobDetailPage';
+export { CompanyDetailPage } from './shared/CompanyDetailPage';
+export { MessagePage } from './shared/MessagePage';
+export { CompaniesPage } from './shared/CompaniesPage';
 
 export { PersonalProfilePage } from './jobseeker/PersonalProfilePage';
 export { JobAppliesPage } from './jobseeker/JobAppliesPage';

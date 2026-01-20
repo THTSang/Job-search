@@ -1,9 +1,3 @@
-// NOTE: Current Page Address
-export interface CurrentPage {
-  currentPage: string,
-  setCurrentPage: (pageName: string) => void
-}
-
 // NOTE: USER AUTH KEY  
 export interface UserCredential {
   token: string,
